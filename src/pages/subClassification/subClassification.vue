@@ -175,6 +175,11 @@ input[type="search" i]:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-se
             if (that.parentIndex == 'index') {
               window.scrollTo(0,0);
               document.body.scrollTop = 0;
+              setTimeout(function(){
+                console.log('scrollTop---------------------------------')
+                window.scrollTo(0,0);
+                document.body.scrollTop = 0;
+              },100);
             }
             if (that.parentIndex == 'classification') {
               //应用类型标签

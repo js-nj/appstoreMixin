@@ -4,8 +4,8 @@
             <img class="contact-img" :src="'./static/assets/knowmore.png'" />
         </div>
         <div class="contact-forms">
-            <mt-field label="联系人" placeholder="联系人" v-model="username"></mt-field>
-            <mt-field label="学校" placeholder="学校" v-model="schoolname" ></mt-field>
+            <mt-field label="联系人" placeholder="联系人" v-model="username" :class="{'contact-form-none':envFlag}"></mt-field>
+            <mt-field label="学校" placeholder="学校" v-model="schoolname"  :class="{'contact-form-none':envFlag}"></mt-field>
             <mt-field label="邮箱" placeholder="请输入邮箱" type="email" v-model="email"></mt-field>
             <mt-field label="联系方式" placeholder="联系方式" type="tel" v-model="phone"></mt-field>
         </div>
@@ -41,6 +41,9 @@
 .mint-field-clear {
     display: none;
 }
+.contact-form-none {
+  display: none !important;
+}
 </style>
 <script>
     import { Button ,MessageBox,Field,Toast} from 'bh-mint-ui2';
@@ -54,19 +57,22 @@
                 schoolname:'',
                 email:'',
                 phone:'',
-                contactHeight:''
+                contactHeight:'',
+                envFlag:true
             }
         },
         methods:{
             contactUs() {
                 var self = this;
-                if (!self.username) {
-                    Toast('请填写联系人');
-                    return;
-                }
-                if (!self.schoolname) {
-                    Toast('请填写学校');
-                    return;
+                if (window.env == 'wx') {
+                  if (!self.username) {
+                      Toast('请填写联系人');
+                      return;
+                  }
+                  if (!self.schoolname) {
+                      Toast('请填写学校');
+                      return;
+                  }
                 }
                 if (self.email) {
                     if (self.email.indexOf('@')==-1) {
@@ -78,30 +84,58 @@
                     return;
                 }
                 var parentRouterInfo = self.$route.query;
-                //提交联系人信息
-                axios({
-                    method:"POST",
-                    url:api.saveUserInfo,
-                    params:{
-                        LXR:self.username,
-                        XX:self.schoolname,
-                        LXFS:self.phone?self.phone:'',
-                        YX:self.email,
-                        FLAG:parentRouterInfo.FLAG,
-                        APP_ID:parentRouterInfo.APP_ID
+                 //提交联系人信息
+                if (window.env == 'wx') {
+                  axios({
+                      method:"POST",
+                      url:api.saveUserInfo,
+                      params:{
+                          LXR:self.username,
+                          XX:self.schoolname,
+                          LXFS:self.phone?self.phone:'',
+                          YX:self.email,
+                          FLAG:parentRouterInfo.FLAG,
+                          APP_ID:parentRouterInfo.APP_ID
+                      }
+                  }).then(function(response){
+                    //debugger
+                    if (response.data.code == 0) {
+                      Toast('提交信息成功');
+                      history.back();
+                    }else {
+                      Toast('提交信息失败');
+                      history.back();
                     }
-                }).then(function(response){
-                  //debugger
-                  if (response.data.code == 0) {
-                    Toast('提交信息成功');
-                    history.back();
-                  }else {
-                    Toast('提交信息失败');
-                    history.back();
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
+                  }).catch(function(err){
+                    Toast(err);
+                  });
+                }else {
+                  axios({
+                      method:"POST",
+                      url:api.iWantIt,
+                      params:{
+                          appId:parentRouterInfo.APP_ID,//应用id
+                          userName:parentRouterInfo.info.name,//用户名
+                          userBh:parentRouterInfo.info.studentNo,//学号
+                          zw:'',//职务
+                          schoolBh:parentRouterInfo.info.tenant,//学校编码
+                          email:parentRouterInfo.info.email,
+                          schoolName:parentRouterInfo.info.tenantShortName,//学校名称
+                          userTel:parentRouterInfo.info.telePhone,//电话号码
+                          userType:parentRouterInfo.info.userRole,//用户类型
+                      }
+                  }).then(function(response){
+                    if (response.data.code == 0) {
+                      Toast('想要成功');
+                      // that.billSelectedTag = true;
+                      // that.asBillUncheck = true;
+                    }else {
+                      Toast('再试一次~');
+                    }
+                  }).catch(function(err){
+                    Toast(err);
+                  });
+                }
             },
             loginUserInfo(){
                 var that = this;
@@ -130,10 +164,17 @@
             }
         },
         created() {
+            var that = this;
+            if (window.env == 'wx') {
+                that.envFlag = false;
+                //只有微信环境下才回显联系数据
+                that.loginUserInfo();
+            }else {
+                that.envFlag = true;
+            }
             //设置contact中间内容部分的高度
             this.contactHeight = document.body.clientHeight + 'px';
             BH_MIXIN_SDK.setTitleText('了解更多');
-            this.loginUserInfo();
             var contactionUrl = window.location.href.split('#/')[0] + '#/?';
             wechatShare.wechatShare({
                  title: '主页', // 分享标题

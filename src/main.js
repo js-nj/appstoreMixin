@@ -7,7 +7,7 @@ import {
 import route from './router';
 import init from 'bh-mixin-sdk';
 import 'bh-mint-ui2/lib/style.css'
-
+console.log('import start----------------');
 Vue.use(Mint);
 Vue.use(VueRouter);
 
@@ -20,14 +20,22 @@ let Init = () => {
         render: h => h(App)
     });
 }
-init(() => {
-    console.log("init");
+console.log('init start----------------');
+console.log(init);
+if (window.env == 'dt') {
+    window.BH_MIXIN_SDK = {
+        setTitleText: function() {}
+    };
     Init();
-
-}, {
-    wx: {
-        debug: false,
-        url: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/users/ticks.do',
-        corp: ''
-    }
-})
+} else {
+    init(() => {
+        console.log("init");
+        Init();
+    }, {
+        wx: {
+            debug: false,
+            url: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/users/ticks.do',
+            corp: ''
+        }
+    })
+}

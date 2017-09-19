@@ -31,7 +31,7 @@
                     </div>
                     <div class="app-intro-text bh-ph-8 bh-pt-16" v-html="introduction.APP_INTRODUCE"></div>
                     <!-- 去掉按钮的样式更改 margin-bottom: 60px;-->
-                    <div style="width:100%;height:36px;margin-bottom: 20px;">
+                    <div style="width:100%;height:36px;" v-bind:style="{ marginBottom: marginBottomValue}">
                         <button v-if="Number(appInfo.SCHOOL_COUNT)!=0" class="app-intro-button" @click="goSchoolPage(appInfo)">查看所有学校</button>
                     </div>
                 </div>   
@@ -41,7 +41,8 @@
               </mt-tab-container-item>
             </mt-tab-container>
         </div>
-        <div class="app-buttonContainer bh-clearfix bh-text-center" style="display:none;">
+        <!--  微信环境下展示的按钮组 -->
+        <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-wx':envFlag}">
             <div class="app-button bh-pv-4">
             <div class="app-col-6" ><i class="iconfont icon-dianhua as-color-warning-lv2"></i><div class="app-button-text"><a class="app-tel-line" :href="telephone">联系我</a></div></div>
                 <div class="app-button-line"></div>
@@ -53,7 +54,19 @@
             </div>
             <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16" :class="{'app-button-disable':billSelectedTag}" @click="addBillItem">加入清单</div>
             <div type="warning" class="app-button as-bgColor-warning-lv1 bh-color-white bh-pv-16" @click="goContactionPage">了解更多</div> 
-        </div>  
+        </div>
+        <!--  今日校园，钉钉环境下展示的按钮组 -->
+        <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-bh':!envFlag}">
+            <div class="app-button bh-pv-4">
+                <div class="app-col-6" >
+                    <i class="iconfont icon-dianhua as-color-warning-lv2"></i>
+                    <div class="app-button-text">
+                        <a class="app-tel-line" :href="telephone">联系我</a>
+                    </div>
+                </div>   
+            </div>
+            <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16"  @click="iWantIt" :class="{'app-button-disable':iwantitTag}" style="float: right;">我想要</div>
+        </div>
     </div>
 </template>
 <style>
@@ -193,6 +206,13 @@
     display: inherit;
     border-radius: 4px;
 }
+.app-buttonContainer-wx ,.app-buttonContainer-bh {
+    display: none;
+}
+.app-tab-container figure {
+    padding: 0px !important;
+    margin: 0px !important;
+}
 /*去掉按钮的样式更改*/
 .mint-tab-container-item {
     background-color: #fff;
@@ -215,12 +235,32 @@
                 appTabContainerHeight:'',
                 telephone:'',
                 appContainerHeight:'',
-                asBillUncheck:false
+                asBillUncheck:false,
+                envFlag:true,
+                marginBottomValue:'20px',
+                iwantitTag:true,
+                userInfo:{}
             }
         },
+        // computed:{
+        //     marginBottomValue:function(){
+        //         if (window.env == 'wx') {
+        //             return '20px';
+        //         }else {
+        //             return '60px';
+        //         }
+        //     }
+        // },
         methods:{
             appMain() {
                 var that = this;
+                if (window.env == 'wx') {
+                    that.envFlag = false;
+                    that.marginBottomValue = '20px';
+                }else {
+                    that.envFlag = true;
+                    that.marginBottomValue = '60px';
+                }
                 var routeApp = {};
                 routeApp = that.$route.query;
                 if (localStorage.getItem("asBillUncheck") == 'true') {
@@ -259,10 +299,10 @@
                         targetUrlHash = targetUrlHash.split('&type=')[0];
                         
                         var tmpHref = window.location.href;
-                        console.log('99999999:'+window.location.href);
+                        //console.log('99999999:'+window.location.href);
                         //tmpHref = tmpHref.replace('123',targetUrlHash);
                         tmpHref = tmpHref.replace('#/',',');
-                        console.log('55555555:'+tmpHref);
+                        //console.log('55555555:'+tmpHref);
                         wechatShare.wechatShare({
                              title: that.appInfo.NAME1, // 分享标题
                              desc: that.appInfo.INTRODUCTION, // 分享描述
@@ -352,24 +392,62 @@
                 }).catch(function(err){
                   Toast(err);
                 });
-                //检查应用是否已经加入清单
-                axios({
-                   method:"POST",
-                   url:api.checkBills,
-                   params:appOption
-                }).then(function(response){
-                 if (response.data.code == 0) {
-                   if (response.data.datas.checkBills.totalSize>0) {
-                       that.billSelectedTag = true;
-                   }else {
-                       that.billSelectedTag = false;
-                   }
-                 }else {
-                   //Toast('检查应用是否加入清单失败');
-                 }
-                }).catch(function(err){
-                    Toast(err);
-                }); 
+                /*不同的环境需要不同的检查*/
+                //alert(window.env)
+                if (window.env =='wx') {
+                    //检查应用是否已经加入清单
+                    axios({
+                       method:"POST",
+                       url:api.checkBills,
+                       params:appOption
+                    }).then(function(response){
+                     if (response.data.code == 0) {
+                       if (response.data.datas.checkBills.totalSize>0) {
+                           that.billSelectedTag = true;
+                       }else {
+                           that.billSelectedTag = false;
+                       }
+                     }else {
+                       //Toast('检查应用是否加入清单失败');
+                     }
+                    }).catch(function(err){
+                        Toast(err);
+                    }); 
+                }else if(window.env == 'bh') {
+                     if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
+                        BH_MIXIN_SDK.bh.cpdaily.getUserInfo(function(info){
+                            /*如果是学生，要检查是否已经想要*/
+                            that.userInfo = info;
+                            //alert(JSON.stringify(info));
+                            if (info.userRole == 'STUDENT') {
+                                axios({
+                                    method:"POST",
+                                    url:api.checkClick,
+                                    params:{
+                                        appId:that.$route.query.APP_ID,//应用id
+                                        userBh:info.studentNo,//学号
+                                        schoolName:info.tenantShortName,//学校名称
+                                        userType:info.userRole,//用户类型
+                                    }
+                                }).then(function(response){
+                                  if (response.data.code == 0) {
+                                    //Toast('检查我想要成功');
+                                    if (response.data.datas.T_APP_APP_LOG.rows[0].flag) {
+                                        that.iwantitTag = true;
+                                    }else {
+                                        that.iwantitTag = false;
+                                    }
+                                  }else {
+                                    Toast('检查我想要失败');
+                                  }
+                                }).catch(function(err){
+                                  Toast(err);
+                                });
+                            }
+                        });  
+                    }
+                }
+                
                 //设置app tab框部分的高度
                 this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
 
@@ -446,6 +524,56 @@
                       Toast(err);
                     });
                 }   
+            },
+            iWantIt(){
+                var that = this;
+                if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
+                    //alert('that.iwantitTag:'+that.iwantitTag +'------------------');
+                    if (!that.iwantitTag) {
+                        //alert('that.userInfo.userRole:'+that.userInfo.userRole +'------------------');
+                        if (that.userInfo.userRole == 'STUDENT') {
+                            axios({
+                                method:"POST",
+                                url:api.iWantIt,
+                                params:{
+                                    appId:that.$route.query.APP_ID,//应用id
+                                    userName:that.userInfo.name,//用户名
+                                    userBh:that.userInfo.studentNo,//学号
+                                    zw:'',//职务
+                                    schoolBh:that.userInfo.tenant,//学校编码
+                                    email:that.userInfo.email,
+                                    schoolName:that.userInfo.tenantShortName,//学校名称
+                                    userTel:that.userInfo.telePhone,//电话号码
+                                    userType:that.userInfo.userRole,//用户类型
+                                }
+                            }).then(function(response){
+                              if (response.data.code == 0) {
+                                that.iwantitTag = true;
+                                Toast('想要成功');
+                              }else {
+                                Toast('再试一次~');
+                              }
+                            }).catch(function(err){
+                              Toast(err);
+                            });
+                        }else if (that.userInfo.userRole == 'TEACHER'){
+                            var queryObject = that.$route.query;
+                            var item = {
+                                FLAG:'1',
+                                APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
+                                info:that.userInfo
+                            };
+                            this.$router.push({
+                              name: 'contaction',
+                              query:item
+                            });
+                        }
+                    }else {
+                        Toast("已想要");
+                    }     
+               }else {
+                Toast("请在今日校园中运行");
+               }
             },
             setImgUrlFromId(id) {
                 return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';

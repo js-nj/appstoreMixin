@@ -285,76 +285,74 @@
           }
           BH_MIXIN_SDK.setTitleText('APP STORE');
           
-          // setTimeout(function(){
-          //       console.log('preventBodyScroll-index')
-          //       wechatShare.preventBodyScroll();
-          //   },1000);
           var indexUrl = window.location.href;
-          console.log('indexUrl:'+indexUrl);
-          //var shareIndexUrl = indexUrl.replace('123','?');
-          //console.log('shareIndexUrl:'+shareIndexUrl)
-          //shareIndexUrl = shareIndexUrl.replace('&from=singlemessage','');
-          wechatShare.wechatShare({
-             title: document.title, // 分享标题
-             desc: '首页首页首页首页', // 分享描述
-             link: indexUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-             imgUrl: 'http://www.baidu.com/img/bd_logo1.png', // 分享图标
-             type: '', // 分享类型,music、video或link，不填默认为link
-             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-             success: function() {
-                // 用户确认分享后执行的回调函数
-                // 统计分享的类型与ID
-                axios({
-                    method:"POST",
-                    url:api.staticsOfShareApp,
-                    params:{
-                        TYPE:1,
-                        ID:''
-                    }
-                }).then(function(response){
+          //console.log('indexUrl:'+indexUrl);
+          //微信环境走授权，非微信环境直接请求
+          if (window.env == 'wx') {
+            wechatShare.wechatShare({
+               title: document.title, // 分享标题
+               desc: '首页首页首页首页', // 分享描述
+               link: indexUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+               imgUrl: 'http://www.baidu.com/img/bd_logo1.png', // 分享图标
+               type: '', // 分享类型,music、video或link，不填默认为link
+               dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+               success: function() {
+                  // 用户确认分享后执行的回调函数
+                  // 统计分享的类型与ID
+                  axios({
+                      method:"POST",
+                      url:api.staticsOfShareApp,
+                      params:{
+                          TYPE:1,
+                          ID:''
+                      }
+                  }).then(function(response){
 
-                });
-             },
-             cancel: function() {
-                 // 用户取消分享后执行的回调函数
-             }
-          });
-          //获取url中的code
-          var codeTmp = location.href.split('code=')[1];
-          var weiXincode = '';
-          if (codeTmp.indexOf('&state')>-1) {
-            weiXincode = codeTmp.split('&state')[0];
-          }else {
-            weiXincode = codeTmp.substring(0,codeTmp.length - 2);
-          }
-          //获取用户openid
-          var openidTmp = sessionStorage.getItem("openId");
-
-          axios({
-              method:"POST",
-              url:api.getUserInfo,
-              params:{
-                  weiXincode:weiXincode,
-                  openId:openidTmp?openidTmp:''
-              }
-          }).then(function(response){
-            //debugger
-            if (response.data.code == 0) {
-              //console.log('获取用户信息成功');
-              //存储用户openid
-              if (response.data.datas.login.rows && response.data.datas.login.rows.length>0) {
-                sessionStorage.setItem("openId",response.data.datas.login.rows[0].openId);
-              }
-              that.requestBestRecomendAjax();
-            }else if(response.data.code == -2){
-              Toast('登陆失败');
+                  });
+               },
+               cancel: function() {
+                   // 用户取消分享后执行的回调函数
+               }
+            });
+            //获取url中的code
+            var codeTmp = location.href.split('code=')[1];
+            var weiXincode = '';
+            if (codeTmp.indexOf('&state')>-1) {
+              weiXincode = codeTmp.split('&state')[0];
             }else {
-              Toast('获取数据失败');
+              weiXincode = codeTmp.substring(0,codeTmp.length - 2);
             }
-          }).catch(function(err){
-            Toast(err);
-          });
+            //获取用户openid
+            var openidTmp = sessionStorage.getItem("openId");
 
+            axios({
+                method:"POST",
+                url:api.getUserInfo,
+                params:{
+                    weiXincode:weiXincode,
+                    openId:openidTmp?openidTmp:''
+                }
+            }).then(function(response){
+              //debugger
+              if (response.data.code == 0) {
+                //console.log('获取用户信息成功');
+                //存储用户openid
+                if (response.data.datas.login.rows && response.data.datas.login.rows.length>0) {
+                  sessionStorage.setItem("openId",response.data.datas.login.rows[0].openId);
+                }
+                that.requestBestRecomendAjax();
+              }else if(response.data.code == -2){
+                Toast('登陆失败');
+              }else {
+                Toast('获取数据失败');
+              }
+            }).catch(function(err){
+              Toast(err);
+            });
+          }else {
+            that.requestBestRecomendAjax();
+          }
+          
           //判断是否有路由跳转信息，有的话，修改默认tab页
           if (sessionStorage.getItem("selectedTab")) {
             that.selected = sessionStorage.getItem("selectedTab");

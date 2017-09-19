@@ -35,13 +35,13 @@
               console.log(e)
               console.log('removeEventListener')
               document.body.removeEventListener('touchmove', scrollCallback);
-
-              if (_czc) {
-                 var location = window.location;
-                 var content_url = location.pathname + location.hash;
-                 var referer_url = '/';
-                 _czc.push(['_trackPageview', content_url, referer_url]);
-              }
+              // cnzz第三方统计
+              // if (_czc) {
+              //    var location = window.location;
+              //    var content_url = location.pathname + location.hash;
+              //    var referer_url = '/';
+              //    _czc.push(['_trackPageview', content_url, referer_url]);
+              // }
            },
         }
     }

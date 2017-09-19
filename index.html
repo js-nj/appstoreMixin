@@ -10,371 +10,82 @@
     <link rel="stylesheet" href="./static/mobile/css/bh.min.css">
     <link rel="stylesheet" href="./static/mobile/css/bh-scenes.min.css">
     <link rel="stylesheet" href="http://cdnres.campusphere.cn/fe_components/iconfont_mobile/iconfont.css">
+    <!-- photoswipe  -->
     <style type="text/css">
-        .box{
-          overflow: auto;
-          -webkit-overflow-scrolling: touch;
-        }
+    .box {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+    }
     </style>
-    <script>
+    <!-- cnzz统计 相关的css与全局变量 -->
+    <!-- <script>
     //声明_czc对象:
     window._czc = window._czc || [];
     //绑定siteid，请用您的siteid替换下方"XXXXXXXX"部分
     window._czc.push(["_setAccount", "1262936208"]);
-    </script>
+    </script> -->
 </head>
 
 <body class="box">
     <div id="app"></div>
     <!-- Root element of PhotoSwipe. Must have class pswp. -->
     <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-     
-     <!-- Background of PhotoSwipe. 
+        <!-- Background of PhotoSwipe. 
      It's a separate element as animating opacity is faster than rgba(). -->
-     <div class="pswp__bg"></div>
-     
-     <!-- Slides wrapper with overflow:hidden. -->
-     <div class="pswp__scroll-wrap">
-     
-     <!-- Container that holds slides. 
+        <div class="pswp__bg"></div>
+        <!-- Slides wrapper with overflow:hidden. -->
+        <div class="pswp__scroll-wrap">
+            <!-- Container that holds slides. 
      PhotoSwipe keeps only 3 of them in the DOM to save memory.
      Don't modify these 3 pswp__item elements, data is added later on. -->
-     <div class="pswp__container">
-     <div class="pswp__item"></div>
-     <div class="pswp__item"></div>
-     <div class="pswp__item"></div>
-     </div>
-     
-     <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
-     <div class="pswp__ui pswp__ui--hidden">
-     
-     <div class="pswp__top-bar">
-     
-     <!-- Controls are self-explanatory. Order can be changed. -->
-     
-     <div class="pswp__counter"></div>
-     
-     <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-     
-     <button class="pswp__button pswp__button--share" title="Share" style="display:none;"></button>
-     
-     <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-     
-     <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-     
-     <!-- element will get class pswp__preloader--active when preloader is running -->
-     <div class="pswp__preloader">
-      <div class="pswp__preloader__icn">
-      <div class="pswp__preloader__cut">
-      <div class="pswp__preloader__donut"></div>
-      </div>
-      </div>
-     </div>
-     </div>
-     
-     <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-     <div class="pswp__share-tooltip"></div> 
-     </div>
-     
-     <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-     </button>
-     
-     <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-     </button>
-     
-     <div class="pswp__caption">
-     <div class="pswp__caption__center"></div>
-     </div>
-     </div>
-     </div>
+            <div class="pswp__container">
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+                <div class="pswp__item"></div>
+            </div>
+            <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+            <div class="pswp__ui pswp__ui--hidden">
+                <div class="pswp__top-bar">
+                    <!-- Controls are self-explanatory. Order can be changed. -->
+                    <div class="pswp__counter"></div>
+                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                    <button class="pswp__button pswp__button--share" title="Share" style="display:none;"></button>
+                    <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                    <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                    <!-- element will get class pswp__preloader--active when preloader is running -->
+                    <div class="pswp__preloader">
+                        <div class="pswp__preloader__icn">
+                            <div class="pswp__preloader__cut">
+                                <div class="pswp__preloader__donut"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                    <div class="pswp__share-tooltip"></div>
+                </div>
+                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                </button>
+                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                </button>
+                <div class="pswp__caption">
+                    <div class="pswp__caption__center"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script type="text/javascript">
-        // // 授权，完成后重定向到项目
-        (function () {
-
-        var appUrl = window.location.href;
-        if (appUrl.indexOf(',')>-1) {
-            var totalUrl = appUrl.split(',');
-            var targetIndex = totalUrl[0];
-            var targetHash = totalUrl[1];
-            //一个地址两个微信分享标识
-            if (targetIndex && targetIndex.indexOf('&from=') > -1 && targetHash && targetHash.indexOf('&from=') > -1) {
-                targetIndex = targetIndex.split('&from=')[0];
-            }
-            appUrl = targetIndex + '#/' + targetHash;
-
-            console.log('888888:' + appUrl);
-            var shareTag = appUrl.indexOf('&from=');
-            console.log('appdetail:' + shareTag);
-            //从分享页面进入的，需要授权操作
-            console.log('要不要授权奥');
-            if (shareTag > -1) {
-                console.log('我在授权奥');
-                if (appUrl.indexOf('appstoretest')>-1) {
-                    var wechat_appid = 'wxda8a6bcfc4cd5518'; //   员工 wxda8a6bcfc4cd5518
-                }else {
-                    var wechat_appid = 'wx3580fbc434aacf74';  //cplus  wx3580fbc434aacf74,
-                }
-                var wechat_redirect_uri = appUrl.split('&from=')[0];
-                var wechat_redirect_uri_index = wechat_redirect_uri.split('?code=')[0];
-                console.log('wechat_redirect_uri_index:' + wechat_redirect_uri_index);
-
-                if (wechat_redirect_uri.indexOf('&state=123')>-1) {
-                    var wechat_redirect_uri_hash = wechat_redirect_uri.split('&state=123')[1];  
-                }else if (wechat_redirect_uri.indexOf('&state=wxShare')>-1){
-                    var wechat_redirect_uri_hash = wechat_redirect_uri.split('&state=wxShare')[1];
-                }
-                wechat_redirect_uri = wechat_redirect_uri_index + wechat_redirect_uri_hash;
-                wechat_redirect_uri = encodeURIComponent(wechat_redirect_uri);
-                var wechat_state = 'wxShare';
-
-
-                var authUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wechat_appid + '&redirect_uri=' + wechat_redirect_uri + '&response_type=code&scope=snsapi_userinfo&state=' + wechat_state + '#wechat_redirect';
-                console.log('authUrl:' + authUrl);
-                window.location.href = authUrl;
-            }
-        }else {
-           console.log('分享首页'); 
-        }
-        window.scrollCallback = function(evt) {
-            if (!evt._isScroller) {
-                evt.preventDefault();
-            }
-        };
-            
-        })();
-    </script>
-    <script src="dist/build.js"></script>
-    <script type="text/javascript">
-        setTimeout(function(){
-          var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-          var statistics = document.createElement('span');
-          statistics.id = 'cnzz_stat_icon_1262936208';
-          document.body.appendChild(statistics);
-          var statisticsScript = document.createElement('script');
-          statisticsScript.src = cnzz_protocol + 's13.cnzz.com/z_stat.php?id=1262936208';
-          statisticsScript.type = 'text/javascript';
-          document.body.appendChild(statisticsScript);
-        },500); 
-    </script>
+    <!-- 适配环境路由 微信，今日校园，钉钉-->
+    <script src="./static/mobile/js/envRoute.js"></script>
+    <!-- cnzz统计-->
+    <!-- <script src="./static/mobile/js/cnzzTj.js"></script> -->
     <!-- photoswipe 图片点击放大-->
     <link rel="stylesheet prefetch" href="./static/mobile/photoswipe/photoswipe.css">
     <link rel="stylesheet prefetch" href="./static/mobile/photoswipe/default-skin/default-skin.css">
     <script src="./static/mobile/photoswipe/photoswipe.js"></script>
     <script src="./static/mobile/photoswipe/photoswipe-ui-default.min.js"></script>
-    <script type="text/javascript">
-         var initPhotoSwipeFromDOM = function(gallerySelector) {
-         // 解析来自DOM元素幻灯片数据（URL，标题，大小...）
-         // (children of gallerySelector)
-         var parseThumbnailElements = function(el) {
-         var thumbElements = el.childNodes,
-         numNodes = thumbElements.length,
-         items = [],
-         figureEl,
-         linkEl,
-         size,
-         item;
-         
-         for(var i = 0; i < numNodes; i++) {
-         
-         figureEl = thumbElements[i]; // <figure> element
-         
-         // 仅包括元素节点
-         if(figureEl.nodeType !== 1) {
-         continue;
-         } 
-         linkEl = figureEl.children[0]; // <a> element
-          
-         size = linkEl.getAttribute('data-size').split('x');
-         
-         // 创建幻灯片对象
-         item = {
-         src: linkEl.getAttribute('href'),
-         w: parseInt(size[0], 10),
-         h: parseInt(size[1], 10)
-         };
-         
-         
-         if(figureEl.children.length > 1) {
-         // <figcaption> content
-         item.title = figureEl.children[1].innerHTML; 
-         }
-         
-         if(linkEl.children.length > 0) {
-         // <img> 缩略图节点, 检索缩略图网址
-         item.msrc = linkEl.children[0].getAttribute('src');
-         }
-         
-         item.el = figureEl; // 保存链接元素 for getThumbBoundsFn
-         items.push(item);
-         }
-         
-         return items;
-         };
-         
-         // 查找最近的父节点
-         var closest = function closest(el, fn) {
-         return el && ( fn(el) ? el : closest(el.parentNode, fn) );
-         };
-         
-         // 当用户点击缩略图触发
-         var onThumbnailsClick = function(e) {
-         e = e || window.event;
-         e.preventDefault ? e.preventDefault() : e.returnValue = false;
-         
-         var eTarget = e.target || e.srcElement;
-         
-         // find root element of slide
-         var clickedListItem = closest(eTarget, function(el) {
-         return (el.tagName && el.tagName.toUpperCase() === 'FIGURE');
-         });
-         
-         if(!clickedListItem) {
-         return;
-         }
-         
-         // find index of clicked item by looping through all child nodes
-         // alternatively, you may define index via data- attribute
-         var clickedGallery = clickedListItem.parentNode,
-         childNodes = clickedListItem.parentNode.childNodes,
-         numChildNodes = childNodes.length,
-         nodeIndex = 0,
-         index;
-         
-         for (var i = 0; i < numChildNodes; i++) {
-         if(childNodes[i].nodeType !== 1) { 
-         continue; 
-         }
-         
-         if(childNodes[i] === clickedListItem) {
-         index = nodeIndex;
-         break;
-         }
-         nodeIndex++;
-         }
-         
-         
-         if(index >= 0) {
-         // open PhotoSwipe if valid index found
-         openPhotoSwipe( index, clickedGallery );
-         }
-         return false;
-         };
-         
-         // parse picture index and gallery index from URL (#&pid=1&gid=2)
-         var photoswipeParseHash = function() {
-         var hash = window.location.hash.substring(1),
-         params = {};
-         
-         if(hash.length < 5) {
-         return params;
-         }
-         
-         var vars = hash.split('&');
-         for (var i = 0; i < vars.length; i++) {
-         if(!vars[i]) {
-         continue;
-         }
-         var pair = vars[i].split('='); 
-         if(pair.length < 2) {
-         continue;
-         } 
-         params[pair[0]] = pair[1];
-         }
-         
-         if(params.gid) {
-         params.gid = parseInt(params.gid, 10);
-         }
-         
-         return params;
-         };
-         
-         var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
-         var pswpElement = document.querySelectorAll('.pswp')[0],
-         gallery,
-         options,
-         items;
-         
-         items = parseThumbnailElements(galleryElement);
-         
-         // 这里可以定义参数
-         options = {
-         barsSize: { 
-         top: 100,
-         bottom: 100
-         }, 
-         fullscreenEl : false, // 是否支持全屏按钮
-         shareButtons: [
-         {id:'wechat', label:'分享微信', url:'#'},
-         {id:'weibo', label:'新浪微博', url:'#'},
-         {id:'download', label:'保存图片', url:'{{raw_image_url}}', download:true}
-         ], // 分享按钮
-         
-         // define gallery index (for URL)
-         galleryUID: galleryElement.getAttribute('data-pswp-uid'),
-         
-         getThumbBoundsFn: function(index) {
-         // See Options -> getThumbBoundsFn section of documentation for more info
-         var thumbnail = items[index].el.getElementsByTagName('img')[0], // find thumbnail
-          pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
-          rect = thumbnail.getBoundingClientRect();
-         
-         return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
-         }
-         
-         };
-         
-         // PhotoSwipe opened from URL
-         if(fromURL) {
-         if(options.galleryPIDs) {
-         // parse real index when custom PIDs are used 
-         for(var j = 0; j < items.length; j++) {
-          if(items[j].pid == index) {
-          options.index = j;
-          break;
-          }
-         }
-         } else {
-         // in URL indexes start from 1
-         options.index = parseInt(index, 10) - 1;
-         }
-         } else {
-         options.index = parseInt(index, 10);
-         }
-         
-         // exit if index not found
-         if( isNaN(options.index) ) {
-         return;
-         }
-         
-         if(disableAnimation) {
-         options.showAnimationDuration = 0;
-         }
-         
-         // Pass data to PhotoSwipe and initialize it
-         gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-         gallery.init();
-         };
-         
-         // loop through all gallery elements and bind events
-         var galleryElements = document.querySelectorAll( gallerySelector );
-         
-         for(var i = 0, l = galleryElements.length; i < l; i++) {
-         galleryElements[i].setAttribute('data-pswp-uid', i+1);
-         galleryElements[i].onclick = onThumbnailsClick;
-         }
-         
-         // Parse URL and open gallery if it contains #&pid=3&gid=1
-         var hashData = photoswipeParseHash();
-         if(hashData.pid && hashData.gid) {
-         openPhotoSwipe( hashData.pid , galleryElements[ hashData.gid - 1 ], true, true );
-         }
-         };
-         
-         // execute above function
-         //initPhotoSwipeFromDOM('.my-gallery');
-         //console.log('initPhotoSwipeFromDOM(.my-gallery)```````````````')
-    </script>
+    <script src="./static/mobile/photoswipe/initPhotoSwipe.js"></script>
+    <!-- 应用主程序-->
+    <!-- <script src="dist/build.js"></script> -->
 </body>
 
 </html>

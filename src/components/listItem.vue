@@ -9,14 +9,20 @@
                         <label class="as-tag bh-l-inline bh-mh-8 bh-ph-4 bh-color-primary-lv1 as-bgcolor-tag" v-if="item.VIDEO_URL" style="font-size:10px;">视频</label>
                     </p>
                     <div class="bh-pv-4 bh-mt-4 as-list-service as-color-666">
-                        <label v-if="item.TYPE == 'app'">正在服务学校</label>
+                        <label v-if="item.TYPE == 'app'">
+                            <label v-if="item.SCHOOL_COUNT != 0">正在服务学校</label>
+                            <label v-else >{{item.INTRODUCTION}}</label>
+                        </label>
                         <label v-else>已拥有应用数</label>
-                        <label v-if="item.TYPE == 'app'" class="bh-l-inline bh-ph-4 bh-color-primary-lv1" style="font-weight:800;">{{item.SCHOOL_COUNT}}</label>
+                        <label v-if="item.TYPE == 'app'" class="bh-l-inline bh-ph-4 bh-color-primary-lv1" style="font-weight:800;">
+                            <label v-if="item.SCHOOL_COUNT != 0">{{item.SCHOOL_COUNT}}</label>
+                        </label>
                         <label v-else class="bh-l-inline bh-ph-4 bh-color-primary-lv1" style="font-weight:800;">{{item.APP_COUNT}}</label>
                     </div>
                 </div>
                 <div v-if="item.TYPE == 'app'" class="as-list-img"><img :src="item.IMAGE" onerror='this.src="./static/assets/logo.png"'/></div>
-                <div v-else class="as-list-img as-college"><img :src="item.BADGE" onerror='this.src="./static/assets/logo.png"' /></div>
+                <!-- 隐藏学校列表中的校徽图标 -->
+                <!-- <div v-else class="as-list-img as-college"><img :src="item.BADGE" onerror='this.src="./static/assets/logo.png"' /></div> -->
             </div>  
         </li>
     </ul>

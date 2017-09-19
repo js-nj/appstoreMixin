@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="bh-ph-16 custom-content-body">
-            <div class="">
+            <div class="" v-if="details.INFORMATION">
                 <div class="bh-pb-8">
                     <span class="custom-use-circle bh-bColor-primary-lv1"></span>
                     <div class="bh-ph-4 custom-use-content">案例介绍</div>
@@ -31,7 +31,14 @@
                     
                 </div>
             </div>
+            <div v-else style="text-align:center;padding-top: 17%;">
+                <div>
+                    <img :src="'./static/assets/no.png'" style="width:176px;height:176px;">
+                </div>
+                <p style="padding-top:16px;font-size: 16px;color: #999;">正在补充中</p>
+            </div>
         </div>
+        
     </div>
 </template>
 <style>
