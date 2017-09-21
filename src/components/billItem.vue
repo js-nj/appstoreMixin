@@ -1,5 +1,5 @@
 <template>
-    <div class="bill-list-container" style="overflow: auto;padding-bottom: 50px;" :style="{height:billItemHeight}" class="scroll">
+    <div class="bill-list-container scroll" style="overflow: auto;padding-bottom: 50px;" :style="{height:billItemHeight}">
         <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :autoFill="false" ref="loadmore1" >
             <ul>
                 <li v-for="item in items" class="as-list bh-ph-16 as-pv-10 bh-clearfix" >

@@ -283,8 +283,35 @@
           if (localStorage.getItem("asBillUncheck") == 'true') {
             that.asBillUncheck = true;
           }
+          console.log('测试钉钉title');
+          console.log(BH_MIXIN_SDK);
           BH_MIXIN_SDK.setTitleText('APP STORE');
+          dd.biz.navigation.setTitle({
+              title: 'BH_MIXIN_SDKBHMIXIN', //控制标题文本，空字符串表示显示默认文本
+              onSuccess: function(result) {
+                  console.log(result);
+                  /*结构
+                  {
+                  }*/
+              },
+              onFail: function(err) {
+                  console.log(err);
+              }
+          });
           
+          dd.device.notification.alert({
+              message: "亲爱的",
+              title: "提示",//可传空
+              buttonName: "收到",
+              onSuccess : function() {
+                  //onSuccess将在点击button之后回调
+                  /*回调*/
+              },
+              onFail : function(err) {}
+          });
+          
+          //BH_MIXIN_SDK.setTitleText('BH_MIXIN_SDKBHMIXIN');
+          console.log('dd.device.notification.alert');
           var indexUrl = window.location.href;
           //console.log('indexUrl:'+indexUrl);
           //微信环境走授权，非微信环境直接请求
@@ -368,6 +395,37 @@
         methods:{
           requestBestRecomendAjax() {
             var self = this;
+            //钉钉上将用户code传递给后台
+            if(window.env == 'dt'){
+              console.log('dingding --------login')
+              dd.runtime.permission.requestAuthCode({
+                  corpId: 'ding5b727efd1035c355', //企业id
+                  onSuccess: function(info) {
+                      console.log('authcode:' + info.code);
+                      window.authcode = info.code;
+                      axios({
+                          method:"POST",
+                          url:api.getUserInfo,
+                          params:{
+                              weiXincode:window.authcode,
+                              openId:""
+                          }
+                      }).then(function(response){
+                        if (response.data.code == 0) {
+                          
+                        }else {
+                          Toast('发送用户code失败');
+                        }
+                      }).catch(function(err){
+                        Toast(err);
+                      });
+                      //ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/users/login.do", "weiXincode=" + window.authcode + "&openId=" + "", 'code');
+                  },
+                  onFail: function(err) {
+                      console.log('requestAuthCode fail: ' + JSON.stringify(err));
+                  }
+              });
+            }
             //tab页进来重新请求
             self.mainDatas = [{
               tabName:'热门应用',

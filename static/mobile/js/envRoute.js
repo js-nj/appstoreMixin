@@ -57,91 +57,91 @@
     /*钉钉环境下*/
     console.log('/dingtalk/');
     window.env = 'dt';
-    ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/dingding/getConfig.do", null, 'dt');
+    // ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/dingding/getConfig.do", null, 'dt');
 
-    function initDingTalk(params) {
-        console.log('initDingTalk------------start');
-        window.dtconfig = JSON.parse(params);
-        console.log(window.dtconfig);
-        //alert(window.dtconfig.corpId);
-        console.log(dd);
-        dd.config({
-            agentId: params.agentId,
-            corpId: params.corpId,
-            timeStamp: params.timeStamp,
-            nonceStr: params.nonceStr,
-            signature: params.signature,
-            jsApiList: [
-                    'runtime.info',
-                    'biz.contact.choose',
-                    'device.notification.confirm',
-                    'device.notification.alert',
-                    'device.notification.prompt',
-                    'biz.ding.post',
-                    'biz.util.openLink',
-                    'runtime.permission.requestAuthCode',
-                    'biz.user.get',
-                    'device.geolocation.get'
-                ] //必填，需要使用的jsapi列表
-        });
-        console.log(window.dtconfig.corpId);
-        console.log('initDingTalk------------dd.ready');
-        dd.ready(function() {
-            console.log('dd.runtime.permission.requestAuthCode');
-            console.log(dd.runtime.permission.requestAuthCode);
-            console.log('dd.biz.user.get');
-            console.log(dd.biz.user.get);
+    // function initDingTalk(params) {
+    //     console.log('initDingTalk------------start');
+    //     window.dtconfig = JSON.parse(params);
+    //     console.log(window.dtconfig);
+    //     //alert(window.dtconfig.corpId);
+    //     console.log(dd);
+    //     dd.config({
+    //         agentId: params.agentId,
+    //         corpId: params.corpId,
+    //         timeStamp: params.timeStamp,
+    //         nonceStr: params.nonceStr,
+    //         signature: params.signature,
+    //         jsApiList: [
+    //                 'runtime.info',
+    //                 'biz.contact.choose',
+    //                 'device.notification.confirm',
+    //                 'device.notification.alert',
+    //                 'device.notification.prompt',
+    //                 'biz.ding.post',
+    //                 'biz.util.openLink',
+    //                 'runtime.permission.requestAuthCode',
+    //                 'biz.user.get',
+    //                 'device.geolocation.get'
+    //             ] //必填，需要使用的jsapi列表
+    //     });
+    //     console.log(window.dtconfig.corpId);
+    //     console.log('initDingTalk------------dd.ready');
+    //     dd.ready(function() {
+    //         console.log('dd.runtime.permission.requestAuthCode');
+    //         console.log(dd.runtime.permission.requestAuthCode);
+    //         console.log('dd.biz.user.get');
+    //         console.log(dd.biz.user.get);
 
-            dd.runtime.permission.requestAuthCode({
-                corpId: window.dtconfig.corpId, //企业id
-                onSuccess: function(info) {
-                    console.log('authcode:' + info.code);
-                    window.authcode = info.code;
-                    ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/users/login.do", "weiXincode=" + window.authcode + "&openId=" + "", 'code');
-                },
-                onFail: function(err) {
-                    console.log('requestAuthCode fail: ' + JSON.stringify(err));
-                }
-            });
-        });
-    }
+    //         dd.runtime.permission.requestAuthCode({
+    //             corpId: window.dtconfig.corpId, //企业id
+    //             onSuccess: function(info) {
+    //                 console.log('authcode:' + info.code);
+    //                 window.authcode = info.code;
+    //                 ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/users/login.do", "weiXincode=" + window.authcode + "&openId=" + "", 'code');
+    //             },
+    //             onFail: function(err) {
+    //                 console.log('requestAuthCode fail: ' + JSON.stringify(err));
+    //             }
+    //         });
+    //     });
+    // }
 
-    function ajax(url, param, flag) {
-        window.ajaxFlag = flag;
-        //先声明一个异步请求对象
-        var xmlHttpReg = null;
-        if (window.ActiveXObject) { //如果是IE
-            xmlHttpReg = new ActiveXObject("Microsoft.XMLHTTP");
-        } else if (window.XMLHttpRequest) {
-            xmlHttpReg = new XMLHttpRequest(); //实例化一个xmlHttpReg
-        }
-        //如果实例化成功,就调用open()方法,就开始准备向服务器发送请求
-        if (xmlHttpReg != null) {
-            xmlHttpReg.open("post", url, true);
-            if (param) {
-                xmlHttpReg.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xmlHttpReg.send(param);
-            } else {
-                xmlHttpReg.send(null);
-            }
-            xmlHttpReg.onreadystatechange = doResult; //设置回调函数
-        }
-        //回调函数
-        //一旦readyState的值改变,将会调用这个函数,readyState=4表示完成相应
-        //设定函数doResult()
-        function doResult() {
-            if (xmlHttpReg.readyState == 4) { //4代表执行完成
-                if (xmlHttpReg.status == 200) { //200代表执行成功
-                    //将xmlHttpReg.responseText的值赋给ID为resText的元素
-                    //alert(JSON.stringify(xmlHttpReg.responseText));
-                    console.log(xmlHttpReg.responseText);
-                    if (window.ajaxFlag == 'dt') {
-                        initDingTalk(xmlHttpReg.responseText);
-                    }
-                }
-            }
-        }
-    }
+    // function ajax(url, param, flag) {
+    //     window.ajaxFlag = flag;
+    //     //先声明一个异步请求对象
+    //     var xmlHttpReg = null;
+    //     if (window.ActiveXObject) { //如果是IE
+    //         xmlHttpReg = new ActiveXObject("Microsoft.XMLHTTP");
+    //     } else if (window.XMLHttpRequest) {
+    //         xmlHttpReg = new XMLHttpRequest(); //实例化一个xmlHttpReg
+    //     }
+    //     //如果实例化成功,就调用open()方法,就开始准备向服务器发送请求
+    //     if (xmlHttpReg != null) {
+    //         xmlHttpReg.open("post", url, true);
+    //         if (param) {
+    //             xmlHttpReg.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //             xmlHttpReg.send(param);
+    //         } else {
+    //             xmlHttpReg.send(null);
+    //         }
+    //         xmlHttpReg.onreadystatechange = doResult; //设置回调函数
+    //     }
+    //     //回调函数
+    //     //一旦readyState的值改变,将会调用这个函数,readyState=4表示完成相应
+    //     //设定函数doResult()
+    //     function doResult() {
+    //         if (xmlHttpReg.readyState == 4) { //4代表执行完成
+    //             if (xmlHttpReg.status == 200) { //200代表执行成功
+    //                 //将xmlHttpReg.responseText的值赋给ID为resText的元素
+    //                 //alert(JSON.stringify(xmlHttpReg.responseText));
+    //                 console.log(xmlHttpReg.responseText);
+    //                 if (window.ajaxFlag == 'dt') {
+    //                     initDingTalk(xmlHttpReg.responseText);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     // } else {
     //     /*今日校园环境下*/
     //     window.env = 'bh';

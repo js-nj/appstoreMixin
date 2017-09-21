@@ -1,5 +1,5 @@
 <template>
-    <div class="bh-mt-16 bill-generated-content" :style="{height:billGeHeight}" class="scroll" style="overflow:auto;">
+    <div class="bh-mt-16 bill-generated-content scroll" :style="{height:billGeHeight}" style="overflow:auto;">
         <mt-loadmore :bottom-method="loadBottom2" :bottom-all-loaded="allLoaded2" ref="loadmore2">
             <ul class="as-lists">
                 <li v-for="item in items" class="as-list bh-pl-16" @click="goBillDetailPage(item)">

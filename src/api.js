@@ -39,6 +39,6 @@ export default {
 	//检查学生是否已经想要
 	checkClick: WEBPACK_CONIFG_HOST + "sys/appstoreservice/jrxy/checkClick.do", //是否已经想要
 	//获取钉钉配置
-	//getDingTalkConfig: WEBPACK_CONIFG_HOST + "sys/appstoreservice/dingding/getConfig.do", //获取钉钉配置
+	getDingTalkConfig: WEBPACK_CONIFG_HOST + "sys/appstoreservice/dingding/getConfig.do", //获取钉钉配置
 
 }
