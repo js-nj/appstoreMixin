@@ -107,7 +107,7 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"development"'
       },
       // "WEBPACK_CONIFG_HOST": '"http://amptest.wisedu.com/xsfwfw/"'
-      "WEBPACK_CONIFG_HOST": '"http://172.16.26.40:80/emap/"'
+      "WEBPACK_CONIFG_HOST": '"http://172.16.26.40:8080/emap/"'
         //"WEBPACK_CONIFG_HOST": '"http://172.16.120.231:8080/emap/"'
 
     })

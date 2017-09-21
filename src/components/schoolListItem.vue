@@ -1,6 +1,6 @@
 <template>
     <ul class="as-lists" v-if="items.length>0">
-        <li v-for="item in items" class="as-list bh-pl-16" @click="goPagesByType(item)">
+        <li v-for="item in items" class="as-list bh-pl-16">
             <div class="as-pv-10 bh-pr-16 bh-clearfix as-list-content">
                 <div class="as-list-des">
                     <p class="bh-pv-8 as-list-title">
@@ -8,7 +8,7 @@
                         <label v-else>{{item.SCHOOL_BM_DISPLAY}}</label>
                         <label class="as-tag bh-l-inline bh-mh-8 bh-ph-4 bh-color-primary-lv1 as-bgcolor-tag" v-if="item.VIDEO_URL" style="font-size:10px;">视频</label>
                     </p>
-                    <div class="bh-pv-4 bh-mt-4 as-list-service as-color-666">
+                    <!-- <div class="bh-pv-4 bh-mt-4 as-list-service as-color-666">
                         <label v-if="item.TYPE == 'app'">
                             <label v-if="item.SCHOOL_COUNT != 0">
                                 正在服务学校
@@ -22,11 +22,10 @@
                             </label>
                         </label>
                         <label v-else class="bh-l-inline bh-ph-4 bh-color-primary-lv1" style="font-weight:800;">{{item.APP_COUNT}}</label>
-                    </div>
+                    </div> -->
                 </div>
-                <div v-if="item.TYPE == 'app'" class="as-list-img"><img :src="item.IMAGE" onerror='this.src="./static/assets/logo.png"'/></div>
-                <!-- 隐藏学校列表中的校徽图标 -->
-                <!-- <div v-else class="as-list-img as-college"><img :src="item.BADGE" onerror='this.src="./static/assets/logo.png"' /></div> -->
+                <!-- <div v-if="item.TYPE == 'app'" class="as-list-img"><img :src="item.IMAGE" onerror='this.src="./static/assets/logo.png"'/></div>
+                <div v-else class="as-list-img as-college"><img :src="item.BADGE" onerror='this.src="./static/assets/logo.png"' /></div> -->
             </div>  
         </li>
     </ul>
