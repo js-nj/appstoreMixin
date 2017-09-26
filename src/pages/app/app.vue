@@ -20,6 +20,7 @@
             <mt-navbar v-model="selected">
               <mt-tab-item id="introduction">介绍</mt-tab-item>
               <mt-tab-item id="case">案例</mt-tab-item>
+              <mt-tab-item id="question">问题</mt-tab-item>
             </mt-navbar>
 
             <!-- tab-container -->
@@ -39,23 +40,11 @@
               <mt-tab-container-item id="case">
                 <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
               </mt-tab-container-item>
+              <mt-tab-container-item id="question">
+                <question-item :items="questionArray"></question-item>
+              </mt-tab-container-item>
             </mt-tab-container>
         </div>
-        <!--  微信环境下展示的按钮组 -->
-        <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-wx':envFlag}">
-            <div class="app-button bh-pv-4">
-            <div class="app-col-6" ><i class="iconfont icon-dianhua as-color-warning-lv2"></i><div class="app-button-text"><a class="app-tel-line" :href="telephone">联系我</a></div></div>
-                <div class="app-button-line"></div>
-                <div class="app-col-6" style="position:relative;">
-                    <i class="iconfont  icon-xuexiaowenjianicon" style="font-weight: 600;"></i>
-                    <i class="as-bill-uncheck app-detail" v-show="asBillUncheck"></i>
-                    <div class="app-button-text" @click="goBillPage">我的清单</div>
-                </div>
-            </div>
-            <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16" :class="{'app-button-disable':billSelectedTag}" @click="addBillItem">加入清单</div>
-            <div type="warning" class="app-button as-bgColor-warning-lv1 bh-color-white bh-pv-16" @click="goContactionPage">了解更多</div> 
-        </div>
-        <!--  今日校园，钉钉环境下展示的按钮组 -->
         <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-bh':!envFlag}">
             <div class="app-button bh-pv-4">
                 <div class="app-col-6" >
@@ -65,10 +54,266 @@
                     </div>
                 </div>   
             </div>
-            <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16"  @click="iWantIt" :class="{'app-button-disable':iwantitTag}" style="float: right;">我想要</div>
+            <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16" @click="goQuickAskPage">快速提问</div>
+            <div type="warning" class="app-button as-bgColor-warning-lv1 bh-color-white bh-pv-16" @click="goGetInfoPage">获取资料</div>
         </div>
     </div>
 </template>
+
+<script>
+    import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
+    import customCase from '../../components/customCase.vue';
+    import questionItem from '../../components/questionItem.vue';
+    import api from '../../api.js';
+    import axios  from 'axios';
+    import wechatShare from '../../../static/mobile/js/wechatShare.js';
+    export default {
+        data () {
+            return {
+                billSelectedTag:true,
+                selected:'introduction',
+                appInfo:{},
+                introduction:{},
+                customInfo:{},
+                appTabContainerHeight:'',
+                telephone:'',
+                appContainerHeight:'',
+                asBillUncheck:false,
+                envFlag:true,
+                marginBottomValue:'20px',
+                iwantitTag:true,
+                userInfo:{},
+                questionArray:[{},{}]
+            }
+        },
+        // computed:{
+        //     marginBottomValue:function(){
+        //         if (window.env == 'wx') {
+        //             return '20px';
+        //         }else {
+        //             return '60px';
+        //         }
+        //     }
+        // },
+        methods:{
+            appMain() {
+                var that = this;
+                if (window.env == 'wx') {
+                    that.envFlag = false;
+                    that.marginBottomValue = '20px';
+                }else {
+                    that.envFlag = true;
+                    that.marginBottomValue = '60px';
+                }
+                var routeApp = {};
+                routeApp = that.$route.query;
+                if (localStorage.getItem("asBillUncheck") == 'true') {
+                    that.asBillUncheck = true;
+                }
+                //设置billdetail框部分的高度
+                this.appContainerHeight = (document.body.clientHeight) + 'px';
+                BH_MIXIN_SDK.setTitleText('应用详情');
+                //应用详情
+                var option = {
+                    WID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
+                };
+                var appOption = {
+                    APP_ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
+                };
+                if (routeApp.TYPEFROM && routeApp.TYPEFROM=='applist') {
+                    option = {
+                        WID:routeApp.WID
+                    };
+                    appOption = {
+                        APP_ID:routeApp.WID
+                    };
+                }
+                axios({
+                    method:"POST",
+                    url:api.appsDetail,
+                    params:option
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
+                        that.appInfo = response.data.datas.detail.rows[0];
+                        //微信分享
+                        var targetUrl = window.location.href.split('#/')[0];
+                        var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
+                        var targetUrlHash = window.location.href.split('#/')[1];
+                        targetUrlHash = targetUrlHash.split('&type=')[0];
+                        
+                        var tmpHref = window.location.href;
+                        //console.log('99999999:'+window.location.href);
+                        //tmpHref = tmpHref.replace('123',targetUrlHash);
+                        tmpHref = tmpHref.replace('#/',',');
+                        //console.log('55555555:'+tmpHref);
+                        
+                    }
+                  }else {
+                    Toast('获取详情数据失败');
+                  }
+                }).catch(function(err){
+                  //Toast(err);
+                });
+                //应用tab介绍
+                axios({
+                    method:"POST",
+                    url:api.appsIntrodure,
+                    params:appOption
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.introdure.rows && response.data.datas.introdure.rows.length>0 ) {
+                        that.introduction = response.data.datas.introdure.rows[0];
+                        if (that.introduction.VIDEO_URL) {
+                            //that.introduction.VIDEO_URL = 'http://player.youku.com/embed/'+ that.introduction.VIDEO_URL;
+                            that.introduction.VIDEO_URL = that.introduction.VIDEO_URL;
+                        }
+                        var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
+                        var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
+                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(regString,totalUrl);
+
+                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
+                        //设置图片放大功能
+                        wechatShare.setImagePhotoSwipe('.app-intro-text img');
+                    }else {
+                        that.introduction = false; 
+                    }
+                  }else {
+                    Toast('获取介绍数据失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+                //应用tab案例
+                axios({
+                    method:"POST",
+                    url:api.appsCustomer,
+                    params:appOption
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
+                        // that.customInfo = {};
+                        that.customInfo = response.data.datas.customer.rows[0];
+                        if(that.customInfo.INFORMATION){
+                            // var regString = /getFileByToken\/(\w+)\.do/g;
+                            // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
+                            var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
+                            var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
+                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
+                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
+
+                            //设置图片放大功能
+                            wechatShare.setImagePhotoSwipe('.app-case-text img');
+                        }
+                    }
+                  }else {
+                    Toast('获取案例数据失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+                
+                //设置app tab框部分的高度
+                this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
+                
+                //查询应用相关的问题
+                axios({
+                    method:"POST",
+                    url:api.queryQuestionByAppId,
+                    params:{
+                        appId:'1'
+                    }
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.list.rows) {
+                        that.questionArray = response.data.datas.list.rows;
+                    }else {
+                        Toast('没有的相关问题');
+                    }
+                  }else {
+                    Toast('获取相关问题失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+                //查询系统电话
+                axios({
+                    method:"POST",
+                    url:api.sysSetting
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.setting.rows) {
+                        that.telephone = 'tel:'+response.data.datas.setting.rows[0].LXFS;
+                    }else {
+                        that.telephone = 'javascript:void(0)';
+                        Toast('请设置系统电话');
+                    }
+                  }else {
+                    Toast('获取系统电话失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+            },
+            goSchoolPage(item) {
+                //var routeApp = this.$route.query;
+                if (Number(item.SCHOOL_COUNT)>0) {
+                    this.$router.push({
+                      name: 'school',
+                      query: {
+                        item: JSON.stringify(item)
+                      }
+                    });
+                }
+            },
+            setImgUrlFromId(id) {
+                return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';
+            },
+            goQuickAskPage() {
+                this.$router.push({
+                   name: 'quickAskContent',
+                   query: ''
+                });
+            },
+            goGetInfoPage(appid) {
+                this.$router.push({
+                   name: 'getInfo',
+                   query: appid
+                });
+            }
+        },
+        watch:{
+            selected:function(value,oldvalue){
+                switch(value){
+                  case 'introduction':
+                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
+                        break;
+                  case 'case':
+                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
+                        break;
+                }
+            },
+            asBillUncheck:function(value,oldvalue) {
+                localStorage.setItem("asBillUncheck",value);
+                console.log(localStorage.getItem("asBillUncheck"))
+            }
+        },
+        created() {
+            var that = this;
+            that.appMain();
+        },
+        components:{
+            [Button.name]: Button,
+            [Navbar.name]: Navbar,
+            [TabItem.name]: TabItem,
+            [TabContainer.name]: TabContainer,
+            [MessageBox.name]: MessageBox,
+            [Toast.name]: Toast,
+            customCase,
+            questionItem
+        }
+    }
+</script>
 <style>
 .app-content {
     font-size: 12px;
@@ -218,395 +463,3 @@
     background-color: #fff;
 }
 </style>
-<script>
-    import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
-    import customCase from '../../components/customCase.vue';
-    import api from '../../api.js';
-    import axios  from 'axios';
-    import wechatShare from '../../../static/mobile/js/wechatShare.js';
-    export default {
-        data () {
-            return {
-                billSelectedTag:true,
-                selected:'introduction',
-                appInfo:{},
-                introduction:{},
-                customInfo:{},
-                appTabContainerHeight:'',
-                telephone:'',
-                appContainerHeight:'',
-                asBillUncheck:false,
-                envFlag:true,
-                marginBottomValue:'20px',
-                iwantitTag:true,
-                userInfo:{}
-            }
-        },
-        // computed:{
-        //     marginBottomValue:function(){
-        //         if (window.env == 'wx') {
-        //             return '20px';
-        //         }else {
-        //             return '60px';
-        //         }
-        //     }
-        // },
-        methods:{
-            appMain() {
-                var that = this;
-                if (window.env == 'wx') {
-                    that.envFlag = false;
-                    that.marginBottomValue = '20px';
-                }else {
-                    that.envFlag = true;
-                    that.marginBottomValue = '60px';
-                }
-                var routeApp = {};
-                routeApp = that.$route.query;
-                if (localStorage.getItem("asBillUncheck") == 'true') {
-                    that.asBillUncheck = true;
-                }
-                //设置billdetail框部分的高度
-                this.appContainerHeight = (document.body.clientHeight) + 'px';
-                BH_MIXIN_SDK.setTitleText('应用详情');
-                //应用详情
-                var option = {
-                    WID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                };
-                var appOption = {
-                    APP_ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                };
-                if (routeApp.TYPEFROM && routeApp.TYPEFROM=='applist') {
-                    option = {
-                        WID:routeApp.WID
-                    };
-                    appOption = {
-                        APP_ID:routeApp.WID
-                    };
-                }
-                axios({
-                    method:"POST",
-                    url:api.appsDetail,
-                    params:option
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
-                        that.appInfo = response.data.datas.detail.rows[0];
-                        //微信分享
-                        var targetUrl = window.location.href.split('#/')[0];
-                        var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
-                        var targetUrlHash = window.location.href.split('#/')[1];
-                        targetUrlHash = targetUrlHash.split('&type=')[0];
-                        
-                        var tmpHref = window.location.href;
-                        //console.log('99999999:'+window.location.href);
-                        //tmpHref = tmpHref.replace('123',targetUrlHash);
-                        tmpHref = tmpHref.replace('#/',',');
-                        //console.log('55555555:'+tmpHref);
-                        wechatShare.wechatShare({
-                             title: that.appInfo.NAME1, // 分享标题
-                             desc: that.appInfo.INTRODUCTION, // 分享描述
-                             link: tmpHref, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                             imgUrl: that.setImgUrlFromId(that.appInfo.IMAGE), // 分享图标
-                             type: '', // 分享类型,music、video或link，不填默认为link
-                             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                             success: function() {
-                                 // 用户确认分享后执行的回调函数
-                                 // 统计分享的类型与ID
-                                 axios({
-                                     method:"POST",
-                                     url:api.staticsOfShareApp,
-                                     params:{
-                                         TYPE:2,
-                                         ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                                     }
-                                 }).then(function(response){
-
-                                 });
-                             },
-                             cancel: function() {
-                                 // 用户取消分享后执行的回调函数
-                             }
-                        });
-                    }
-                  }else {
-                    Toast('获取详情数据失败');
-                  }
-                }).catch(function(err){
-                  //Toast(err);
-                });
-                //应用tab介绍
-                axios({
-                    method:"POST",
-                    url:api.appsIntrodure,
-                    params:appOption
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.introdure.rows && response.data.datas.introdure.rows.length>0 ) {
-                        that.introduction = response.data.datas.introdure.rows[0];
-                        if (that.introduction.VIDEO_URL) {
-                            //that.introduction.VIDEO_URL = 'http://player.youku.com/embed/'+ that.introduction.VIDEO_URL;
-                            that.introduction.VIDEO_URL = that.introduction.VIDEO_URL;
-                        }
-                        var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
-                        var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
-                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(regString,totalUrl);
-
-                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
-                        //设置图片放大功能
-                        wechatShare.setImagePhotoSwipe('.app-intro-text img');
-                    }else {
-                        that.introduction = false; 
-                    }
-                  }else {
-                    Toast('获取介绍数据失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-                //应用tab案例
-                axios({
-                    method:"POST",
-                    url:api.appsCustomer,
-                    params:appOption
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
-                        // that.customInfo = {};
-                        that.customInfo = response.data.datas.customer.rows[0];
-                        if(that.customInfo.INFORMATION){
-                            // var regString = /getFileByToken\/(\w+)\.do/g;
-                            // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
-                            var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
-                            var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
-
-                            //设置图片放大功能
-                            wechatShare.setImagePhotoSwipe('.app-case-text img');
-                        }
-                    }
-                  }else {
-                    Toast('获取案例数据失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-                /*不同的环境需要不同的检查*/
-                //alert(window.env)
-                if (window.env =='wx') {
-                    //检查应用是否已经加入清单
-                    axios({
-                       method:"POST",
-                       url:api.checkBills,
-                       params:appOption
-                    }).then(function(response){
-                     if (response.data.code == 0) {
-                       if (response.data.datas.checkBills.totalSize>0) {
-                           that.billSelectedTag = true;
-                       }else {
-                           that.billSelectedTag = false;
-                       }
-                     }else {
-                       //Toast('检查应用是否加入清单失败');
-                     }
-                    }).catch(function(err){
-                        Toast(err);
-                    }); 
-                }else if(window.env == 'bh') {
-                     if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
-                        BH_MIXIN_SDK.bh.cpdaily.getUserInfo(function(info){
-                            /*如果是学生，要检查是否已经想要*/
-                            that.userInfo = info;
-                            //alert(JSON.stringify(info));
-                            if (info.userRole == 'STUDENT') {
-                                axios({
-                                    method:"POST",
-                                    url:api.checkClick,
-                                    params:{
-                                        appId:that.$route.query.APP_ID,//应用id
-                                        userBh:info.studentNo,//学号
-                                        schoolName:info.tenantShortName,//学校名称
-                                        userType:info.userRole,//用户类型
-                                    }
-                                }).then(function(response){
-                                  if (response.data.code == 0) {
-                                    //Toast('检查我想要成功');
-                                    if (response.data.datas.T_APP_APP_LOG.rows[0].flag) {
-                                        that.iwantitTag = true;
-                                    }else {
-                                        that.iwantitTag = false;
-                                    }
-                                  }else {
-                                    Toast('检查我想要失败');
-                                  }
-                                }).catch(function(err){
-                                  Toast(err);
-                                });
-                            }
-                        });  
-                    }
-                }
-                
-                //设置app tab框部分的高度
-                this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
-
-                //查询系统电话
-                axios({
-                    method:"POST",
-                    url:api.sysSetting
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.setting.rows) {
-                        that.telephone = 'tel:'+response.data.datas.setting.rows[0].LXFS;
-                    }else {
-                        that.telephone = 'javascript:void(0)';
-                        Toast('请设置系统电话');
-                    }
-                  }else {
-                    Toast('获取系统电话失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-            },
-            goSchoolPage(item) {
-                //var routeApp = this.$route.query;
-                if (Number(item.SCHOOL_COUNT)>0) {
-                    this.$router.push({
-                      name: 'school',
-                      query: {
-                        item: JSON.stringify(item)
-                      }
-                    });
-                }
-            },
-            goContactionPage() {
-                var queryObject = this.$route.query;
-                var item = {
-                    FLAG:'1',
-                    APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
-                };
-                this.$router.push({
-                  name: 'contaction',
-                  query:item
-                });
-            },
-            goBillPage() {
-                sessionStorage.setItem("selectedTab","myBill");
-                this.$router.push({
-                  name: 'index'
-                });
-            },
-            addBillItem() {
-                //加入清单
-                //如果是已加入
-                var that = this;
-                var queryObject = that.$route.query;
-                if (that.billSelectedTag) {
-                    Toast('已在清单中');
-                }else {
-                    axios({
-                        method:"POST",
-                        url:api.addBill,
-                        params:{
-                            APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
-                        }
-                    }).then(function(response){
-                      if (response.data.code == 0) {
-                        Toast('加入清单成功');
-                        that.billSelectedTag = true;
-                        that.asBillUncheck = true;
-                      }else {
-                        Toast('加入清单失败');
-                      }
-                    }).catch(function(err){
-                      Toast(err);
-                    });
-                }   
-            },
-            iWantIt(){
-                var that = this;
-                if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
-                    //alert('that.iwantitTag:'+that.iwantitTag +'------------------');
-                    if (!that.iwantitTag) {
-                        //alert('that.userInfo.userRole:'+that.userInfo.userRole +'------------------');
-                        if (that.userInfo.userRole == 'STUDENT') {
-                            axios({
-                                method:"POST",
-                                url:api.iWantIt,
-                                params:{
-                                    appId:that.$route.query.APP_ID,//应用id
-                                    userName:that.userInfo.name,//用户名
-                                    userBh:that.userInfo.studentNo,//学号
-                                    zw:'',//职务
-                                    schoolBh:that.userInfo.tenant,//学校编码
-                                    email:that.userInfo.email,
-                                    schoolName:that.userInfo.tenantShortName,//学校名称
-                                    userTel:that.userInfo.telePhone,//电话号码
-                                    userType:that.userInfo.userRole,//用户类型
-                                }
-                            }).then(function(response){
-                              if (response.data.code == 0) {
-                                that.iwantitTag = true;
-                                Toast('想要成功');
-                              }else {
-                                Toast('再试一次~');
-                              }
-                            }).catch(function(err){
-                              Toast(err);
-                            });
-                        }else if (that.userInfo.userRole == 'TEACHER'){
-                            var queryObject = that.$route.query;
-                            var item = {
-                                FLAG:'1',
-                                APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
-                                info:that.userInfo
-                            };
-                            this.$router.push({
-                              name: 'contaction',
-                              query:item
-                            });
-                        }
-                    }else {
-                        Toast("已想要");
-                    }     
-               }else {
-                Toast("请在今日校园中运行");
-               }
-            },
-            setImgUrlFromId(id) {
-                return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';
-            }
-        },
-        watch:{
-            selected:function(value,oldvalue){
-                switch(value){
-                  case 'introduction':
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
-                        break;
-                  case 'case':
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
-                        break;
-                }
-            },
-            asBillUncheck:function(value,oldvalue) {
-                localStorage.setItem("asBillUncheck",value);
-                console.log(localStorage.getItem("asBillUncheck"))
-            }
-        },
-        created() {
-            var that = this;
-            wechatShare.authAndLogin(that.appMain); 
-        },
-        components:{
-            [Button.name]: Button,
-            [Navbar.name]: Navbar,
-            [TabItem.name]: TabItem,
-            [TabContainer.name]: TabContainer,
-            [MessageBox.name]: MessageBox,
-            [Toast.name]: Toast,
-            customCase
-        }
-    }
-</script>

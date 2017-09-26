@@ -31,6 +31,7 @@ init(() => {
         corp: ''
     },
     dd: {
-        url: 'http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/dingding/getConfig.do'
+        url: 'http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/dingding/getConfig.do',
+        emapPrefixPath: window.HOST
     }
 });

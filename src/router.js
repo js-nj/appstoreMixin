@@ -5,8 +5,10 @@ import school from './pages/app/school.vue';
 import contaction from './pages/contaction/contaction.vue';
 import subClassification from './pages/subClassification/subClassification.vue';
 import billDetail from './pages/bill/billDetail.vue';
-import notFoundComponent from './pages/notFoundComponent/notFoundComponent.vue';
-
+import quickAskContent from './pages/quickAskContent/quickAskContent.vue';
+import questionContent from './pages/questionContent/questionContent.vue';
+import questionReplaying from './pages/questionReplaying/questionReplaying.vue';
+import getInfo from './pages/getInfo/getInfo.vue';
 export default {
 	routes: [{
 		path: '/',
@@ -36,6 +38,22 @@ export default {
 		path: '/billDetail',
 		name: 'billDetail',
 		component: billDetail
+	}, {
+		path: '/quickAskContent',
+		name: 'quickAskContent',
+		component: quickAskContent
+	}, {
+		path: '/getInfo',
+		name: 'getInfo',
+		component: getInfo
+	}, {
+		path: '/questionContent',
+		name: 'questionContent',
+		component: questionContent
+	}, {
+		path: '/questionReplaying',
+		name: 'questionReplaying',
+		component: questionReplaying
 	}],
 	scrollBehavior(to, from, savedPosition) {
 		return {

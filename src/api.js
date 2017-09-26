@@ -40,5 +40,25 @@ export default {
 	checkClick: WEBPACK_CONIFG_HOST + "sys/appstoreservice/jrxy/checkClick.do", //是否已经想要
 	//获取钉钉配置
 	getDingTalkConfig: WEBPACK_CONIFG_HOST + "sys/appstoreservice/dingding/getConfig.do", //获取钉钉配置
+	//保存问题
+	saveQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/saveQuestion.do",
+	//获取当前用户待解决问题
+	queryQuestionByUserId: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionByUserId.do",
+	//获取产品线
+	queryAppType: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryAppType.do",
+	//获取目标产品线产品
+	queryAppByType: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryAppByType.do",
+	//给客户发送资料
+	sendAppCustomLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/sendAppCustomLog.do",
+	//给销售发送资料
+	sendAppSalesLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/sendAppSalesLog.do",
+	//添加回答
+	solveQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/solveQuestion.do",
+	//根据应用id获取相关的问题列表
+	queryQuestionByAppId: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionByAppId.do",
+	// 获取问题解决方案列表
+	querySolveQuestionList: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/querySolveQuestionList.do",
+	// 查询当前人对应产品线 所有问题
+	queryQuestionByProduceId: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionByProduceId.do",
 
 }

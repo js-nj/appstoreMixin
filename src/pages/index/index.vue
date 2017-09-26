@@ -13,6 +13,7 @@
                 </mt-search>
               </div>
               <com-test :imgs="imgs"></com-test>
+              <quick-ask></quick-ask>
               <div class="as-content" id="as-index-items">
                 <!-- tab模板 -->
                 <div v-for="item in mainDatas" v-if="item.tabContent.length>0">
@@ -25,98 +26,35 @@
                </div>
               </div>
           </mt-tab-container-item>
-          <!-- 应用分类 -->
-          <mt-tab-container-item id="appType">
-            <div>
-              <div class="appType-header bh-pv-16">
-                <div class="bh-clearfix  appType-item as-pv-11" @click="goSubClassification(totalApp)">
-                  <img class="appType-item-img" :src="totalApp.IMG" /><label class="appType-item-title bh-ph-16">{{totalApp.TITLE}}</label>
-                  <label class="appType-item-cout bh-color-gray-lv3">
-                      <span>{{totalApp.APP_COUNT}}</span>个应用<div class="appType-item-arrow bh-mh-8"></div>
-                  </label>
+
+          <mt-tab-container-item id="feedBack">
+            <quick-ask></quick-ask>
+            <div class="bh-clearfix bh-ph-16 bh-pv-16" style="position:relative;border-top:solid 1px #eee;border-bottom:solid 1px #eee;" @click="getQuestionWithMe">
+                <div class="bh-pull-left">
+                  <img :src="'./static/assets/replay.png'" style="width: 20px;"/>
+                  <h5 class="" style="font-size: 16px;font-weight: 600;display:inline-block;">待我解答的问题</h5>
                 </div>
-              </div>
-              <div class="appType-body">
-                <div class="bh-clearfix  as-pv-11 appType-item bh-ml-16" v-for="item in classifications" @click="goSubClassification(item)">
-                    <img class="appType-item-img" :src="item.IMG" /><label class="appType-item-title bh-ph-16">{{item.LBMC}}</label>
-                    <label class="appType-item-cout bh-color-gray-lv3">
-                        <span>{{item.APP_COUNT}}</span>个应用<div class="appType-item-arrow bh-mh-8"></div>
-                    </label>
+                <div class="" style="    position: absolute;top: 6px;right: 6px;">
+                    <mt-badge style="display:inline-block;font-size:10px;" type="error">13</mt-badge>
+                    <i class="iconfont icon-keyboardarrowright" style="color: #b4b4b4;font-size: 30px;vertical-align: sub;"></i>
                 </div>
-              </div>
             </div>
-          </mt-tab-container-item>
-          <!-- 我的清单 -->
-          <mt-tab-container-item id="myBill">
-            <div class="bh-pb-32 bh-mb-32 myBill">
-                <mt-navbar v-model="billSelected">
-                  <mt-tab-item id="toBeGenerated">待生成</mt-tab-item>
-                  <mt-tab-item id="AlreadyGenerated">已生成</mt-tab-item>
-                </mt-navbar>
-                <!-- tab-container -->
-                <mt-tab-container v-model="billSelected" class="bh-mt-4">
-                  <mt-tab-container-item id="toBeGenerated">
-                    <div v-if="this.billList.length == 0 && !this.billSearchTag" class="bh-text-center mybill-empty-tips" :style="{height:mybillTabcontentWidth}">
-                      <div class="mybill-empty-content">
-                        <div>
-                          <img :src="'./static/assets/noresult.png'" />
-                        </div>
-                        <p class="bh-pv-16" style="font-size:15px;color:#666;">暂无内容,去精品推荐看看</p>
-                        <div class="bh-ph-16 bh-pv-8 as-noresult-button" style="width:130px;margin:0 auto;">
-                           <mt-button type="warning" size="large" class="" @click="goSelectedTab('bestRecomend')">去看看</mt-button> 
-                        </div>
-                      </div>  
-                    </div>
-                    <div v-else :style="{height:mybillTabcontentWidth}" >
-                        <div class="sub-tag-container scroll">
-                           <div class="sub-title bh-pv-16 bh-color-gray-lv2" :style="{width:subTagCont}" >
-                                <label  class="sub-tag" :class="{'sub-tag-selected':subTagAll}" @click="setTagSelected()">全部</label>
-                                <label class="sub-tag" v-for="(item,index) in classifications" :class="{'sub-tag-selected': !subTagAll && index === tagIndex}"  @click="setTagSelected(item.LBDM,index)">{{item.LBMC}}</label>
-                            </div> 
-                        </div>
-                        <bill-item  v-if="this.billList.length>0" :items="billList"  :allLoaded="allLoadedIndex"  v-on:deleteAllSelectedItems="deleteAllSelectedItems" v-on:generatedBill="updateBillItems" v-on:toBeGeneratedLoadMore="toBeGeneratedIndexLoadMore"></bill-item>
-                        <div v-else class="sub-class-noresult">
-                            无该分类应用
-                        </div>
-                    </div>
-                  </mt-tab-container-item>
-                  <mt-tab-container-item id="AlreadyGenerated">
-                    <div v-if="this.billGenerated.length == 0" class="bh-text-center mybill-empty-tips " :style="{height:mybillTabcontentWidth}">
-                      <div class="mybill-empty-content">
-                        <div>
-                          <img :src="'./static/assets/noresult.png'" />
-                        </div>
-                        <p class="bh-pv-16" style="font-size:15px;color:#666;">暂无内容,去精品推荐看看</p>
-                        <div class="bh-ph-16 bh-pv-8 as-noresult-button" style="width:130px;margin:0 auto;">
-                           <mt-button type="warning" size="large" class="" @click="goSelectedTab('bestRecomend')">去看看</mt-button> 
-                        </div>
-                      </div>
-                    </div>
-                    <bill-generated v-else :items="billGenerated" v-on:AlreadyGeneratedLoadMore="AlreadyGeneratedIndexLoadMore" :allLoaded2="allLoadedGeneratedIndex"></bill-generated>
-                  </mt-tab-container-item>
-                </mt-tab-container> 
-            </div>
+            <question-item :items="questionArray"></question-item>
           </mt-tab-container-item>
         </mt-tab-container>
         <!-- tabbar -->
-        <mt-tabbar v-model="selected" :fixed='true' class="as-index-tabbar" style="display:none;">
+        <mt-tabbar v-model="selected" :fixed='true' class="as-index-tabbar">
           <mt-tab-item id="bestRecomend">
             <div>
               <div class="tab-icon" :class="classBestRecomend"></div>
             </div>
             精品推荐
           </mt-tab-item>
-          <mt-tab-item id="appType" >
+          <mt-tab-item id="feedBack" >
             <div>
-              <div class="tab-icon" :class="classAppType"></div>
+              <div class="tab-icon" :class="classFeedBack"></div>
             </div>
-            应用分类
-          </mt-tab-item>
-          <mt-tab-item id="myBill" >
-            <div>
-              <div class="tab-icon" :class="classMyBill" style="position:relative;"><i class="as-bill-uncheck" v-show="asBillUncheck"></i></div>
-            </div>
-            我的清单
+            问题反馈
           </mt-tab-item>
         </mt-tabbar>
     </div>
@@ -135,7 +73,8 @@
       TabContainer,
       TabContainerItem,
       Tabbar,
-      Toast
+      Toast,
+      Badge
     } from 'bh-mint-ui2';
     import axios  from 'axios';
     import _ from 'lodash'; //引入lodash
@@ -143,6 +82,8 @@
     import listItem from '../../components/listItem.vue';
     import billItem from '../../components/billItem.vue';
     import billGenerated from '../../components/billGenerated.vue';
+    import quickAsk from '../../components/quickAsk.vue';
+    import questionItem from '../../components/questionItem.vue';
     import wechatShare from '../../../static/mobile/js/wechatShare.js';
     import api from '../../api.js';
 
@@ -171,6 +112,7 @@
                 billSelected:'toBeGenerated',
                 selected:'bestRecomend',
                 classBestRecomend:'tab-icon-bestRecomend-selected',
+                classFeedBack:'tab-icon-feedBack',
                 classAppType:'tab-icon-appType',
                 classMyBill:'tab-icon-myBill',
                 value:'',
@@ -198,7 +140,7 @@
                 billSearchTag:false,
                 allLoadedIndex:false,
                 allLoadedGeneratedIndex:false,
-                asBillUncheck:window.asBillUncheck
+                questionArray:[{},{}]
                 //loadmoreBillItem:'loadmoreBillItem'
             }
         },
@@ -207,193 +149,36 @@
             switch(value){
               case 'bestRecomend':
                   this.classBestRecomend = 'tab-icon-bestRecomend-selected';
-                  this.classAppType = 'tab-icon-appType';
-                  this.classMyBill = 'tab-icon-myBill';
-                  sessionStorage.setItem("selectedTab",'bestRecomend');
-                  //清除bill Tab 的默认子tab
-                  sessionStorage.setItem("billSelectedTab",'');
-                  sessionStorage.setItem('subClassificationPageNum','');
+                  this.classFeedBack = 'tab-icon-feedBack';
                   BH_MIXIN_SDK.setTitleText('精品推荐');
-                  console.log('removeEventListener')
                   document.body.removeEventListener('touchmove', scrollCallback);
-                  this.requestBestRecomendAjax();
-                  this.allLoadedGeneratedIndex = false;
-                  this.allLoadedIndex = false;
+                  this.login();
                   break;
-              case 'appType':
+              case 'feedBack':
                   this.classBestRecomend = 'tab-icon-bestRecomend';
-                  this.classAppType = 'tab-icon-appType-selected';
-                  this.classMyBill = 'tab-icon-myBill';
-                  sessionStorage.setItem("selectedTab",'appType');
-                  //清除bill Tab 的默认子tab
-                  sessionStorage.setItem("billSelectedTab",'');
-                  BH_MIXIN_SDK.setTitleText('应用分类');
-                  console.log('removeEventListener')
+                  this.classFeedBack = 'tab-icon-feedBack-selected';
+                  BH_MIXIN_SDK.setTitleText('问题反馈');
                   document.body.removeEventListener('touchmove', scrollCallback);
-                  if (this.classifications.length == 0) {
-                    this.requestAppTypeAjax();
-                  }
-                  this.allLoadedGeneratedIndex = false;
-                  this.allLoadedIndex = false;
-                  break;
-              case 'myBill':
-                  this.classBestRecomend = 'tab-icon-bestRecomend';
-                  this.classAppType = 'tab-icon-appType';
-                  this.classMyBill = 'tab-icon-myBill-selected';
-                  sessionStorage.setItem("selectedTab",'myBill');
-                  BH_MIXIN_SDK.setTitleText('我的清单');
-                  sessionStorage.setItem('toBeGeneratedPageNum','');
-                  sessionStorage.setItem('AlreadyGeneratedPageNum','');
-                  sessionStorage.setItem('subClassificationPageNum','');
-                  this.billList = [];
-                  this.billGenerated=[];
-                  if (sessionStorage.getItem("billSelectedTab")!='AlreadyGenerated') {
-                    this.asBillUncheck = false;
-                    this.allLoadedIndex = false;
-                  }else {
-                    console.log('this.allLoadedGeneratedIndex = false mybill')
-                    this.allLoadedGeneratedIndex = false;
-                    //document.body.removeEventListener('touchmove', scrollCallback);
-                  }
-                  this.requestMyBillAjax();
+                  this.queryQuestionByProduceId();
                   break;
             }
-          },
-          billSelected:function(value,oldvalue){
-            switch(value){
-              case 'toBeGenerated':
-                  this.asBillUncheck = false;
-                  sessionStorage.setItem("billSelectedTab",'toBeGenerated');
-                  break;
-              case 'AlreadyGenerated':
-                  console.log('this.allLoadedGeneratedIndex = false billSelected')
-                  //this.allLoadedGeneratedIndex = false;
-                  //document.body.removeEventListener('touchmove', scrollCallback);
-                  sessionStorage.setItem("billSelectedTab",'AlreadyGenerated');
-                  break;
-            }
-          },
-          asBillUncheck:function(value,oldvalue){
-              localStorage.setItem("asBillUncheck",value);
-              console.log(localStorage.getItem("asBillUncheck"))
           }
         },
         created() {
           var that = this;
-          if (localStorage.getItem("asBillUncheck") == 'true') {
-            that.asBillUncheck = true;
-          }
           console.log('测试钉钉title');
           console.log(BH_MIXIN_SDK);
           BH_MIXIN_SDK.setTitleText('APP STORE');
-          dd.biz.navigation.setTitle({
-              title: 'BH_MIXIN_SDKBHMIXIN', //控制标题文本，空字符串表示显示默认文本
-              onSuccess: function(result) {
-                  console.log(result);
-                  /*结构
-                  {
-                  }*/
-              },
-              onFail: function(err) {
-                  console.log(err);
-              }
-          });
-          
-          dd.device.notification.alert({
-              message: "亲爱的",
-              title: "提示",//可传空
-              buttonName: "收到",
-              onSuccess : function() {
-                  //onSuccess将在点击button之后回调
-                  /*回调*/
-              },
-              onFail : function(err) {}
-          });
-          
-          //BH_MIXIN_SDK.setTitleText('BH_MIXIN_SDKBHMIXIN');
-          console.log('dd.device.notification.alert');
           var indexUrl = window.location.href;
-          //console.log('indexUrl:'+indexUrl);
-          //微信环境走授权，非微信环境直接请求
-          if (window.env == 'wx') {
-            wechatShare.wechatShare({
-               title: document.title, // 分享标题
-               desc: '首页首页首页首页', // 分享描述
-               link: indexUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-               imgUrl: 'http://www.baidu.com/img/bd_logo1.png', // 分享图标
-               type: '', // 分享类型,music、video或link，不填默认为link
-               dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-               success: function() {
-                  // 用户确认分享后执行的回调函数
-                  // 统计分享的类型与ID
-                  axios({
-                      method:"POST",
-                      url:api.staticsOfShareApp,
-                      params:{
-                          TYPE:1,
-                          ID:''
-                      }
-                  }).then(function(response){
 
-                  });
-               },
-               cancel: function() {
-                   // 用户取消分享后执行的回调函数
-               }
-            });
-            //获取url中的code
-            var codeTmp = location.href.split('code=')[1];
-            var weiXincode = '';
-            if (codeTmp.indexOf('&state')>-1) {
-              weiXincode = codeTmp.split('&state')[0];
-            }else {
-              weiXincode = codeTmp.substring(0,codeTmp.length - 2);
-            }
-            //获取用户openid
-            var openidTmp = sessionStorage.getItem("openId");
-
-            axios({
-                method:"POST",
-                url:api.getUserInfo,
-                params:{
-                    weiXincode:weiXincode,
-                    openId:openidTmp?openidTmp:''
-                }
-            }).then(function(response){
-              //debugger
-              if (response.data.code == 0) {
-                //console.log('获取用户信息成功');
-                //存储用户openid
-                if (response.data.datas.login.rows && response.data.datas.login.rows.length>0) {
-                  sessionStorage.setItem("openId",response.data.datas.login.rows[0].openId);
-                }
-                that.requestBestRecomendAjax();
-              }else if(response.data.code == -2){
-                Toast('登陆失败');
-              }else {
-                Toast('获取数据失败');
-              }
-            }).catch(function(err){
-              Toast(err);
-            });
-          }else {
-            that.requestBestRecomendAjax();
-          }
-          
-          //判断是否有路由跳转信息，有的话，修改默认tab页
-          if (sessionStorage.getItem("selectedTab")) {
-            that.selected = sessionStorage.getItem("selectedTab");
-          }
-          //debugger
-          if (that.selected == 'myBill') {
-            that.billSelected = sessionStorage.getItem("billSelectedTab")?sessionStorage.getItem("billSelectedTab"):'toBeGenerated';
-          }
+          that.login();
+        
           //设置bill中间内容部分的高度
           that.mybillTabcontentWidth = (document.body.clientHeight - 51 - 43) + 'px';//51是底部导航栏的高度 43是顶部tab头的高度
           document.getElementsByTagName('body')[0].style.height = document.body.clientHeight+'px';
         },
         methods:{
-          requestBestRecomendAjax() {
+          login(){
             var self = this;
             //钉钉上将用户code传递给后台
             if(window.env == 'dt'){
@@ -412,20 +197,22 @@
                           }
                       }).then(function(response){
                         if (response.data.code == 0) {
-                          
+                          self.requestBestRecomendAjax();
                         }else {
                           Toast('发送用户code失败');
                         }
                       }).catch(function(err){
                         Toast(err);
                       });
-                      //ajax("http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/users/login.do", "weiXincode=" + window.authcode + "&openId=" + "", 'code');
                   },
                   onFail: function(err) {
                       console.log('requestAuthCode fail: ' + JSON.stringify(err));
                   }
               });
             }
+          },
+          requestBestRecomendAjax() {
+            var self = this;
             //tab页进来重新请求
             self.mainDatas = [{
               tabName:'热门应用',
@@ -610,274 +397,36 @@
             }).catch(function(err){
               Toast(err);
             });
-            //应用类型(全部)
-            axios({
-                method:"POST",
-                url:api.appsList,
-                params:{
-                  APPTYPE:'',
-                  BQ:'',
-                  Condition:''
-                }
-            }).then(function(response){
-              if (response.data.code == 0) {
-                self.totalApp.APP_COUNT = response.data.datas.list.totalSize;
-                self.placeholder = self.totalApp.APP_COUNT + self.placeholderDefault;
-              }else {
-                Toast('获取数据失败');
-              }
-            }).catch(function(err){
-              Toast(err);
-            });
-          },
-          requestAppTypeAjax() {
-            var self = this;
-            //应用类型
-            axios({
-                method:"POST",
-                url:api.appYyflSum,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
-            }).then(function(response){
-              var responseData = response.data.datas.yyflSum.rows;
-              if (response.data.code == 0) {
-                if (responseData && responseData.length>0) {
-                  self.classifications = responseData.map(function(item){
-                      switch(item.LBDM) {
-                        case '12':
-                          item.IMG = './static/assets/hr-icon.png';
-                          break;
-                        case '01':
-                          item.IMG = './static/assets/sw-icon.png';
-                          break;
-                        case '02':
-                          item.IMG = './static/assets/teach-icon.png';
-                          break;
-                        case '23':
-                          item.IMG = './static/assets/oa-icon.png';
-                          break;
-                        case '22':
-                          item.IMG = './static/assets/postgraduate-icon.png';
-                          break;
-                        case '20':
-                          item.IMG = './static/assets/service-icon.png';
-                          break;
-                        case '19':
-                          item.IMG = './static/assets/other-icon.png';
-                          break;
-                        case '13':
-                          item.IMG = './static/assets/dollar-icon.png';
-                          break;
-                        case '16':
-                          item.IMG = './static/assets/zs-icon.png';
-                          break;
-                        default:
-                          item.IMG = './static/assets/other-icon.png';
-                      }
-                      return item;
-                  });
-                }
-                //设置标签容器的长度
-                if (self.classifications.length > 3) {
-                    self.subTagCont = (88 * (self.classifications.length + 1))+'px'; 
-                  }
-              }else {
-                Toast('获取数据失败');
-              }
-            }).catch(function(err){
-              Toast(err);
-            });
             
           },
-          requestMyBillAjax() {
+          queryQuestionByProduceId() {
             var self = this;
-            //我的清单里面，需要展示应用分类的tag
-            if (self.classifications.length == 0) {
-              self.requestAppTypeAjax();
-            }
-            //我的清单
-            self.requestMyBills();
-            //已生成报价单
-            self.requestGenerateBills();
-          },
-          deepCopy(source) { 
-            var result={};
-            var self = this;
-            for (var key in source) {
-                result[key] = typeof source[key]==='object'? self.deepCopy(source[key]): source[key];
-            } 
-            return result; 
-          },
-          goSubClassification(item) {
-            if (!item.parentIndex) {
-              this.$router.push({
-                name: 'subClassification',
-                query: {
-                    item: JSON.stringify(item)
-                }
-              });
-            }else {
-              this.$router.push({
-                name: 'subClassification',
-                query: {
-                    item: JSON.stringify(item)
-                }
-              });
-            }
-          },
-          updateBillItems() {
-            this.requestMyBills();
-            this.requestGenerateBills();
-            this.billSelected = 'AlreadyGenerated';
-          },
-          requestGenerateBills (flag) {
-            var self = this;
-            var pageNumTmp = sessionStorage.getItem('AlreadyGeneratedPageNum');
-            var option = {
+            axios({
                 method:"POST",
-                url:api.quotationsList,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
-            };
-            if (pageNumTmp) {
-              pageNumTmp = Number(pageNumTmp) +1;
-              option.params.pageNum = pageNumTmp;
-            }
-            axios(option).then(function(response){
+                url:api.queryQuestionByProduceId,
+                params:{}
+            }).then(function(response){
+              var responseData = response.data.datas.list.rows;
               if (response.data.code == 0) {
-                if (response.data.datas.list.rows && response.data.datas.list.rows.length>0) {
-                  if (flag && flag=='more') {
-                    //加载后面页的数据，需要在原来的基础上追加数据 
-                  }else {
-                    //其他情况下需要对数据清0
-                    self.billGenerated=[];
-                  }
-                  response.data.datas.list.rows.map(function(item){
-                    var itemObj = item;
-                    itemObj.PRICE = item.PRICE.toFixed(2);
-                    self.billGenerated.push(itemObj);
-                  });
-                  if (response.data.datas.list.rows.length < response.data.datas.list.pageSize) {
-                    self.allLoadedGeneratedIndex = true; 
-                  }else if (response.data.datas.list.rows.length == response.data.datas.list.pageSize && response.data.datas.list.rows.length < response.data.datas.list.totalSize){
-                    sessionStorage.setItem('AlreadyGeneratedPageNum',response.data.datas.list.pageNumber);
-                  }else {
-                    self.allLoadedGeneratedIndex = true; 
-                  }
-                }
-              }else {
-                Toast('获取报价单失败');
-              }
-            }).catch(function(err){
-              Toast(err);
-            });
-          },
-          requestMyBills(dm,flag) {
-            var self = this;
-            var pageNumTmp = sessionStorage.getItem('toBeGeneratedPageNum');
-            var option = {
-                method:"POST",
-                url:api.billsList,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
-            };
-            if (pageNumTmp) {
-              pageNumTmp = Number(pageNumTmp) +1;
-              option.params.pageNum = pageNumTmp;
-            }
-            if (dm) {
-              self.billSearchTag = true;
-              option.params.APPTYPE = dm;
-            }
-            //我的清单
-            axios(option).then(function(response){
-              if (response.data.code == 0 ) {
-                var responseData = response.data.datas.list.rows;
                 if (responseData && responseData.length>0) {
-                  if (flag && flag=='more') {
-                    //加载后面页的数据，需要在原来的基础上追加数据 
-                  }else {
-                    //其他情况下需要对数据清0
-                    self.billList=[];
-                  }
-                  responseData.map(function(item){
-                    var itemObj = item;
-                      itemObj.TYPE = 'app';
-                      //itemObj.PIC = item.IMAGE;
-                      itemObj.IMAGE = self.setImgUrlFromId(item.IMAGE);
-                      self.billList.push(itemObj);
-                  });
-                  if (responseData.length < response.data.datas.list.pageSize) {
-                    self.allLoadedIndex = true; 
-                  }else if (responseData.length == response.data.datas.list.pageSize && responseData.length < response.data.datas.list.totalSize){
-                    sessionStorage.setItem('toBeGeneratedPageNum',response.data.datas.list.pageNumber);
-                  }else {
-                    self.allLoadedIndex = true;
-                  }
-                }else {
-                  self.billList = [];
+                  self.questionArray = responseData;
                 }
               }else {
-                Toast('获取我的清单失败');
+                Toast('获取相关问题列表失败');
               }
             }).catch(function(err){
               Toast(err);
+            });  
+          },
+          getQuestionWithMe(){
+            this.$router.push({
+               name: 'questionReplaying',
+               query: ''
             });
-          },
-          deleteAllSelectedItems(){
-            var self = this;
-            sessionStorage.setItem('toBeGeneratedPageNum','');
-            if (self.subTagAll==false && typeof(self.tagIndex) === 'number') {
-              self.requestMyBills(self.classifications[self.tagIndex].LBDM);
-            } else if (self.subTagAll==true) {
-              self.requestMyBills('');
-            }
-          },
-          toBeGeneratedIndexLoadMore(){
-            var self = this;
-            //如果请求结果是十五条，表示可能存在第二页
-            if (self.billList.length == 15) {
-              if (self.subTagAll==false && typeof(self.tagIndex) === 'number') {
-                self.requestMyBills(self.classifications[self.tagIndex].LBDM,'more');
-              } else if (self.subTagAll==true) {
-                self.requestMyBills('','more');
-              }
-            } 
-          },
-          AlreadyGeneratedIndexLoadMore(){
-            var self = this;
-            //如果请求结果是十五条，表示可能存在第二页
-            if (self.billGenerated.length == 15) {
-              self.requestGenerateBills('more'); 
-            } 
           },
           setImgUrlFromId(id) {
             return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';
-          },
-          goSelectedTab(tab) {
-            this.selected = tab;
-          },
-          setTagSelected(wid,num) {
-              var that = this;
-              that.allLoadedIndex = false;
-              sessionStorage.setItem('toBeGeneratedPageNum','');
-              if (wid) {
-                  that.subTagAll=false;
-                  that.tagIndex = num;    
-                  that.requestMyBills(that.classifications[num].LBDM);
-              }else {
-                  that.subTagAll=true;
-                  that.tagIndex = '';
-                  that.requestMyBills();
-              }
           }
-
         },
         components: {
             [Swipe.name]: Swipe,
@@ -892,10 +441,13 @@
             [TabContainer.name]: TabContainer,
             [TabContainerItem.name]: TabContainerItem,
             [Toast.name]: Toast,
+            [Badge.name]: Badge,
             comTest,
             listItem,
             billItem,
-            billGenerated
+            billGenerated,
+            quickAsk,
+            questionItem
         }
     }
 </script>
@@ -1081,6 +633,16 @@ color: #999;
 .tab-icon-bestRecomend-selected {
     /*vue背景图不可以写成这样的路径url('./static/assets/bestRecomend-D.png')*/
     background: url(../../../static/assets/bestRecomend-P.png) top center no-repeat;
+    background-size: 100% 100%;
+}
+.tab-icon-feedBack {
+    /*vue背景图不可以写成这样的路径url('./static/assets/bestRecomend-D.png')*/
+    background: url(../../../static/assets/feedBack-P.png) top center no-repeat;
+    background-size: 100% 100%;
+}
+.tab-icon-feedBack-selected {
+    /*vue背景图不可以写成这样的路径url('./static/assets/bestRecomend-D.png')*/
+    background: url(../../../static/assets/feedBack-D.png) top center no-repeat;
     background-size: 100% 100%;
 }
 .tab-icon-appType {
