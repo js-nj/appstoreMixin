@@ -1,7 +1,7 @@
 <template>
     <transition :name="transitionName" duration="0">
-        <router-view class="child-view"></router-view>
-      </transition>
+        <router-view class="child-view"></router-view>  
+    </transition>
 </template>
 <style type="text/css">
 
@@ -26,23 +26,30 @@
     export default {
         data () {
             return {
-            	transitionName: 'slide-left'
+            	transitionName: 'slide-left',
+              routeToName:'',
+              routeFromName:''
             }
         },
         watch: {
-           '$route'(e) {
-              console.log('$route')
-              console.log(e)
-              console.log('removeEventListener')
+            '$route' (to, from) {
+              // console.log('to');
+              // console.log(to);
+              // console.log('from');
+              // console.log(from);
+              // console.log('this.routeFromName:'+this.routeFromName);
+              if (to.name == 'index' || (to.name == this.routeFromName)) {
+                this.transitionName = 'slide-right';
+              }else {
+                this.transitionName = 'slide-left';
+              }
+              if (to.name == 'index') {
+                 this.routeFromName = '';
+              }else {
+                this.routeFromName = from.name;
+              }
               document.body.removeEventListener('touchmove', scrollCallback);
-              // cnzz第三方统计
-              // if (_czc) {
-              //    var location = window.location;
-              //    var content_url = location.pathname + location.hash;
-              //    var referer_url = '/';
-              //    _czc.push(['_trackPageview', content_url, referer_url]);
-              // }
-           },
+            }
         }
     }
 </script>
