@@ -5,8 +5,9 @@ import {
     install as Mint
 } from 'bh-mint-ui2';
 import route from './router';
-// import init from 'bh-mixin-sdk';
-import init from 'index.js';
+import init from 'bh-mixin-sdk';
+//bh-mixin-sdk
+//import init from 'index.js';
 import 'bh-mint-ui2/lib/style.css'
 Vue.use(Mint);
 Vue.use(VueRouter);
@@ -31,7 +32,7 @@ init(() => {
         corp: ''
     },
     dd: {
-        url: 'http://appstoretest.wisedu.com:8080/emap/sys/appstoreservice/dingding/getConfig.do',
+        url: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/dingding/getConfig.do',
         emapPrefixPath: window.HOST
     }
 });

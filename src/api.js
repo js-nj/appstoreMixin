@@ -59,6 +59,25 @@ export default {
 	// 获取问题解决方案列表
 	querySolveQuestionList: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/querySolveQuestionList.do",
 	// 查询当前人对应产品线 所有问题
-	queryQuestionByProduceId: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionByProduceId.do",
-
+	queryQuestionByProduceId: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestions.do",
+	//上传图片
+	upload: WEBPACK_CONIFG_HOST + "sys/appstoreservice/qUpload/upload.do",
+	//删除问题
+	deleteQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/deleteQuestion.do",
+	//更新问题
+	updateQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/updateQuestion.do",
+	//删除答案
+	deleteSolveQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/deleteSolveQuestion.do",
+	//更新答案
+	updateSolveQuestion: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/updateSolveQuestion.do",
+	//获取学校列表
+	getSchools: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryCustomByUserGh.do",
+	//获取用户身份信息
+	queryCurrentUserInfo: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryCurrentUserInfo.do",
+	//请求图片地址
+	getImgs: WEBPACK_CONIFG_HOST + 'sys/emapcomponent/file/getUploadedAttachment/',
+	//删除图片
+	deleteImgs: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/qUpload/deleteFile.do',
+	//请求问题详情
+	queryQuestionDetail: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionDetail.do"
 }

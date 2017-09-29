@@ -19,14 +19,10 @@
         },
         created() {
             var self = this;
-            //应用类型
             axios({
                 method:"POST",
                 url:api.queryQuestionByUserId,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
+                params:{}
             }).then(function(response){
               //alert(JSON.stringify(response.data));
               var responseData = response.data.datas.list.rows;

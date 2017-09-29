@@ -1,49 +1,51 @@
 <template>
-    <div class="app-content" :style="{height:appContainerHeight}">
-        <div class="bh-ph-16 bh-pt-16 app-name">
-            <h5 class="app-name-info">
-                <label class="as-string-cut" style="font-size:18px;width: 210px;display:inline-block;">{{appInfo.NAME1}}</label>
-                <label v-if="Number(appInfo.SCHOOL_COUNT)!=0" class="app-service-school" @click="goSchoolPage(appInfo)">正在服务的学校<span class="app-service-schoolNum bh-ph-8 bh-color-primary-lv1">{{appInfo.SCHOOL_COUNT}}<i class="iconfont icon-keyboardarrowright"></i></span></label>
-            </h5>
-            <div class="app-name-des bh-pt-8" style="">{{appInfo.INTRODUCTION}}</div>
-        </div>
-        <div class="bh-clearfix bh-pl-16 bh-pv-8 app-info bh-color-gray-lv2">
-            <div style="border-top: solid 1px #eee;">
-                <div class="app-col-6 bh-pv-8">终端类型：<label> {{appInfo.TYPE}}</label></div>
-                <div class="app-col-6 bh-pv-8" style="display:none;">版本号：<label>{{appInfo.VERSION}} </label></div>
-                <div class="app-col-6 bh-pv-8" style="display:none;">价格（￥）：<label>{{appInfo.PRICE}} </label></div>
-                <div class="app-col-6 bh-pv-8">厂商：<label>{{appInfo.FACTORY}} </label></div>
-                <div class="app-col-12 bh-pv-8">标签：<label>{{appInfo.BQ_DISPLAY}} </label></div>
-            </div>    
-        </div>
-        <div class="app-tab-container" :style="{height:appTabContainerHeight}">
-            <mt-navbar v-model="selected">
-              <mt-tab-item id="introduction">介绍</mt-tab-item>
-              <mt-tab-item id="case">案例</mt-tab-item>
-              <mt-tab-item id="question">问题</mt-tab-item>
-            </mt-navbar>
+    <div class="app-content" >
+        <div class="app-content-body" :style="{height:appContainerHeight}">
+           <div class="bh-ph-16 bh-pt-16 app-name">
+               <h5 class="app-name-info">
+                   <label class="as-string-cut" style="font-size:18px;width: 210px;display:inline-block;">{{appInfo.NAME1}}</label>
+                   <label v-if="Number(appInfo.SCHOOL_COUNT)!=0" class="app-service-school" @click="goSchoolPage(appInfo)">正在服务的学校<span class="app-service-schoolNum bh-ph-8 bh-color-primary-lv1">{{appInfo.SCHOOL_COUNT}}<i class="iconfont icon-keyboardarrowright"></i></span></label>
+               </h5>
+               <div class="app-name-des bh-pt-8" style="">{{appInfo.INTRODUCTION}}</div>
+           </div>
+           <div class="bh-clearfix bh-pl-16 bh-pv-8 app-info bh-color-gray-lv2">
+               <div style="border-top: solid 1px #eee;">
+                   <div class="app-col-6 bh-pv-8">终端类型：<label> {{appInfo.TYPE}}</label></div>
+                   <div class="app-col-6 bh-pv-8" style="display:none;">版本号：<label>{{appInfo.VERSION}} </label></div>
+                   <div class="app-col-6 bh-pv-8" style="display:none;">价格（￥）：<label>{{appInfo.PRICE}} </label></div>
+                   <div class="app-col-6 bh-pv-8">厂商：<label>{{appInfo.FACTORY}} </label></div>
+                   <div class="app-col-12 bh-pv-8">标签：<label>{{appInfo.BQ_DISPLAY}} </label></div>
+               </div>    
+           </div>
+           <div class="app-tab-container" :style="{height:appTabContainerHeight}">
+               <mt-navbar v-model="selected">
+                 <mt-tab-item id="introduction">介绍</mt-tab-item>
+                 <mt-tab-item id="case">案例</mt-tab-item>
+                 <mt-tab-item id="question">问题</mt-tab-item>
+               </mt-navbar>
 
-            <!-- tab-container -->
-            <mt-tab-container v-model="selected" class="bh-mt-4">
-              <mt-tab-container-item id="introduction">
-                <div v-if="introduction">
-                    <div class="app-intro-video" v-if="introduction.VIDEO_URL">
-                        <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe>
-                    </div>
-                    <div class="app-intro-text bh-ph-8 bh-pt-16" v-html="introduction.APP_INTRODUCE"></div>
-                    <!-- 去掉按钮的样式更改 margin-bottom: 60px;-->
-                    <div style="width:100%;height:36px;" v-bind:style="{ marginBottom: marginBottomValue}">
-                        <button v-if="Number(appInfo.SCHOOL_COUNT)!=0" class="app-intro-button" @click="goSchoolPage(appInfo)">查看所有学校</button>
-                    </div>
-                </div>   
-              </mt-tab-container-item>
-              <mt-tab-container-item id="case">
-                <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
-              </mt-tab-container-item>
-              <mt-tab-container-item id="question">
-                <question-item :items="questionArray"></question-item>
-              </mt-tab-container-item>
-            </mt-tab-container>
+               <!-- tab-container -->
+               <mt-tab-container v-model="selected" class="bh-mt-4">
+                 <mt-tab-container-item id="introduction">
+                   <div v-if="introduction">
+                       <div class="app-intro-video" v-if="introduction.VIDEO_URL">
+                           <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe>
+                       </div>
+                       <div class="app-intro-text bh-ph-8 bh-pt-16" v-html="introduction.APP_INTRODUCE"></div>
+                       <!-- 去掉按钮的样式更改 margin-bottom: 60px;-->
+                       <div style="width:100%;height:36px;" v-bind:style="{ marginBottom: marginBottomValue}">
+                           <button v-if="Number(appInfo.SCHOOL_COUNT)!=0" class="app-intro-button" @click="goSchoolPage(appInfo)">查看所有学校</button>
+                       </div>
+                   </div>   
+                 </mt-tab-container-item>
+                 <mt-tab-container-item id="case">
+                   <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
+                 </mt-tab-container-item>
+                 <mt-tab-container-item id="question">
+                   <question-item :items="questionArray"></question-item>
+                 </mt-tab-container-item>
+               </mt-tab-container>
+           </div> 
         </div>
         <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-bh':!envFlag}">
             <div class="app-button bh-pv-4">
@@ -83,7 +85,7 @@
                 marginBottomValue:'20px',
                 iwantitTag:true,
                 userInfo:{},
-                questionArray:[{},{}]
+                questionArray:[]
             }
         },
         // computed:{
@@ -111,7 +113,9 @@
                     that.asBillUncheck = true;
                 }
                 //设置billdetail框部分的高度
-                this.appContainerHeight = (document.body.clientHeight) + 'px';
+                //this.appContainerHeight = (document.body.clientHeight) + 'px';
+                //下面写法在ios上存在兼容性
+                this.appContainerHeight = (document.body.clientHeight) - 50 + 'px';
                 BH_MIXIN_SDK.setTitleText('应用详情');
                 //应用详情
                 var option = {
@@ -221,7 +225,7 @@
                     method:"POST",
                     url:api.queryQuestionByAppId,
                     params:{
-                        appId:'1'
+                        appId:that.$route.query.APP_ID
                     }
                 }).then(function(response){
                   if (response.data.code == 0) {
@@ -272,13 +276,18 @@
             goQuickAskPage() {
                 this.$router.push({
                    name: 'quickAskContent',
-                   query: ''
+                   query: {
+                        type:'app',
+                        question:this.appInfo
+                   }
                 });
             },
-            goGetInfoPage(appid) {
+            goGetInfoPage() {
                 this.$router.push({
                    name: 'getInfo',
-                   query: appid
+                   query: {
+                    WID:this.appInfo.WID
+                  }
                 });
             }
         },
@@ -286,10 +295,16 @@
             selected:function(value,oldvalue){
                 switch(value){
                   case 'introduction':
+                        localStorage.appSelectedTab = 'introduction';
                         document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
                         break;
                   case 'case':
+                        localStorage.appSelectedTab = 'case';
                         document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
+                        break;
+                  case 'question':
+                        localStorage.appSelectedTab = 'question';
+                        //document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
                         break;
                 }
             },
@@ -300,6 +315,9 @@
         },
         created() {
             var that = this;
+            if (localStorage.appSelectedTab) {
+              that.selected = localStorage.appSelectedTab;
+            }
             that.appMain();
         },
         components:{
@@ -317,6 +335,11 @@
 <style>
 .app-content {
     font-size: 12px;
+    /*overflow:auto;*/
+    /*padding-bottom:50px;*/
+}
+.app-content-body {
+    overflow:auto;
 }
 .app-name {
 }
@@ -380,6 +403,9 @@
  .mint-navbar .mint-tab-item:first-child .mint-tab-item-label{
     border-right: solid 1px #eee;
 }
+.mint-navbar .mint-tab-item:last-child .mint-tab-item-label {
+    border-left: 1px solid #eee;
+}
 .app-name-des {
     word-wrap: break-word;
     font-size: 14px;color: #999;
@@ -387,9 +413,13 @@
 .app-buttonContainer {
     position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
+    z-index:1;
     width: 100%;
     background-color: #fff;
     border-top: solid 1px #f6f6f6;
+    display: flex;
 }
 .app-button {
     width: 33.33%;

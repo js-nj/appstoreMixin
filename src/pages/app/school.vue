@@ -6,10 +6,9 @@
         </div>
         <div class="school-items bh-pt-32">
           <mt-loadmore  v-if="customerCases.length>0" :bottom-method="loadBottom" :autoFill="false" :bottom-all-loaded="allLoaded" ref="loadmore" >
-            <list-item :items="customerCases"></list-item>
+            <school-list-item :items="customerCases"></school-list-item>
             <div class="as-nullData bh-color-gray-lv2" v-show="allLoaded && customerCases.length>5">暂无更多数据</div>
           </mt-loadmore>
-          
         </div>
     </div>
 </template>
@@ -33,7 +32,7 @@
 </style>
 <script>
     import { Button ,MessageBox,Toast,Loadmore} from 'bh-mint-ui2';
-    import listItem from '../../components/listItem.vue';
+    import schoolListItem from '../../components/schoolListItem.vue';
     import wechatShare from '../../../static/mobile/js/wechatShare.js';
     import api from '../../api.js';
     import axios  from 'axios';
@@ -140,7 +139,7 @@
             [MessageBox.name]: MessageBox,
             [Toast.name]: Toast,
             [Loadmore.name]: Loadmore,
-            listItem
+            schoolListItem
         }
     }
 </script>

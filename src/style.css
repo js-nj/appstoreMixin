@@ -91,3 +91,6 @@ body > a[title="站长统计"] {
     -ms-transform: scale(0);
     transform: scale(0);
 }
+.mint-badge.is-primary {
+    background-color: rgba(38,150,255,0.4) !important;
+}

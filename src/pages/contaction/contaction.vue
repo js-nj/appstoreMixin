@@ -88,12 +88,13 @@
                       params:{
                           custom_name:self.username,
                           custom_school:self.schoolname,
-                          appId:'d10bf4d5def3430489315ae7181e96c3',//parentRouterInfo.appId
+                          appId:parentRouterInfo.appId,//parentRouterInfo.appId
                           custom_email:self.email
                       }
                   }).then(function(response){
                     if (response.data.code == 0) {
-                      Toast('发送客户资料成功');
+                      Toast('资料已发送至客户邮箱');
+                      self.$router.go(-1);
                     }else {
                       Toast('发送客户资料失败');
                     }

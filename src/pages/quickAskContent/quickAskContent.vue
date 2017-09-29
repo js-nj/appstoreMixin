@@ -39,14 +39,14 @@
                       <span class="" @click="okSchoolValue" style="float:right;color:#26a2ff;display:inline-block;padding: 4px 16px;">确定</span>
                       <div class="" style="clear:both;"></div>
                     </div>
-                    <mt-picker :slots="schoolSlots" @change="onSchoolValuesChange"></mt-picker>
+                    <mt-picker :slots="schoolSlots" @change="onSchoolValuesChange" value-key="KHMC"></mt-picker>
                 </mt-popup>
     		    <!-- <mt-field class="qac-border-bt" label="学校" placeholder="学校" v-model="schoolName"></mt-field> -->
         	</div>
         	
 			<div class="qac-border-tp bh-mt-16">
 				<mt-field v-if="!isAddReplay" class="qac-border-bt" label="问题标题" placeholder="问题标题" v-model="quTitle"></mt-field>
-				<mt-field class="qac-border-bt" label="" type="textarea" placeholder="问题描述1" rows="4" v-model="introduction"></mt-field>
+				<mt-field class="qac-border-bt" label="" type="textarea" placeholder="问题描述" rows="4" v-model="introduction"></mt-field>
 			</div>
             <!-- <div class="bh-text-center bh-mh-16 bh-mv-16">
                 <div style="" class="qac-img-upload  bh-l-inline" @click="uploadImg">
@@ -54,10 +54,10 @@
                 </div>
             </div> -->
             <!-- 上传图片 -->
-            <div class="post-imgs">
-                <div class="post-img" v-for="img in imgs">
-                    <img @click="previewImg($index)" :src="img.base64">
-                    <span @click="deleteImg($index)" class="post-img-del">
+            <div class="post-imgs bh-clearfix">
+                <div class="post-img" v-for="(img,index) in imgs">
+                    <img @click="previewImg(index)" :src="img.base64">
+                    <span @click="deleteImg(index,img)" class="post-img-del">
                 <img :src="'./static/assets/delete.png'"/>
                 </span>
                 </div>
@@ -193,7 +193,7 @@
                 schoolSlots:[
                     {
                       flex: 1,
-                      values: [{NAME:'南京大学',ID:'001'},{NAME:'东南大学',ID:'002'}],
+                      values: [],
                       className: 'slot3',
                       textAlign: 'center'
                     }
@@ -204,7 +204,12 @@
                 introduction:'',
                 qacContainerHeight:'',
                 imgs:[],
-                imgLimit: 3
+                imgLimit: 3,
+                parentRouterInfo:{},
+                options:{},
+                targetUrl:'',
+                targetDes:'',
+                deleteImgArr:[]
             }
         },
         methods:{
@@ -248,85 +253,229 @@
                 this.popupSchoolVisible = false;
             },
             onSchoolValuesChange(picker, values){
-              this.schoolName = values[0].NAME;
-              this.schoolNameCode = values[0].ID;
+              this.schoolName = values[0].KHMC;
+              //this.schoolNameCode = values[0].KHBH;
             },
+            //提交保存结果
             saveQuestion(){
-                // var options = {
-                //     BXRGH: this.$route.params.userId,
-                //     XM: this.$route.params.userName,
-                //     SJ: this.tel,
-                //     GZLXDM: this.selectFault,
-                //     BXQY: this.areaCode,
-                //     BXDD: this.regionsCode,
-                //     XXDD: this.location,
-                //     MS: this.des
-                // }
-                // if (this.imgs.length > 0) {
-                //     Indicator.open();
-                //     this.uploadImage().then((result) => {
-                //         console.log('result:', result);
-                //         options.TP = result.token;
-                //         Indicator.close();
-                //         api.saveRepair.call(this, options);
-                //     });
-                // } else {
-                //     api.saveRepair.call(this, options);
-                // }
                 var that = this;
-                if (that.isAddReplay) {
-                    axios({
-                        method:"POST",
-                        url:api.solveQuestion,
-                        params:{
-                            questionId:that.$route.query.questionId,
-                            answer:that.introduction,
-                            answerDescPic:''
-                        }
-                    }).then(function(response){
-                      //debugger
-                      if (response.data.code == 0) {
-                        Toast('回答问题成功');
-                      }else {
-                        Toast('回答问题失败');
-                      }
-                    }).catch(function(err){
-                      Toast(err);
+                //删除图片
+                var deleteEmapImg = [];
+                if (that.deleteImgArr.length>0) {
+                    that.deleteImgArr.forEach(function(item){
+                        if (item.url.indexOf('emapcomponent')>-1) {
+                            deleteEmapImg.push(item.id);
+                        }  
                     });
+                    if (deleteEmapImg.length>0) {
+                        axios({
+                          method:"POST",
+                          url:api.deleteImgs,
+                          params:{
+                            wid:deleteEmapImg.join(',')
+                          }
+                        }).then(function(response){
+                            if (response.data.success == true) {
+                                
+                            }else {
+                                console.log(response)
+                            } 
+                        }).catch(function(err){
+                         Toast(err);
+                        });
+                    }
+                }
+                //添加回答
+                if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'addReplay') {
+                    if (!that.introduction) {
+                        Toast('请填写回答');
+                        return;
+                    }
+                    that.options = {
+                        questionId:that.$route.query.question.WID,
+                        answer:that.introduction,
+                        answerDescPic:''
+                    };
+                    that.saveImgToEmap(that.options,that.addReplay);
+                }else if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'editReplay') {
+                    console.log('editReplay-----------------');
+                    if (!that.introduction) {
+                        Toast('请填写回答');
+                        return;
+                    }
+                    that.options = {
+                        createMan:that.parentRouterInfo.question.CREATE_MAN,
+                        answer:that.introduction,
+                        answerDescPic:that.parentRouterInfo.question.ANSWER_DESC_PIC || '',
+                        wid:that.parentRouterInfo.question.WID
+                    };
+                    that.saveImgToEmap(that.options,that.updateSolveQuestion);
                 }else {
-                    var option = {
+                    if (!that.productionLineCode) {
+                        Toast('请选择产品线');
+                        return;
+                    }
+                    if (!that.productionNameCode) {
+                        Toast('请选择产品');
+                        return;
+                    }
+                    // if (!that.schoolName) {
+                    //     Toast('请选择学校');
+                    //     return;
+                    // }
+                    if (!that.quTitle) {
+                        Toast('请填写问题');
+                        return;
+                    }
+                    if (!that.introduction) {
+                        Toast('请填写问题内容');
+                        return;
+                    }
+                    //保存问题与更新问题
+                    that.options = {
                         productCode:that.productionLineCode,
-                        schoolCode:that.schoolNameCode,
+                        schoolCode:that.schoolName || '',
                         title:that.quTitle,
                         content:that.introduction,
                         descPic:'',
                         appId:that.productionNameCode
                     };
+                    if(that.parentRouterInfo.type && that.parentRouterInfo.type == 'editQuestion'){
+                        that.targetUrl = api.updateQuestion;
+                        that.targetDes = '更新';
+                        if (that.parentRouterInfo.question.DESC_PIC) {
+                          that.options.descPic = that.parentRouterInfo.question.DESC_PIC;  
+                        }
+                        that.options.wid = that.parentRouterInfo.question.WID;
+                    }else {
+                        that.targetUrl = api.saveQuestion;
+                        that.targetDes = '保存';
+                    }
+                    that.saveImgToEmap(that.options,that.postQuestion);
+                }
 
-                    if (that.imgs.length > 0) {
-                        Indicator.open();
-                        that.uploadImage().then((result) => {
-                            console.log('result:', result);
-                            options.descPic = result.token;
-                            Indicator.close();
-                            axios({
-                                method:"POST",
-                                url:api.saveQuestion,
-                                params:option
-                            }).then(function(response){
-                              //debugger
-                              if (response.data.code == 0) {
-                                Toast('保存问题成功');
-                              }else {
-                                Toast('保存问题失败');
-                              }
-                            }).catch(function(err){
-                              Toast(err);
-                            });
+            },
+            addReplay (){
+                var that = this;
+                axios({
+                    method:"POST",
+                    url:api.solveQuestion,
+                    params:that.options
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    Toast('回答问题成功');
+                    that.$router.go(-1);
+                  }else {
+                    Toast(response.data.msg);
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+            },
+            updateSolveQuestion (){
+                var that = this;
+                axios({
+                    method:"POST",
+                    url:api.updateSolveQuestion,
+                    params:that.options
+                }).then(function(response){
+                  //debugger
+                  if (response.data.code == 0) {
+                    Toast('更新回答成功');
+                    that.$router.go(-1);
+                  }else {
+                    Toast(response.data.msg);
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+            },
+            postQuestion (){
+                var that = this;
+                axios({
+                    method:"POST",
+                    url:that.targetUrl,
+                    params:that.options
+                }).then(function(response){
+                  //debugger
+                  if (response.data.code == 0) {
+                    Toast(that.targetDes+'问题成功');
+                    if (that.parentRouterInfo.type == 'editQuestion') {//编辑问题
+                        that.$router.go(-1);
+                    }else if (that.parentRouterInfo.type == 'app'){ //应用详情页的快速提问
+                        that.$router.go(-1);
+                    }else {//首页的两个快速提问
+                        that.$router.push({
+                            name: 'index',
+                            query: {
+                                selectedTab:'feedBack'
+                            }
                         });
                     }
-                    
+                  }else {
+                    Toast(that.targetDes+'问题失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+            },
+            saveImgToEmap(options,cb){
+                var that = this;
+                if (that.imgs.length > 0) {
+                    var urls = [];
+                    that.imgs.forEach(function(item){
+                        if (item.url.indexOf('dingtalk')>-1) {
+                           urls.push(item.url);
+                        }  
+                    });
+                    if (urls.length>0) {
+                        axios({
+                            method:"POST",
+                            url:api.upload,
+                            params:{
+                                fileUrl:urls.join(','),
+                                token:options.descPic || options.answerDescPic ||''
+                            }
+                        }).then(function(response){
+                          if (response.data.code == 0) {
+                            var pageType = that.parentRouterInfo.type;
+                            if (pageType && ((pageType == 'addReplay') || (pageType == 'editReplay'))) {
+                               options.answerDescPic = response.data.fileToken; 
+                            }else {
+                                options.descPic = response.data.fileToken;
+                            }
+                            cb();
+                          }else {
+                            Toast('保存图片失败');
+                          }
+                        }).catch(function(err){
+                          Toast(err);
+                        });
+                    }else {
+                      cb();  
+                    }   
+                }else {
+                    cb();
                 }
+            },
+            querySchools(){
+                var that = this;
+                axios({
+                    method:"GET",
+                    url:api.getSchools,//  01111019
+                    params:{}
+                }).then(function(response){
+                  var responseData = response.data.datas.queryCustomByUserGh.rows;
+                  if (response.data.code == 0) {
+                    if (responseData && responseData.length>0) {
+                       that.schoolSlots[0].values = responseData;
+                    }
+                  }else {
+                    Toast('查询学校数据失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
             },
             queryAppType(){
                 var that = this;
@@ -351,18 +500,25 @@
             },
             queryTargetTypeApp(type){
                 var that = this;
+                var tmpType = type;
+                var questionInfo = that.parentRouterInfo.question;
+                if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'editQuestion') {
+                   tmpType = questionInfo.PRODUCT_CODE; 
+                }else if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'app') {
+                    tmpType = questionInfo.APPTYPE; 
+                }
                 axios({
                     method:"POST",
                     url:api.queryAppByType,
                     params:{
-                        appType:type
+                        appType:tmpType
                     }
                 }).then(function(response){
                   if (response.data.code == 0) {
                     var responseData = response.data.datas.list.rows;
                     if (responseData && responseData.length>0) {
                        that.productionSlots[0].values = responseData;
-                       
+                       that.isEditLoadDatas();
                     }else {
                         Toast('此产品线无应用');
                     }
@@ -373,9 +529,46 @@
                   Toast(err);
                 });
             },
-            // uploadImg(){
-            //     BH_MIXIN_SDK.takePhoto();
-            // },
+            isEditLoadDatas(){
+                console.log('isEditLoadDatas---------------')
+                var that = this;
+                var questionInfo = that.parentRouterInfo.question;
+                if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'editQuestion') {
+                    that.productionLine = questionInfo.PRODUCT_CODE_DISPLAY;
+                    that.productionLineCode = questionInfo.PRODUCT_CODE;
+                    that.productionName = questionInfo.APP_ID_DISPALY;
+                    that.productionNameCode = questionInfo.APP_ID;
+                    that.schoolName = questionInfo.SCHOOL_CODE;
+                    //that.schoolNameCode = questionInfo.SCHOOL_CODE;
+                    that.quTitle=questionInfo.TITLE;
+                    that.introduction=questionInfo.CONTENT;
+                    if (questionInfo.DESC_PIC) {
+                        axios({
+                          method:"POST",
+                          url:api.getImgs+questionInfo.DESC_PIC+'.do',
+                          params:{}
+                        }).then(function(response){
+                            if (response.data.success == true) {
+                                that.imgs = response.data.items.map(function(item){
+                                    return {
+                                        base64:item.fileUrl,
+                                        url:item.fileUrl,
+                                        id:item.id
+                                    }
+                                });
+                            }
+                             
+                        }).catch(function(err){
+                         Toast(err);
+                        });
+                    }  
+                }else if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'app') {
+                    that.productionLine = questionInfo.APPTYPE_DISPLAY;
+                    that.productionLineCode = questionInfo.APPTYPE;
+                    that.productionName = questionInfo.NAME1;
+                    that.productionNameCode = questionInfo.APPID; 
+                }
+            },
             takeCamera() {
                 let takeCamera = BH_MIXIN_SDK.takeCamera;
                 takeCamera((ret) => {
@@ -390,8 +583,10 @@
                 }, this.imgLimit - this.imgs.length)
                 //this.uploadImgType = '相册';
             },
-            deleteImg(index) {
+            deleteImg(index,item) {
+                console.log('deleteImg---------index:'+index)
                 this.imgs.splice(index, 1);
+                this.deleteImgArr.push(item);
             },
             previewImg(index) {
                 BH_MIXIN_SDK.preViewImages(this.imgs, index);
@@ -410,13 +605,39 @@
             var that = this;
             //设置高度
             that.qacContainerHeight = (document.body.clientHeight) + 'px';
-
-            var parentRouterInfo = that.$route.query;
-            if (parentRouterInfo.type && parentRouterInfo.type == 'addReplay') {
+            that.parentRouterInfo = that.$route.query;
+            var pageType = that.parentRouterInfo.type;
+            var pageInfo = that.parentRouterInfo.question;
+            console.log('that.parentRouterInfo.type:'+that.parentRouterInfo.type);
+            if (pageType && ((pageType == 'addReplay') || (pageType == 'editReplay'))) {
                 that.isAddReplay = true;
+                if (pageType == 'editReplay') {
+                    that.introduction = pageInfo.ANSWER;
+                    if (pageInfo.ANSWER_DESC_PIC) {
+                        axios({
+                          method:"POST",
+                          url:api.getImgs + pageInfo.ANSWER_DESC_PIC + '.do',
+                          params:{}
+                        }).then(function(response){
+                            if (response.data.success == true) {
+                                that.imgs = response.data.items.map(function(item){
+                                    return {
+                                        base64:item.fileUrl,
+                                        url:item.fileUrl,
+                                        id:item.id
+                                    }
+                                });
+                            }   
+                        }).catch(function(err){
+                         Toast(err);
+                        });
+                    }
+                }   
             }else {
-               //查询产品线
+                //查询产品线
+                that.isAddReplay = false;
                 that.queryAppType(); 
+                that.querySchools();
             }
         },
         // watch:{

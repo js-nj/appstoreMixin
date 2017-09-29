@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mt-tab-container v-model="selected">
+        <mt-tab-container v-model="selected" :style="{height:pageHeight}" style="overflow:auto;">
           <!-- 首页，推荐应用 -->
           <mt-tab-container-item id="bestRecomend" >
               <div class="as-index-search-instead" @click="goSubClassification({parentIndex:'index'})"></div>
@@ -35,7 +35,7 @@
                   <h5 class="" style="font-size: 16px;font-weight: 600;display:inline-block;">待我解答的问题</h5>
                 </div>
                 <div class="" style="    position: absolute;top: 6px;right: 6px;">
-                    <mt-badge style="display:inline-block;font-size:10px;" type="error">13</mt-badge>
+                    <mt-badge style="display:inline-block;font-size:10px;" type="error">{{questionLength}}</mt-badge>
                     <i class="iconfont icon-keyboardarrowright" style="color: #b4b4b4;font-size: 30px;vertical-align: sub;"></i>
                 </div>
             </div>
@@ -92,6 +92,7 @@
     export default {
         data(){
             return {
+                pageHeight:'',
                 mainDatas:[{
                   tabName:'热门应用',
                   tabContent:[],
@@ -140,7 +141,8 @@
                 billSearchTag:false,
                 allLoadedIndex:false,
                 allLoadedGeneratedIndex:false,
-                questionArray:[{},{}]
+                questionArray:[],
+                questionLength:''
                 //loadmoreBillItem:'loadmoreBillItem'
             }
         },
@@ -148,18 +150,22 @@
           selected:function(value,oldvalue){
             switch(value){
               case 'bestRecomend':
+                  localStorage.selectedTab = 'bestRecomend';
                   this.classBestRecomend = 'tab-icon-bestRecomend-selected';
                   this.classFeedBack = 'tab-icon-feedBack';
                   BH_MIXIN_SDK.setTitleText('精品推荐');
                   document.body.removeEventListener('touchmove', scrollCallback);
-                  this.login();
+                  this.requestBestRecomendAjax();
+                  //this.queryCurrentUserInfo();
+                  //this.login();
                   break;
               case 'feedBack':
+                  localStorage.selectedTab = 'feedBack';
                   this.classBestRecomend = 'tab-icon-bestRecomend';
                   this.classFeedBack = 'tab-icon-feedBack-selected';
                   BH_MIXIN_SDK.setTitleText('问题反馈');
                   document.body.removeEventListener('touchmove', scrollCallback);
-                  this.queryQuestionByProduceId();
+                  this.queryFeedBackDatas();
                   break;
             }
           }
@@ -169,48 +175,85 @@
           console.log('测试钉钉title');
           console.log(BH_MIXIN_SDK);
           BH_MIXIN_SDK.setTitleText('APP STORE');
+          that.pageHeight = (document.body.clientHeight) - 50 +'px';
           var indexUrl = window.location.href;
-
-          that.login();
-        
+          var routeParam = that.$route.query;
+          if (routeParam.selectedTab) {
+            that.selected = routeParam.selectedTab;
+          }else {
+            console.log('localStorage.selectedTab:'+localStorage.selectedTab)
+            if (localStorage.selectedTab && localStorage.selectedTab =='feedBack') {
+              that.selected = 'feedBack';
+            }else {
+              that.selected = 'bestRecomend';
+              that.requestBestRecomendAjax();
+            }
+          }
+          //that.login();
           //设置bill中间内容部分的高度
           that.mybillTabcontentWidth = (document.body.clientHeight - 51 - 43) + 'px';//51是底部导航栏的高度 43是顶部tab头的高度
           document.getElementsByTagName('body')[0].style.height = document.body.clientHeight+'px';
         },
         methods:{
-          login(){
-            var self = this;
-            //钉钉上将用户code传递给后台
-            if(window.env == 'dt'){
-              console.log('dingding --------login')
-              dd.runtime.permission.requestAuthCode({
-                  corpId: 'ding5b727efd1035c355', //企业id
-                  onSuccess: function(info) {
-                      console.log('authcode:' + info.code);
-                      window.authcode = info.code;
-                      axios({
-                          method:"POST",
-                          url:api.getUserInfo,
-                          params:{
-                              weiXincode:window.authcode,
-                              openId:""
-                          }
-                      }).then(function(response){
-                        if (response.data.code == 0) {
-                          self.requestBestRecomendAjax();
-                        }else {
-                          Toast('发送用户code失败');
-                        }
-                      }).catch(function(err){
-                        Toast(err);
-                      });
-                  },
-                  onFail: function(err) {
-                      console.log('requestAuthCode fail: ' + JSON.stringify(err));
-                  }
-              });
-            }
-          },
+          // login(){
+          //   var self = this;
+          //   //钉钉上将用户code传递给后台
+          //   if(window.env == 'dt'){
+          //     console.log('dingding --------login')
+          //     dd.runtime.permission.requestAuthCode({
+          //         corpId: 'ding5b727efd1035c355', //企业id
+          //         onSuccess: function(info) {
+          //             console.log('authcode:' + info.code);
+          //             window.authcode = info.code;
+          //             axios({
+          //                 method:"POST",
+          //                 url:api.getUserInfo,
+          //                 params:{
+          //                     weiXincode:window.authcode,
+          //                     openId:""
+          //                 }
+          //             }).then(function(response){
+          //               if (response.data.code == 0) {
+          //                 self.requestBestRecomendAjax();
+          //                 self.queryCurrentUserInfo();
+          //               }else {
+          //                 Toast('发送用户code失败');
+          //               }
+          //             }).catch(function(err){
+          //               Toast(err);
+          //             });
+          //         },
+          //         onFail: function(err) {
+          //             console.log('requestAuthCode fail: ' + JSON.stringify(err));
+          //         }
+          //     });
+          //   }
+          // },
+          // queryCurrentUserInfo(){
+          //   //获取用户身份信息
+          //   axios({
+          //       method:"POST",
+          //       url:api.queryCurrentUserInfo,
+          //       params:{
+          //           pageNum:1,
+          //           pageSize:8
+          //       }
+          //   }).then(function(response){
+          //     //alert(JSON.stringify(response));
+          //     if (response.data.code == 0) {
+          //       var responseData = response.data.datas.list.rows;
+          //       localStorage.personId = responseData[0].WID;
+          //       localStorage.personGh = responseData[0].GH;
+          //       console.log('window.personId:'+localStorage.personId)
+          //       console.log('window.personGh:'+localStorage.personGh)
+          //     }else {
+          //       Toast('获取用户身份信息失败');
+          //     }
+          //   }).catch(function(err){
+          //     Toast(err);
+          //     //Toast('queryCurrentUserInfo');
+          //   });
+          // },
           requestBestRecomendAjax() {
             var self = this;
             //tab页进来重新请求
@@ -249,7 +292,7 @@
                   });
                 }
               }else {
-                Toast('获取数据失败');
+                Toast('获取轮播图数据失败');
               }
             }).catch(function(err){
               Toast(err);
@@ -273,9 +316,11 @@
                     return item;
                   });
                   self.mainDatas[0].tabContent = self.hotApps;
+                  //请求用户身份信息，必须在异步的异步中
+                  //self.queryCurrentUserInfo();
                 } 
               }else {
-                Toast('获取数据失败');
+                Toast('获取热门应用数据失败');
               }
             }).catch(function(err){
               Toast(err);
@@ -301,7 +346,7 @@
                   self.mainDatas[1].tabContent = self.newApps;
                 }  
               }else {
-                Toast('获取数据失败');
+                Toast('获取最新应用数据失败');
               }
             }).catch(function(err){
               Toast(err);
@@ -327,7 +372,7 @@
                   self.mainDatas[2].tabContent = self.customerCases;
                 }
               }else {
-                Toast('获取数据失败');
+                Toast('获取客户案例数据失败');
               }
             }).catch(function(err){
               Toast(err);
@@ -341,8 +386,9 @@
                     pageSize:15
                 }
             }).then(function(response){
-              var responseData = response.data.datas.list.rows;
+              
               if (response.data.code == 0) {
+                var responseData = response.data.datas.list.rows;
                 if (responseData && responseData.length>0) {
                   self.selfDefineTabs = responseData;
                   //循环每一个自定义的tab
@@ -396,8 +442,13 @@
               }
             }).catch(function(err){
               Toast(err);
+              //Toast('zdyTab')
             });
-            
+          },
+          queryFeedBackDatas(){
+            var that = this;
+            that.queryQuestionByProduceId();
+            that.queryQuestionByUserId();
           },
           queryQuestionByProduceId() {
             var self = this;
@@ -406,8 +457,9 @@
                 url:api.queryQuestionByProduceId,
                 params:{}
             }).then(function(response){
-              var responseData = response.data.datas.list.rows;
+              
               if (response.data.code == 0) {
+                var responseData = response.data.datas.list.rows;
                 if (responseData && responseData.length>0) {
                   self.questionArray = responseData;
                 }
@@ -416,12 +468,42 @@
               }
             }).catch(function(err){
               Toast(err);
+              //Toast('queryQuestionByProduceId')
             });  
           },
+          queryQuestionByUserId(){
+            var self = this;
+            axios({
+                method:"POST",
+                url:api.queryQuestionByUserId,
+                params:{}
+            }).then(function(response){
+              //alert(JSON.stringify(response.data));
+              //var responseData = response.data.datas.list.rows;
+              if (response.data.code == 0) {
+                self.questionLength = response.data.datas.list.totalSize;
+              }else {
+                Toast('获取个人问题数据失败');
+              }
+            }).catch(function(err){
+              Toast(err);
+              //Toast('queryQuestionByUserId')
+            }); 
+          },
           getQuestionWithMe(){
+            if (this.questionLength > 0) {
+              this.$router.push({
+                 name: 'questionReplaying',
+                 query: ''
+              });
+            }
+          },
+          goSubClassification(item) {
             this.$router.push({
-               name: 'questionReplaying',
-               query: ''
+              name: 'subClassification',
+              query: {
+                  item: JSON.stringify(item)
+              }
             });
           },
           setImgUrlFromId(id) {
@@ -688,5 +770,11 @@ color: #999;
   top: 0;
   right: -16px;
   display: inline-block;
+}
+.as-index-tabbar .mint-tab-item .mint-tab-item-label {
+  border-right: solid 1px #eee;
+}
+.as-search input.mint-searchbar-core {
+  width:95% !important;
 }
 </style>

@@ -5,12 +5,12 @@
                 <img :src="'./static/assets/ask.png'" style="margin-top:-4px;width:16px;height:16px;"/>
                 <h5 class="" style="font-size: 16px;font-weight: 600;display:inline-block;">有问题,问我们</h5>
             </div>
-            <div style="font-size: 10px;line-height:15px;color: #999;">
+            <div class="bh-pt-4" style="font-size: 14px;line-height:15px;color: #999;">
                 产品实施技术各种问题，统统快速回答
             </div>
         </div>
         <div class="bh-pull-right" style="height:43px;line-height:43px;">
-            <mt-button class=" is-plain" type="primary" size="normal" style="padding: 5px 10px;" @click="goQuickAskContent">快速提问</mt-button>
+            <mt-button class=" is-plain" type="primary" size="normal" style="padding: 0px 10px;font-size: 14px;" @click="goQuickAskContent">快速提问</mt-button>
         </div>
     </div>
 </template>
