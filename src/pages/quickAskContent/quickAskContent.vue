@@ -171,7 +171,8 @@
                       flex: 1,
                       values: [],
                       className: 'slot1',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      defaultIndex:1,
                     }
                 ],
                 popupLineVisible:false,
@@ -183,7 +184,8 @@
                       flex: 1,
                       values: [],
                       className: 'slot2',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      defaultIndex:1
                     }
                 ],
                 popupProductionVisible:false,
@@ -195,7 +197,8 @@
                       flex: 1,
                       values: [],
                       className: 'slot3',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      defaultIndex:1
                     }
                 ],
                 popupSchoolVisible:false,
@@ -222,11 +225,19 @@
             },
             okLineValue(){
                 this.popupLineVisible = false;
-                this.queryTargetTypeApp(this.productionLineCode);
+                this.queryTargetTypeApp(this.productionLineCode,'choose');
             },
             onLineValuesChange(picker, values){
-              this.productionLine = values[0].LBMC;
-              this.productionLineCode = values[0].LBDM;
+                if (values[0] && values[0].LBMC) {
+                    this.productionLine = values[0].LBMC;
+                }
+              
+              console.log('this.productionLineCode:'+this.productionLineCode)
+                if (values[0] && values[0].LBDM) {
+                    this.productionLineCode = values[0].LBDM;
+                }
+              
+              console.log('this.productionLineCode:'+this.productionLineCode)
             },
             //选择产品
             chooseProduction(){
@@ -239,8 +250,13 @@
                 this.popupProductionVisible = false;
             },
             onProductionValuesChange(picker, values){
-              this.productionName = values[0].NAME1;
-              this.productionNameCode = values[0].WID;
+              if (values[0] && values[0].NAME1) {
+                this.productionName = values[0].NAME1;
+              }
+              if (values[0] && values[0].WID) {
+                this.productionNameCode = values[0].WID;
+              }
+              
             },
             //选择学校
             chooseSchool(){
@@ -253,8 +269,10 @@
                 this.popupSchoolVisible = false;
             },
             onSchoolValuesChange(picker, values){
-              this.schoolName = values[0].KHMC;
-              //this.schoolNameCode = values[0].KHBH;
+                if (values[0] && values[0].KHMC) {
+                    this.schoolName = values[0].KHMC;
+                }
+                //this.schoolNameCode = values[0].KHBH;
             },
             //提交保存结果
             saveQuestion(){
@@ -319,10 +337,10 @@
                         Toast('请选择产品');
                         return;
                     }
-                    // if (!that.schoolName) {
-                    //     Toast('请选择学校');
-                    //     return;
-                    // }
+                    if (!that.schoolName) {
+                        Toast('请选择学校');
+                        return;
+                    }
                     if (!that.quTitle) {
                         Toast('请填写问题');
                         return;
@@ -403,6 +421,7 @@
                     if (that.parentRouterInfo.type == 'editQuestion') {//编辑问题
                         that.$router.go(-1);
                     }else if (that.parentRouterInfo.type == 'app'){ //应用详情页的快速提问
+                        localStorage.appSelectedTab = 'question';
                         that.$router.go(-1);
                     }else {//首页的两个快速提问
                         that.$router.push({
@@ -489,6 +508,14 @@
                     var responseData = response.data.datas.list.rows;
                     if (responseData && responseData.length>0) {
                        that.lineSlots[0].values = responseData;
+                       if (that.parentRouterInfo && that.parentRouterInfo.question) {
+                            var targetType = that.parentRouterInfo.question.PRODUCT_CODE ? that.parentRouterInfo.question.PRODUCT_CODE:that.parentRouterInfo.question.APPTYPE;
+                            responseData.forEach(function(item,index){
+                                 if (item.LBDM == targetType) {
+                                     that.lineSlots[0].defaultIndex = index;
+                                 }
+                            });
+                       }
                        that.queryTargetTypeApp(that.lineSlots[0].values[0].LBDM);
                     }
                   }else {
@@ -498,14 +525,19 @@
                   Toast(err);
                 });
             },
-            queryTargetTypeApp(type){
+            queryTargetTypeApp(type,fromTar){
                 var that = this;
                 var tmpType = type;
                 var questionInfo = that.parentRouterInfo.question;
+                console.log('queryTargetTypeApp');
                 if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'editQuestion') {
-                   tmpType = questionInfo.PRODUCT_CODE; 
+                    if (!fromTar) {
+                        tmpType = questionInfo.PRODUCT_CODE;
+                    }
                 }else if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'app') {
-                    tmpType = questionInfo.APPTYPE; 
+                    if (!fromTar) {
+                        tmpType = questionInfo.APPTYPE; 
+                    }
                 }
                 axios({
                     method:"POST",
@@ -516,11 +548,31 @@
                 }).then(function(response){
                   if (response.data.code == 0) {
                     var responseData = response.data.datas.list.rows;
+                    console.log('responseData----------------')
+                    console.log(responseData);
+                    console.log(that.parentRouterInfo.question);
                     if (responseData && responseData.length>0) {
                        that.productionSlots[0].values = responseData;
-                       that.isEditLoadDatas();
+                       if (that.parentRouterInfo && that.parentRouterInfo.question) {
+                            var targetID = that.parentRouterInfo.question.APP_ID?that.parentRouterInfo.question.APP_ID:that.parentRouterInfo.question.WID;
+                           responseData.forEach(function(item,index){
+                                if (item.WID == targetID) {
+                                    that.productionSlots[0].defaultIndex = index;
+                                }else {
+                                    console.log("item.WID:"+item.WID+",that.parentRouterInfo.question.APP_ID:"+that.parentRouterInfo.question.APP_ID);
+                                }
+                           });
+                       }
+                       if (fromTar && fromTar=='choose') {
+
+                       }else {
+                        that.isEditLoadDatas();
+                       }
                     }else {
                         Toast('此产品线无应用');
+                        that.productionName = '';
+                        that.productionNameCode = '';
+                        that.productionSlots[0].values = [];
                     }
                   }else {
                     Toast('查询目标产品失败');
@@ -532,12 +584,20 @@
             isEditLoadDatas(){
                 console.log('isEditLoadDatas---------------')
                 var that = this;
+                sessionStorage.isEditLoadDatas = false;
                 var questionInfo = that.parentRouterInfo.question;
                 if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'editQuestion') {
                     that.productionLine = questionInfo.PRODUCT_CODE_DISPLAY;
                     that.productionLineCode = questionInfo.PRODUCT_CODE;
-                    that.productionName = questionInfo.APP_ID_DISPALY;
-                    that.productionNameCode = questionInfo.APP_ID;
+                    console.log(questionInfo);
+                    setTimeout(function(){
+                        console.log('11:'+that.productionName);
+                        that.productionName = questionInfo.APP_ID_DISPLAY;
+                        console.log('222:'+questionInfo.APP_ID_DISPLAY);
+                        console.log('22:'+that.productionName);
+                        that.productionNameCode = questionInfo.WID; 
+                         console.log('33:'+questionInfo.WID); 
+                    },200);
                     that.schoolName = questionInfo.SCHOOL_CODE;
                     //that.schoolNameCode = questionInfo.SCHOOL_CODE;
                     that.quTitle=questionInfo.TITLE;
@@ -563,10 +623,15 @@
                         });
                     }  
                 }else if (that.parentRouterInfo.type && that.parentRouterInfo.type == 'app') {
+                    console.log(questionInfo);
                     that.productionLine = questionInfo.APPTYPE_DISPLAY;
                     that.productionLineCode = questionInfo.APPTYPE;
-                    that.productionName = questionInfo.NAME1;
-                    that.productionNameCode = questionInfo.APPID; 
+                    console.log('1:'+that.productionName);
+                    setTimeout(function(){
+                        that.productionName = questionInfo.NAME1;
+                        console.log('2:'+that.productionName);
+                        that.productionNameCode = questionInfo.WID;
+                    },200); 
                 }
             },
             takeCamera() {
@@ -580,7 +645,7 @@
                 let takePhoto = BH_MIXIN_SDK.takePhoto;
                 takePhoto((ret) => {
                     this.imgs = this.imgs.concat(ret);
-                }, this.imgLimit - this.imgs.length)
+                }, this.imgLimit - this.imgs.length);
                 //this.uploadImgType = '相册';
             },
             deleteImg(index,item) {
@@ -635,6 +700,7 @@
                 }   
             }else {
                 //查询产品线
+                console.log('编辑新增问题')
                 that.isAddReplay = false;
                 that.queryAppType(); 
                 that.querySchools();

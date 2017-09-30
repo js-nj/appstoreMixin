@@ -42,7 +42,15 @@
                    <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
                  </mt-tab-container-item>
                  <mt-tab-container-item id="question">
-                   <question-item :items="questionArray"></question-item>
+
+                    <question-item :items="questionArray"></question-item>
+                    <div v-show="noQuestion" style="text-align:center;padding-top: 17%;">
+                       <div>
+                           <img :src="'./static/assets/no.png'" style="width:176px;height:176px;">
+                       </div>
+                       <p style="padding-top:16px;font-size: 16px;color: #999;">暂无相关问题</p>
+                    </div>
+
                  </mt-tab-container-item>
                </mt-tab-container>
            </div> 
@@ -85,7 +93,8 @@
                 marginBottomValue:'20px',
                 iwantitTag:true,
                 userInfo:{},
-                questionArray:[]
+                questionArray:[],
+                noQuestion:false
             }
         },
         // computed:{
@@ -225,14 +234,15 @@
                     method:"POST",
                     url:api.queryQuestionByAppId,
                     params:{
-                        appId:that.$route.query.APP_ID
+                        appId:that.$route.query.APP_ID?that.$route.query.APP_ID:that.$route.query.WID
                     }
                 }).then(function(response){
                   if (response.data.code == 0) {
                     if (response.data.datas.list.rows) {
                         that.questionArray = response.data.datas.list.rows;
                     }else {
-                        Toast('没有的相关问题');
+                        //Toast('没有的相关问题');
+                        that.noQuestion = true;
                     }
                   }else {
                     Toast('获取相关问题失败');

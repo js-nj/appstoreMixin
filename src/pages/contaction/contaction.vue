@@ -61,15 +61,13 @@
         methods:{
             saveSalesCustomLog() {
                 var self = this;
-                if (window.env == 'wx') {
-                  if (!self.username) {
-                      Toast('请填写联系人');
-                      return;
-                  }
-                  if (!self.schoolname) {
-                      Toast('请填写学校');
-                      return;
-                  }
+                if (!self.username) {
+                    Toast('请填写联系人');
+                    return;
+                }
+                if (!self.schoolname) {
+                    Toast('请填写学校');
+                    return;
                 }
                 if (self.email) {
                     if (self.email.indexOf('@')==-1) {

@@ -436,18 +436,18 @@
                that.getImg(that.questionInfo.DESC_PIC,that.imgs); 
             }
             if (that.questionInfo.WID) {
-                if (that.questionInfo.TITLE) {
-                    if (that.personId == that.questionInfo.CREATE_MAN) {
-                        that.isMyQuestion = true;
-                    }else {
-                        that.isMyQuestion = false;
-                    }
-                    //从问题列表页跳进来，携带数据
-                    that.querySolveQuestionList();
-                }else{
-                    //从钉钉推送消息中进入
-                    that.queryQuestionDetail();
-                }
+                // if (that.questionInfo.TITLE) {
+                //     if (that.personId == that.questionInfo.CREATE_MAN) {
+                //         that.isMyQuestion = true;
+                //     }else {
+                //         that.isMyQuestion = false;
+                //     }
+                //     //从问题列表页跳进来，携带数据
+                //     that.querySolveQuestionList();
+                // }else{
+                //从钉钉推送消息中进入
+                that.queryQuestionDetail();
+                // }
             }else {
                 Toast('请求地址有误，请重新打开');
             } 
