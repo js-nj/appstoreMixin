@@ -616,8 +616,7 @@
                                         id:item.id
                                     }
                                 });
-                            }
-                             
+                            }    
                         }).catch(function(err){
                          Toast(err);
                         });
