@@ -109,7 +109,7 @@
                   }).catch(function(err){
                     Toast(err);
                   });
-                }else {
+                }else if (window.env == 'bh'){
                   axios({
                       method:"POST",
                       url:api.iWantIt,

@@ -527,7 +527,7 @@
             },
             iWantIt(){
                 var that = this;
-                if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
+                if (window.env == 'bh') {
                     //alert('that.iwantitTag:'+that.iwantitTag +'------------------');
                     if (!that.iwantitTag) {
                         //alert('that.userInfo.userRole:'+that.userInfo.userRole +'------------------');
@@ -563,7 +563,7 @@
                                 APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
                                 info:that.userInfo
                             };
-                            this.$router.push({
+                            that.$router.push({
                               name: 'contaction',
                               query:item
                             });
@@ -571,8 +571,18 @@
                     }else {
                         Toast("已想要");
                     }     
+               }else if(window.env == 'wx') {
+                  var queryObject = that.$route.query;
+                  var item = {
+                      FLAG:'1',
+                      APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
+                  };
+                  that.$router.push({
+                    name: 'contaction',
+                    query:item
+                  });
                }else {
-                Toast("请在今日校园中运行");
+                  Toast('请检查运行环境，是否是微信或者今日校园');
                }
             },
             setImgUrlFromId(id) {
