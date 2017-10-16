@@ -30,8 +30,7 @@
                    <div v-if="introduction">
                        <div class="app-intro-video bh-mt-16" v-if="introduction.VIDEO_URL">
                            <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
-                           <video id="my-video" class="video-js" controls preload="auto" width="100%;" height="230"
-                             poster="" data-setup="{}">
+                           <video id="my-video" class="video-js" controls preload="auto" poster="" data-setup="{}">
                                <source :src="introduction.VIDEO_URL" type='video/mp4'>
                             </video>
                        </div>
@@ -192,6 +191,15 @@
                         that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
                         //设置图片放大功能
                         wechatShare.setImagePhotoSwipe('.app-intro-text img');
+
+                        //设置视频元素的高度
+                        setTimeout(function(){
+                          var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+                          var videoStyle = document.getElementsByClassName("video-js")[0];
+                          //debugger
+                          //console.log(videoStyle);
+                          videoStyle.style.height = (Number(width) * 9 / 16) + 'px';
+                        },50);
                     }else {
                         that.introduction = false; 
                     }
@@ -508,5 +516,6 @@
 }
 .video-js {
   width: 100% !important;
+  /* height:212px !important; */
 }
 </style>
