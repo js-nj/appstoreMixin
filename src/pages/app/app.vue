@@ -28,8 +28,12 @@
                <mt-tab-container v-model="selected" class="bh-mt-4">
                  <mt-tab-container-item id="introduction">
                    <div v-if="introduction">
-                       <div class="app-intro-video" v-if="introduction.VIDEO_URL">
-                           <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe>
+                       <div class="app-intro-video bh-mt-16" v-if="introduction.VIDEO_URL">
+                           <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
+                           <video id="my-video" class="video-js" controls preload="auto" width="100%;" height="230"
+                             poster="" data-setup="{}">
+                               <source :src="introduction.VIDEO_URL" type='video/mp4'>
+                            </video>
                        </div>
                        <div class="app-intro-text bh-ph-8 bh-pt-16" v-html="introduction.APP_INTRODUCE"></div>
                        <!-- 去掉按钮的样式更改 margin-bottom: 60px;-->
@@ -501,5 +505,8 @@
 /*去掉按钮的样式更改*/
 .mint-tab-container-item {
     background-color: #fff;
+}
+.video-js {
+  width: 100% !important;
 }
 </style>

@@ -25,7 +25,7 @@
                     </div> 
                 </li>
                 <div class="as-nullData bh-color-gray-lv2" v-show="allLoaded && items.length>5">暂无更多数据</div>
-            </ul>   
+            </ul> 
         </mt-loadmore>
         
         <!-- 操作按钮 -->

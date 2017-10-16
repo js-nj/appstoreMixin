@@ -49,7 +49,7 @@ export default {
 	//获取目标产品线产品
 	queryAppByType: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryAppByType.do",
 	//给客户发送资料
-	sendAppCustomLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/sendAppCustomLog.do",
+	sendAppCustomLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/sendAppCustomLog.do",
 	//给销售发送资料
 	sendAppSalesLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/sendAppSalesLog.do",
 	//添加回答
@@ -79,5 +79,9 @@ export default {
 	//删除图片
 	deleteImgs: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/qUpload/deleteFile.do',
 	//请求问题详情
-	queryQuestionDetail: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionDetail.do"
+	queryQuestionDetail: WEBPACK_CONIFG_HOST + "sys/appstoreservice/question/queryQuestionDetail.do",
+	//查询销售获取资料详情
+	queryAppIntroduceFjxx: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/queryAppIntroduceFjxx.do",
+	//发送销售获取资料项目
+	sendAppSalesLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/sendAppSalesLog.do"
 }

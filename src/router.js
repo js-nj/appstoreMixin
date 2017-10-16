@@ -9,6 +9,7 @@ import quickAskContent from './pages/quickAskContent/quickAskContent.vue';
 import questionContent from './pages/questionContent/questionContent.vue';
 import questionReplaying from './pages/questionReplaying/questionReplaying.vue';
 import getInfo from './pages/getInfo/getInfo.vue';
+import getInfoCheckbox from './pages/getInfo/getInfoCheckbox.vue';
 export default {
 	routes: [{
 		path: '/',
@@ -54,6 +55,10 @@ export default {
 		path: '/questionReplaying',
 		name: 'questionReplaying',
 		component: questionReplaying
+	}, {
+		path: '/getInfoCheckbox',
+		name: 'getInfoCheckbox',
+		component: getInfoCheckbox
 	}],
 	scrollBehavior(to, from, savedPosition) {
 		return {

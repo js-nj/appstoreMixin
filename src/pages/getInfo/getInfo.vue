@@ -52,38 +52,42 @@
         methods:{
             goSendInfoPage(appid) {
                 var self = this;
-                this.$router.push({
+                self.$router.push({
                    name: 'contaction',
                    query: {appId:self.$route.query.WID}
                 });
             },
             getTargetAppInfo(){
                 var self = this;
-                axios({
-                    method:"POST",
-                    url:api.sendAppSalesLog,
-                    params:{
-                        appId:self.$route.query.WID
-                    }
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    //Toast('发送销售资料成功');
-                    dd.device.notification.alert({
-                        message: "资料已发送至邮箱",
-                        title: "",//可传空
-                        buttonName: "ok",
-                        onSuccess : function() {
-                            //onSuccess将在点击button之后回调
-                            /*回调*/
-                        },
-                        onFail : function(err) {}
-                    });
-                  }else {
-                    Toast('发送销售资料失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
+                self.$router.push({
+                   name: 'getInfoCheckbox',
+                   query: {appId:self.$route.query.WID}
                 });
+                // axios({
+                //     method:"POST",
+                //     url:api.sendAppSalesLog,
+                //     params:{
+                //         appId:self.$route.query.WID
+                //     }
+                // }).then(function(response){
+                //   if (response.data.code == 0) {
+                //     //Toast('发送销售资料成功');
+                //     dd.device.notification.alert({
+                //         message: "资料已发送至邮箱",
+                //         title: "",//可传空
+                //         buttonName: "ok",
+                //         onSuccess : function() {
+                //             //onSuccess将在点击button之后回调
+                //             /*回调*/
+                //         },
+                //         onFail : function(err) {}
+                //     });
+                //   }else {
+                //     Toast('发送销售资料失败');
+                //   }
+                // }).catch(function(err){
+                //   Toast(err);
+                // });
             }
         },
         components:{
