@@ -30,7 +30,8 @@
                    <div v-if="introduction">
                        <div class="app-intro-video bh-mt-16" v-if="introduction.VIDEO_URL">
                            <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
-                           <video id="my-video" class="video-js" controls preload="auto" poster="" data-setup="{}">
+                           <!-- 'http://appstore.campusphere.cn:18080/appstore/appstoredown/emap/store/file/2017/10/e61878721a2942be8a6fad0d18473bcf.mp4' -->
+                           <video id="my-video" controls poster="" class="video-js"  preload="auto"  data-setup="{}">
                                <source :src="introduction.VIDEO_URL" type='video/mp4'>
                             </video>
                        </div>
@@ -198,7 +199,7 @@
                           var videoStyle = document.getElementsByClassName("video-js")[0];
                           //debugger
                           //console.log(videoStyle);
-                          videoStyle.style.height = (Number(width) * 9 / 16) + 'px';
+                          videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
                         },50);
                     }else {
                         that.introduction = false; 

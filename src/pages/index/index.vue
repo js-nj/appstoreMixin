@@ -195,65 +195,6 @@
           document.getElementsByTagName('body')[0].style.height = document.body.clientHeight+'px';
         },
         methods:{
-          // login(){
-          //   var self = this;
-          //   //钉钉上将用户code传递给后台
-          //   if(window.env == 'dt'){
-          //     console.log('dingding --------login')
-          //     dd.runtime.permission.requestAuthCode({
-          //         corpId: 'ding5b727efd1035c355', //企业id
-          //         onSuccess: function(info) {
-          //             console.log('authcode:' + info.code);
-          //             window.authcode = info.code;
-          //             axios({
-          //                 method:"POST",
-          //                 url:api.getUserInfo,
-          //                 params:{
-          //                     weiXincode:window.authcode,
-          //                     openId:""
-          //                 }
-          //             }).then(function(response){
-          //               if (response.data.code == 0) {
-          //                 self.requestBestRecomendAjax();
-          //                 self.queryCurrentUserInfo();
-          //               }else {
-          //                 Toast('发送用户code失败');
-          //               }
-          //             }).catch(function(err){
-          //               Toast(err);
-          //             });
-          //         },
-          //         onFail: function(err) {
-          //             console.log('requestAuthCode fail: ' + JSON.stringify(err));
-          //         }
-          //     });
-          //   }
-          // },
-          // queryCurrentUserInfo(){
-          //   //获取用户身份信息
-          //   axios({
-          //       method:"POST",
-          //       url:api.queryCurrentUserInfo,
-          //       params:{
-          //           pageNum:1,
-          //           pageSize:8
-          //       }
-          //   }).then(function(response){
-          //     //alert(JSON.stringify(response));
-          //     if (response.data.code == 0) {
-          //       var responseData = response.data.datas.list.rows;
-          //       localStorage.personId = responseData[0].WID;
-          //       localStorage.personGh = responseData[0].GH;
-          //       console.log('window.personId:'+localStorage.personId)
-          //       console.log('window.personGh:'+localStorage.personGh)
-          //     }else {
-          //       Toast('获取用户身份信息失败');
-          //     }
-          //   }).catch(function(err){
-          //     Toast(err);
-          //     //Toast('queryCurrentUserInfo');
-          //   });
-          // },
           requestBestRecomendAjax() {
             var self = this;
             //tab页进来重新请求
@@ -277,6 +218,7 @@
                 method:"POST",
                 url:api.appsLbtList,
                 params:{
+                    syAppClassify:'2',
                     pageNum:1,
                     pageSize:8
                 }
@@ -295,6 +237,7 @@
                 Toast('获取轮播图数据失败');
               }
             }).catch(function(err){
+              Toast('appsLbtList');
               Toast(err);
             });
             //热门应用
@@ -302,6 +245,7 @@
                 method:"POST",
                 url:api.appsRmyyList,
                 params:{
+                    syAppClassify:'2',
                     pageNum:1,
                     pageSize:15
                 }
@@ -323,6 +267,7 @@
                 Toast('获取热门应用数据失败');
               }
             }).catch(function(err){
+              //Toast('appsRmyyList');
               Toast(err);
             });
             //最新应用
@@ -330,6 +275,7 @@
                 method:"POST",
                 url:api.appsZxyyList,
                 params:{
+                    syAppClassify:'2',
                     pageNum:1,
                     pageSize:6
                 }
@@ -349,6 +295,7 @@
                 Toast('获取最新应用数据失败');
               }
             }).catch(function(err){
+              //Toast('appsZxyyList');
               Toast(err);
             });
             //客户案例
@@ -356,6 +303,7 @@
                 method:"POST",
                 url:api.appsKhalList,
                 params:{
+                    syAppClassify:'2',
                     pageNum:1,
                     pageSize:6
                 }
@@ -375,6 +323,7 @@
                 Toast('获取客户案例数据失败');
               }
             }).catch(function(err){
+              //Toast('appsKhalList');
               Toast(err);
             });
             //自定义tab类型
@@ -402,6 +351,7 @@
                           method:"POST",
                           url:api.zdyList,
                           params:{
+                              syAppClassify:'2',
                               TAB_ID:sub.WID,
                               pageNum:1,
                               pageSize:6
@@ -431,6 +381,7 @@
                           Toast('获取自定义栏内容失败');
                         }
                       }).catch(function(err){
+                        //Toast('zdyList');
                         Toast(err);
                       });
                       //按照请求数据的顺序先导入父结构
