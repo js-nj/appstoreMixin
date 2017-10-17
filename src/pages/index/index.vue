@@ -385,13 +385,18 @@
               tabType:'as-tabColor-primary'
             }];
             //轮播图数据
+            var appsLbtListOptions = {
+                syAppClassify:'3',//默认今日校园
+                pageNum:1,
+                pageSize:8
+            };
+            if (window.env == 'wx') {
+              appsLbtListOptions.syAppClassify = '1';
+            }
             axios({
                 method:"POST",
                 url:api.appsLbtList,
-                params:{
-                    pageNum:1,
-                    pageSize:8
-                }
+                params:appsLbtListOptions
             }).then(function(response){
               var responseData = response.data.datas.lbtList.rows;
               if (response.data.code == 0) {
@@ -410,13 +415,18 @@
               Toast(err);
             });
             //热门应用
+            var appsRmyyListOptions = {
+                syAppClassify:'3',//默认今日校园
+                pageNum:1,
+                pageSize:6
+            };
+            if (window.env == 'wx') {
+              appsRmyyListOptions.syAppClassify = '1';
+            }
             axios({
                 method:"POST",
                 url:api.appsRmyyList,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
+                params:appsRmyyListOptions
             }).then(function(response){
               var responseData = response.data.datas.rmyyList.rows;
               if (response.data.code == 0) {
@@ -436,13 +446,18 @@
               Toast(err);
             });
             //最新应用
+            var appsZxyyListOptions = {
+                syAppClassify:'3',//默认今日校园
+                pageNum:1,
+                pageSize:6
+            };
+            if (window.env == 'wx') {
+              appsZxyyListOptions.syAppClassify = '1';
+            }
             axios({
                 method:"POST",
                 url:api.appsZxyyList,
-                params:{
-                    pageNum:1,
-                    pageSize:6
-                }
+                params:appsZxyyListOptions
             }).then(function(response){
               var responseData = response.data.datas.zxyyList.rows;
               if (response.data.code == 0 ) {
@@ -462,13 +477,18 @@
               Toast(err);
             });
             //客户案例
+            var appsKhalListOptions = {
+                syAppClassify:'3',//默认今日校园
+                pageNum:1,
+                pageSize:6
+            };
+            if (window.env == 'wx') {
+              appsKhalListOptions.syAppClassify = '1';
+            }
             axios({
                 method:"POST",
                 url:api.appsKhalList,
-                params:{
-                    pageNum:1,
-                    pageSize:6
-                }
+                params:appsKhalListOptions
             }).then(function(response){
               var responseData = response.data.datas.khalList.rows;
               if (response.data.code == 0) {
@@ -507,14 +527,19 @@
                       sub.tabName = sub.NAME1;
                       sub.tabContent = [];
                       //请求对应tab内的list内容
+                      var zdyListOptions = {
+                          TAB_ID:sub.WID,
+                          syAppClassify:'3',//默认今日校园
+                          pageNum:1,
+                          pageSize:6
+                      };
+                      if (window.env == 'wx') {
+                        zdyListOptions.syAppClassify = '1';
+                      }
                       axios({
                           method:"POST",
                           url:api.zdyList,
-                          params:{
-                              TAB_ID:sub.WID,
-                              pageNum:1,
-                              pageSize:6
-                          }
+                          params:zdyListOptions
                       }).then(function(subresponse){
                         var subresponseData = subresponse.data.datas.zdyList.rows;
                         if (subresponse.data.code == 0) {
