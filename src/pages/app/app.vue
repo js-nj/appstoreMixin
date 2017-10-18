@@ -10,7 +10,7 @@
            </div>
            <div class="bh-clearfix bh-pl-16 bh-pv-8 app-info bh-color-gray-lv2">
                <div style="border-top: solid 1px #eee;">
-                   <div class="app-col-6 bh-pv-8">应用类型：<label> {{appInfo.TYPE}}</label></div>
+                   <div class="app-col-6 bh-pv-8">应用类型：<label> {{appInfo.APPCLASSIFY_DISPLAY}}</label></div>
                    <div class="app-col-6 bh-pv-8" style="display:none;">版本号：<label>{{appInfo.VERSION}} </label></div>
                    <div class="app-col-6 bh-pv-8" style="display:none;">价格（￥）：<label>{{appInfo.PRICE}} </label></div>
                    <div class="app-col-6 bh-pv-8">厂商：<label>{{appInfo.FACTORY}} </label></div>
