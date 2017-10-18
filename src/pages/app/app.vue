@@ -9,7 +9,7 @@
         </div>
         <div class="bh-clearfix bh-pl-16 bh-pv-8 app-info bh-color-gray-lv2">
             <div style="border-top: solid 1px #eee;">
-                <div class="app-col-6 bh-pv-8">应用类型：<label> {{appInfo.APPCLASSIFY_DISPLAY}}</label></div>
+                <div class="app-col-6 bh-pv-8">应用分类：<label> {{appInfo.APPCLASSIFY_DISPLAY}}</label></div>
                 <div class="app-col-6 bh-pv-8" style="display:none;">版本号：<label>{{appInfo.VERSION}} </label></div>
                 <div class="app-col-6 bh-pv-8" style="display:none;">价格（￥）：<label>{{appInfo.PRICE}} </label></div>
                 <div class="app-col-6 bh-pv-8">厂商：<label>{{appInfo.FACTORY}} </label></div>
@@ -26,7 +26,7 @@
             <mt-tab-container v-model="selected" class="bh-mt-4">
               <mt-tab-container-item id="introduction">
                 <div v-if="introduction">
-                    <div class="app-intro-video" v-if="introduction.VIDEO_URL">
+                    <div class="app-intro-video bh-mt-16" v-if="introduction.VIDEO_URL">
                         <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
                         <video id="my-video" controls poster="" class="video-js"  preload="auto"  data-setup="{}">
                             <source :src="introduction.VIDEO_URL" type='video/mp4'>
@@ -220,6 +220,10 @@
 .mint-tab-container-item {
     background-color: #fff;
 }
+.video-js {
+  width: 100% !important;
+  /* height:212px !important; */
+}
 </style>
 <script>
     import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
@@ -358,6 +362,14 @@
                         that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
                         //设置图片放大功能
                         wechatShare.setImagePhotoSwipe('.app-intro-text img');
+                        //设置视频元素的高度
+                        setTimeout(function(){
+                          var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+                          var videoStyle = document.getElementsByClassName("video-js")[0];
+                          //debugger
+                          //console.log(videoStyle);
+                          videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
+                        },100);
                     }else {
                         that.introduction = false; 
                     }
