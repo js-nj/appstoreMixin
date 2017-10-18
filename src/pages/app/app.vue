@@ -9,7 +9,7 @@
         </div>
         <div class="bh-clearfix bh-pl-16 bh-pv-8 app-info bh-color-gray-lv2">
             <div style="border-top: solid 1px #eee;">
-                <div class="app-col-6 bh-pv-8">应用类型：<label> {{appInfo.TYPE}}</label></div>
+                <div class="app-col-6 bh-pv-8">应用类型：<label> {{appInfo.APPCLASSIFY_DISPLAY}}</label></div>
                 <div class="app-col-6 bh-pv-8" style="display:none;">版本号：<label>{{appInfo.VERSION}} </label></div>
                 <div class="app-col-6 bh-pv-8" style="display:none;">价格（￥）：<label>{{appInfo.PRICE}} </label></div>
                 <div class="app-col-6 bh-pv-8">厂商：<label>{{appInfo.FACTORY}} </label></div>
@@ -27,7 +27,10 @@
               <mt-tab-container-item id="introduction">
                 <div v-if="introduction">
                     <div class="app-intro-video" v-if="introduction.VIDEO_URL">
-                        <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe>
+                        <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
+                        <video id="my-video" controls poster="" class="video-js"  preload="auto"  data-setup="{}">
+                            <source :src="introduction.VIDEO_URL" type='video/mp4'>
+                        </video>
                     </div>
                     <div class="app-intro-text bh-ph-8 bh-pt-16" v-html="introduction.APP_INTRODUCE"></div>
                     <!-- 去掉按钮的样式更改 margin-bottom: 60px;-->
@@ -61,7 +64,7 @@
                 <div class="app-col-6" >
                     <i class="iconfont icon-dianhua as-color-warning-lv2"></i>
                     <div class="app-button-text">
-                        <a class="app-tel-line" :href="telephone">联系我</a>
+                        <a class="app-tel-line" :href="telephone">联系厂商</a>
                     </div>
                 </div>   
             </div>
@@ -443,6 +446,8 @@
                                 }).catch(function(err){
                                   Toast(err);
                                 });
+                            }else if (info.userRole == 'TEACHER') {
+                                that.iwantitTag = false;
                             }
                         });  
                     }

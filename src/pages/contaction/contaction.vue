@@ -119,14 +119,15 @@
                           userBh:parentRouterInfo.info.studentNo,//学号
                           zw:'',//职务
                           schoolBh:parentRouterInfo.info.tenant,//学校编码
-                          email:parentRouterInfo.info.email,
+                          email:self.email,
                           schoolName:parentRouterInfo.info.tenantShortName,//学校名称
-                          userTel:parentRouterInfo.info.telePhone,//电话号码
+                          userTel:self.phone,//电话号码
                           userType:parentRouterInfo.info.userRole,//用户类型
                       }
                   }).then(function(response){
                     if (response.data.code == 0) {
                       Toast('想要成功');
+                      history.back();
                       // that.billSelectedTag = true;
                       // that.asBillUncheck = true;
                     }else {
