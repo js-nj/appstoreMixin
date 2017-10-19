@@ -33,8 +33,9 @@ if (window.env == 'dt') {
         Init();
     }, {
         wx: {
-            debug: false,
             url: WEBPACK_CONIFG_HOST + 'sys/appstoreservice/users/ticks.do',
+            signData: '',
+            debug: false,
             corp: ''
         }
     })
