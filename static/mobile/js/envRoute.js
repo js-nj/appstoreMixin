@@ -51,6 +51,9 @@
     } else if (/wisedu/.test(navigator.userAgent.toLowerCase())) {
         /*今日校园环境下*/
         window.env = 'bh';
+    } else if (/dingtalk/.test(navigator.userAgent.toLowerCase())) {
+        /*今日校园环境下*/
+        window.env = 'dt';
     } else {
         /*今日校园环境下*/
         window.env = 'bh';
