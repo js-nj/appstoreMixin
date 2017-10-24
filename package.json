@@ -17,7 +17,8 @@
     "bh-mint-ui2": "^0.0.10",
     "vue": "^2.1.0",
     "vue-router": "2.7.0",
-    "lodash": "4.17.4"
+    "lodash": "4.17.4",
+    "echarts": "3.7.2"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",

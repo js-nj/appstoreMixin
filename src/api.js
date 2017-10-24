@@ -83,5 +83,9 @@ export default {
 	//查询销售获取资料详情
 	queryAppIntroduceFjxx: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/queryAppIntroduceFjxx.do",
 	//发送销售获取资料项目
-	sendAppSalesLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/sendAppSalesLog.do"
+	sendAppSalesLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/send/sendAppSalesLog.do",
+	//应用核心数据
+	data: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/data.do",
+	//数据-案例卡片
+	customerData: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/customerData.do",
 }

@@ -20,7 +20,7 @@
            <div class="app-tab-container" :style="{height:appTabContainerHeight}">
                <mt-navbar v-model="selected">
                  <mt-tab-item id="introduction">介绍</mt-tab-item>
-                 <mt-tab-item id="case">案例</mt-tab-item>
+                 <mt-tab-item id="case">数据</mt-tab-item>
                  <mt-tab-item id="question">问题</mt-tab-item>
                </mt-navbar>
 
@@ -29,8 +29,6 @@
                  <mt-tab-container-item id="introduction">
                    <div v-if="introduction">
                        <div class="app-intro-video bh-mt-16" v-if="introduction.VIDEO_URL">
-                           <!-- <iframe class="app-intro-video-iframe" :src="introduction.VIDEO_URL" allowFullScreen="true" quality="high" width="100%" height="230" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></iframe> -->
-                           <!-- 'http://appstore.campusphere.cn:18080/appstore/appstoredown/emap/store/file/2017/10/e61878721a2942be8a6fad0d18473bcf.mp4' -->
                            <video id="my-video" controls poster="" class="video-js"  preload="auto"  data-setup="{}">
                                <source :src="introduction.VIDEO_URL" type='video/mp4'>
                             </video>
@@ -43,7 +41,101 @@
                    </div>   
                  </mt-tab-container-item>
                  <mt-tab-container-item id="case">
-                   <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
+                   <!-- <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case> -->
+                   <div class="data-case bh-ph-16 bh-mh-4 bh-pv-16" style="display:none;">
+                     <div class="bh-pb-8 as-color-999">标杆案例数据</div>
+                     <div class="data-border-radius bh-ph-8" @click="goCustomerCase">
+                       <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                         <div class="bh-pull-left data-case-school">{{customerDataTmp.SCHOOL_BM_DISPLAY}}</div>
+                         <label class="bh-pull-right data-case-updateTime">
+                          更新于 <label>{{customerDataTmp.DATA_UPDATE_TIME}}</label>
+                          <span class="data-case-arrow"></span>
+                         </label>
+                       </div>
+                       <div class="bh-clearfix bh-text-center bh-pv-8" style="border-top:solid 1px #ddd;">
+                         <div class="as-col-md-4">
+                           <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.HYD}}</h5>
+                           <div class="bh-pb-8 as-color-666">活跃度</div>
+                         </div>
+                         <div class="as-col-md-4">
+                           <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.LLS}}</h5>
+                           <div class="bh-pb-8 as-color-666">30日浏览数(PV)</div>
+                         </div>
+                         <div class="as-col-md-4">
+                           <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.SYS}}</h5>
+                           <div class="bh-pb-8 as-color-666">30日使用数(UV)</div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="data-main bh-ph-16 bh-mh-4 bh-pv-16">
+                     <div class="bh-pb-8 as-color-999">应用核心数据</div>
+                     <div class="main-container">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">应用数据概况</div>
+                           <label class="bh-pull-right">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class="bh-clearfix bh-text-center bh-pv-8">
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">{{mainDatas.ZHPM}}</h5>
+                             <div class="bh-pb-8">综合排名</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">{{mainDatas.HYD}}</h5>
+                             <div class="bh-pb-8">活跃度</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">{{mainDatas.FGL}}</h5>
+                             <div class="bh-pb-8">覆盖率</div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="data-sex bh-ph-16 bh-mh-4 bh-pv-16" style="display:none;">
+                    <div style="border:solid 1px #ddd;border-radius:4px;">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户性别分布</div>
+                          <label class="bh-pull-right">更新于 <span>2017-02-25</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="sexEchart" class="data-echart">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="sex-uls">
+                            <li><span style="background: #4E7CCC;"></span><label>男</label><label>54.3%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>男</label><label>54.3%</label></li>
+                            <li><span style="background: #36B3C3;"></span><label>男</label><label>54.3%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-16" style="display:none;">
+                    <div style="border:solid 1px #ddd;border-radius:4px;">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户角色分布</div>
+                          <label class="bh-pull-right" >更新于 <span>2017-02-25</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="roleEchart" class="data-echart" style="">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="role-uls bh-pt-32">
+                            <li><span style="background: #4E7CCC;"></span><label>教师</label><label>54.3%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>学生</label><label>54.3%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
                  </mt-tab-container-item>
                  <mt-tab-container-item id="question">
 
@@ -60,14 +152,14 @@
            </div> 
         </div>
         <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-bh':!envFlag}">
-            <div class="app-button bh-pv-4">
+            <!-- <div class="app-button bh-pv-4">
                 <div class="app-col-6" style="display:none;">
                     <i class="iconfont icon-dianhua as-color-warning-lv2"></i>
                     <div class="app-button-text">
                         <a class="app-tel-line" :href="telephone">联系我</a>
                     </div>
                 </div>   
-            </div>
+            </div> -->
             <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16" @click="goQuickAskPage">快速提问</div>
             <div type="warning" class="app-button as-bgColor-warning-lv1 bh-color-white bh-pv-16" @click="goGetInfoPage">获取资料</div>
         </div>
@@ -80,6 +172,7 @@
     import questionItem from '../../components/questionItem.vue';
     import api from '../../api.js';
     import axios  from 'axios';
+    import echarts from 'echarts';
     import wechatShare from '../../../static/mobile/js/wechatShare.js';
     export default {
         data () {
@@ -98,18 +191,17 @@
                 iwantitTag:true,
                 userInfo:{},
                 questionArray:[],
-                noQuestion:false
+                noQuestion:false,
+                mainDatas:{},
+                customerDataTmp:{
+                  'SCHOOL_BM_DISPLAY':'1',
+                  'DATA_UPDATE_TIME':'2',
+                  'HYD':'3',
+                  'LLS':'4',
+                  'SYS':'5'
+                }
             }
         },
-        // computed:{
-        //     marginBottomValue:function(){
-        //         if (window.env == 'wx') {
-        //             return '20px';
-        //         }else {
-        //             return '60px';
-        //         }
-        //     }
-        // },
         methods:{
             appMain() {
                 var that = this;
@@ -128,7 +220,7 @@
                 //设置billdetail框部分的高度
                 //this.appContainerHeight = (document.body.clientHeight) + 'px';
                 //下面写法在ios上存在兼容性
-                this.appContainerHeight = (document.body.clientHeight) - 50 + 'px';
+                this.appContainerHeight = (document.body.clientHeight) - 47 + 'px';
                 BH_MIXIN_SDK.setTitleText('应用详情');
                 //应用详情
                 var option = {
@@ -158,13 +250,8 @@
                         var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
                         var targetUrlHash = window.location.href.split('#/')[1];
                         targetUrlHash = targetUrlHash.split('&type=')[0];
-                        
                         var tmpHref = window.location.href;
-                        //console.log('99999999:'+window.location.href);
-                        //tmpHref = tmpHref.replace('123',targetUrlHash);
                         tmpHref = tmpHref.replace('#/',',');
-                        //console.log('55555555:'+tmpHref);
-                        
                     }
                   }else {
                     Toast('获取详情数据失败');
@@ -182,23 +269,18 @@
                     if (response.data.datas.introdure.rows && response.data.datas.introdure.rows.length>0 ) {
                         that.introduction = response.data.datas.introdure.rows[0];
                         if (that.introduction.VIDEO_URL) {
-                            //that.introduction.VIDEO_URL = 'http://player.youku.com/embed/'+ that.introduction.VIDEO_URL;
                             that.introduction.VIDEO_URL = that.introduction.VIDEO_URL;
                         }
                         var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
                         var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
                         that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(regString,totalUrl);
-
                         that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
                         //设置图片放大功能
                         wechatShare.setImagePhotoSwipe('.app-intro-text img');
-
                         //设置视频元素的高度
                         setTimeout(function(){
                           var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
                           var videoStyle = document.getElementsByClassName("video-js")[0];
-                          //debugger
-                          //console.log(videoStyle);
                           videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
                         },50);
                     }else {
@@ -210,38 +292,93 @@
                 }).catch(function(err){
                   Toast(err);
                 });
-                //应用tab案例
+                //数据-应用核心数据
                 axios({
                     method:"POST",
-                    url:api.appsCustomer,
-                    params:appOption
+                    url:api.data,
+                    params:{
+                      appId:appOption.APP_ID
+                    }
                 }).then(function(response){
                   if (response.data.code == 0) {
-                    if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
-                        // that.customInfo = {};
-                        that.customInfo = response.data.datas.customer.rows[0];
-                        if(that.customInfo.INFORMATION){
-                            // var regString = /getFileByToken\/(\w+)\.do/g;
-                            // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
-                            var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
-                            var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
-
-                            //设置图片放大功能
-                            wechatShare.setImagePhotoSwipe('.app-case-text img');
-                        }
+                    if (response.data.datas.list.rows && response.data.datas.list.rows.length>0) {
+                        that.mainDatas = response.data.datas.list.rows[0];
+                    }else {
+                      Toast('暂无应用核心数据');
                     }
                   }else {
-                    Toast('获取案例数据失败');
+                    Toast('获取应用核心数据失败');
                   }
                 }).catch(function(err){
                   Toast(err);
                 });
+                // //数据-案例卡片
+                // axios({
+                //     method:"POST",
+                //     url:api.customerData,
+                //     params:{
+                //       appId:appOption.APP_ID
+                //     }
+                // }).then(function(response){
+                //   if (response.data.code == 0) {
+                //     var responseData = response.data.datas.list.rows;
+                //     if (responseData && responseData.length>0) {
+                //       if (!responseData[0].HYD) {
+                //         responseData[0].HYD = 0;
+                //       }
+                //       if (!responseData[0].LLS) {
+                //         responseData[0].LLS = 0;
+                //       }
+                //       if (!responseData[0].SYS) {
+                //         responseData[0].SYS = 0;
+                //       }
+                //       if (!responseData[0].DATA_UPDATE_TIME) {
+                //         responseData[0].DATA_UPDATE_TIME = '无';
+                //       }
+                //       if (!responseData[0].SCHOOL_BM_DISPLAY) {
+                //         responseData[0].SCHOOL_BM_DISPLAY = '无';
+                //       }
+                //       that.customerDataTmp = responseData[0];
+                //     }else {
+                //       Toast('暂无卡片案例数据数据');
+                //     }
+                //   }else {
+                //     Toast('获取卡片案例数据失败');
+                //   }
+                // }).catch(function(err){
+                //   Toast(err);
+                // });
+                //应用tab案例
+                // axios({
+                //     method:"POST",
+                //     url:api.appsCustomer,
+                //     params:appOption
+                // }).then(function(response){
+                //   if (response.data.code == 0) {
+                //     if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
+                //         // that.customInfo = {};
+                //         that.customInfo = response.data.datas.customer.rows[0];
+                //         if(that.customInfo.INFORMATION){
+                //             // var regString = /getFileByToken\/(\w+)\.do/g;
+                //             // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
+                //             var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
+                //             var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
+                //             that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
+                //             that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
+
+                //             //设置图片放大功能
+                //             wechatShare.setImagePhotoSwipe('.app-case-text img');
+                //         }
+                //     }
+                //   }else {
+                //     Toast('获取案例数据失败');
+                //   }
+                // }).catch(function(err){
+                //   Toast(err);
+                // });
                 
                 //设置app tab框部分的高度
                 this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
-                
                 //查询应用相关的问题
                 axios({
                     method:"POST",
@@ -312,22 +449,115 @@
                     WID:this.appInfo.WID
                   }
                 });
+            },
+            goCustomerCase() {
+              var that = this;
+              axios({
+                  method:"POST",
+                  url:api.appsCustomer,
+                  params:{'APP_ID':that.$route.query.APP_ID}
+              }).then(function(response){
+                if (response.data.code == 0) {
+                  if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
+                      that.$router.push({
+                        name: 'custom',
+                        query:response.data.datas.customer.rows[0]
+                      });
+                  }
+                }else {
+                  Toast('获取案例数据失败');
+                }
+              }).catch(function(err){
+                Toast(err);
+              });
             }
+        },
+        mounted () {
+          //debugger
+          // let sexEchart = echarts.init(document.getElementById('sexEchart'));
+          // var options = {
+          //   series: [
+          //       {
+          //           name:'',
+          //           type:'pie',
+          //           radius: ['60%', '95%'],
+          //           avoidLabelOverlap: false,
+          //           label: {
+          //               normal: {
+          //                   show: false,
+          //                   position: 'center'
+          //               },
+          //               emphasis: {
+          //                   show: false,
+          //                   textStyle: {
+          //                       fontSize: '30',
+          //                       fontWeight: 'bold'
+          //                   }
+          //               }
+          //           },
+          //           labelLine: {
+          //               normal: {
+          //                   show: false
+          //               }
+          //           },
+          //           data:[
+          //               {value:50, name:'男'},
+          //               {value:30, name:'女'},
+          //               {value:20, name:'其他'},
+          //           ]
+          //       }
+          //   ],
+          //   color:['#4E7CCC','#4ECDA5','#36B3C3']
+          // };
+          // sexEchart.setOption(options);
+          // let roleEchart = echarts.init(document.getElementById('roleEchart'));
+          // var options = {
+          //   series: [
+          //       {
+          //           name:'',
+          //           type:'pie',
+          //           radius: ['60%', '95%'],
+          //           avoidLabelOverlap: false,
+          //           label: {
+          //               normal: {
+          //                   show: false,
+          //                   position: 'center'
+          //               },
+          //               emphasis: {
+          //                   show: false,
+          //                   textStyle: {
+          //                       fontSize: '30',
+          //                       fontWeight: 'bold'
+          //                   }
+          //               }
+          //           },
+          //           labelLine: {
+          //               normal: {
+          //                   show: false
+          //               }
+          //           },
+          //           data:[
+          //               {value:50, name:'教师'},
+          //               {value:30, name:'学生'},
+          //           ]
+          //       }
+          //   ],
+          //   color:['#4E7CCC','#4ECDA5']
+          // };
+          // roleEchart.setOption(options);
+          
         },
         watch:{
             selected:function(value,oldvalue){
                 switch(value){
                   case 'introduction':
                         localStorage.appSelectedTab = 'introduction';
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
                         break;
                   case 'case':
                         localStorage.appSelectedTab = 'case';
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
                         break;
                   case 'question':
                         localStorage.appSelectedTab = 'question';
-                        //document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
                         break;
                 }
             },
@@ -342,6 +572,19 @@
               that.selected = localStorage.appSelectedTab;
             }
             that.appMain();
+            // dd.biz.util.share({
+            //     type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
+            //     url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html#/app?APP_ID=dc92e66d663046cb952c40c57c2abe48',
+            //     title: '我是来自钉钉的分享',
+            //     content: '我分享的地址是今日校园的',
+            //     image: 'www.baidu.com/img/bd_logo1.png',
+            //     onSuccess : function() {
+            //         alert('分享成功');
+            //     },
+            //     onFail : function(err) {
+            //       alert(err);
+            //     }
+            // });
         },
         components:{
             [Button.name]: Button,
@@ -445,7 +688,7 @@
     display: flex;
 }
 .app-button {
-    width: 33.33%;
+    width: 50%;
     float: left;
     font-size: 16px;
     position: relative;
@@ -519,4 +762,80 @@
   width: 100% !important;
   /* height:212px !important; */
 }
+.data-case-arrow {
+  display: inline-block;
+  width:8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border-top: solid 1px #666;
+  border-right: solid 1px #666;
+}
+.sex-uls {
+  padding: 8px 0;
+}
+.sex-uls li {
+  padding: 4px 4px;
+  font-size:16px;
+}
+.sex-uls li span {
+  display: inline-block;
+  width:8px;
+  height:8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  background: #666;
+}
+.role-uls {
+  padding: 8px 0;
+}
+.role-uls li {
+  padding: 4px 4px;
+  font-size:16px;
+}
+.role-uls li span {
+  display: inline-block;
+  width:8px;
+  height:8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  background: #666;
+}
+.sex-uls li label {
+  display: inline-block;
+  padding-right: 32px;
+}
+.data-main .main-container {
+    border:solid 1px #ddd;
+    border-radius:4px;
+    background-color:#0D152F;
+    color:#fff;
+}
+ .data-main .main-container > div{
+  background: url(../../../static/assets/main-background.png) top center no-repeat;
+    background-size: 100% 100%;
+ }
+ .data-border-radius {
+  border:solid 1px #ddd;border-radius:4px;
+ }
+ .data-case-school {
+  font-size:18px;font-weight: 600;
+ }
+ .data-case-updateTime {
+  color:#666;line-height: 24px;
+ }
+  .data-case-updateTime label{
+  display:inline-block;padding:0 4px;
+  }
+  .data-main-title {
+    font-size:14px;line-height: 14px;font-weight: 600;border-left:solid 2px #27EFA6;padding-left:8px;
+  }
+  .data-main-title label {
+    color:rgba(255,255,255,0.23);line-height: 14px;
+  }
+  .data-main-title label span {
+    display:inline-block;padding:0 4px;
+  }
+  .data-echart {
+    width:106px;height:106px;margin:0 auto;
+  }
 </style>

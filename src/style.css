@@ -94,3 +94,20 @@ body > a[title="站长统计"] {
 .mint-badge.is-primary {
     background-color: rgba(38,150,255,0.4) !important;
 }
+.as-col-md-4 {
+    float: left;
+    width:33.33%;
+}
+.as-col-md-6 {
+    float: left;
+    width:50%;
+}
+.as-color-666 {
+    color:#666;
+}
+.as-color-999 {
+    color:#999;
+}
+.as-font-weight {
+    font-weight: 600;
+}
