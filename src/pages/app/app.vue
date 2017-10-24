@@ -463,6 +463,8 @@
                             }
                         });  
                     }
+                } else if (window.env == 'dt') {
+                    that.iwantitTag = false;
                 }
                 
                 //设置app tab框部分的高度
@@ -598,8 +600,18 @@
                     name: 'contaction',
                     query:item
                   });
-               }else {
-                  Toast('请检查运行环境，是否是微信或者今日校园');
+               }else if(window.env == 'dt') {
+                    //Toast('请检查运行环境，是否是微信或者今日校园');
+                    var queryObject = that.$route.query;
+                    var item = {
+                        FLAG:'1',
+                        APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
+                        info:{}
+                    };
+                    that.$router.push({
+                      name: 'contaction',
+                      query:item
+                    });
                }
             },
             setImgUrlFromId(id) {

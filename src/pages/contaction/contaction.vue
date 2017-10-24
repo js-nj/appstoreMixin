@@ -136,6 +136,27 @@
                   }).catch(function(err){
                     Toast(err);
                   });
+                }else if (window.env == 'dt') {
+                  axios({
+                      method:"POST",
+                      url:api.saveShareLog,
+                      params:{
+                          appId:parentRouterInfo.APP_ID,//应用id
+                          email:self.email,
+                          linkWay:self.phone
+                      }
+                  }).then(function(response){
+                    if (response.data.code == 0) {
+                      Toast('想要成功');
+                      history.back();
+                      // that.billSelectedTag = true;
+                      // that.asBillUncheck = true;
+                    }else {
+                      Toast('再试一次~');
+                    }
+                  }).catch(function(err){
+                    Toast(err);
+                  });
                 }
             },
             loginUserInfo(){

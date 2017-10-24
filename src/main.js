@@ -23,9 +23,9 @@ let Init = () => {
 console.log('init start----------------');
 console.log(init);
 if (window.env == 'dt') {
-    // window.BH_MIXIN_SDK = {
-    //     setTitleText: function() {}
-    // };
+    window.BH_MIXIN_SDK = {
+        setTitleText: function() {}
+    };
     // 支持钉钉上的分享的页面
     Init();
 } else {
