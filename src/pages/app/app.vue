@@ -243,7 +243,7 @@
                 telephone:'',
                 appContainerHeight:'',
                 asBillUncheck:false,
-                envFlag:false,
+                envFlag:true,
                 marginBottomValue:'60px',
                 iwantitTag:true,
                 userInfo:{}
@@ -411,24 +411,25 @@
                 /*不同的环境需要不同的检查*/
                 //alert(window.env)
                 if (window.env =='wx') {
+                    that.iwantitTag = false;
                     //检查应用是否已经加入清单
-                    axios({
-                       method:"POST",
-                       url:api.checkBills,
-                       params:appOption
-                    }).then(function(response){
-                     if (response.data.code == 0) {
-                       if (response.data.datas.checkBills.totalSize>0) {
-                           that.billSelectedTag = true;
-                       }else {
-                           that.billSelectedTag = false;
-                       }
-                     }else {
-                       //Toast('检查应用是否加入清单失败');
-                     }
-                    }).catch(function(err){
-                        Toast(err);
-                    }); 
+                    // axios({
+                    //    method:"POST",
+                    //    url:api.checkBills,
+                    //    params:appOption
+                    // }).then(function(response){
+                    //  if (response.data.code == 0) {
+                    //    if (response.data.datas.checkBills.totalSize>0) {
+                    //        that.billSelectedTag = true;
+                    //    }else {
+                    //        that.billSelectedTag = false;
+                    //    }
+                    //  }else {
+                    //    //Toast('检查应用是否加入清单失败');
+                    //  }
+                    // }).catch(function(err){
+                    //     Toast(err);
+                    // }); 
                 }else if(window.env == 'bh') {
                      if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
                         BH_MIXIN_SDK.bh.cpdaily.getUserInfo(function(info){
@@ -465,6 +466,8 @@
                         });  
                     }
                 } else if (window.env == 'dt') {
+                    that.iwantitTag = false;
+                } else {
                     that.iwantitTag = false;
                 }
                 

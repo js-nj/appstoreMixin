@@ -64,16 +64,16 @@
         methods:{
             contactUs() {
                 var self = this;
-                if (window.env == 'wx') {
-                  if (!self.username) {
-                      Toast('请填写联系人');
-                      return;
-                  }
-                  if (!self.schoolname) {
-                      Toast('请填写学校');
-                      return;
-                  }
-                }
+                // if (window.env == 'wx') {
+                //   if (!self.username) {
+                //       Toast('请填写联系人');
+                //       return;
+                //   }
+                //   if (!self.schoolname) {
+                //       Toast('请填写学校');
+                //       return;
+                //   }
+                // }
                 if (self.email) {
                     if (self.email.indexOf('@')==-1) {
                         Toast('邮箱格式不正确');
@@ -88,27 +88,47 @@
                 if (window.env == 'wx') {
                   axios({
                       method:"POST",
-                      url:api.saveUserInfo,
+                      url:api.saveShareLog,
                       params:{
-                          LXR:self.username,
-                          XX:self.schoolname,
-                          LXFS:self.phone?self.phone:'',
-                          YX:self.email,
-                          FLAG:parentRouterInfo.FLAG,
-                          APP_ID:parentRouterInfo.APP_ID
+                          appId:parentRouterInfo.APP_ID,//应用id
+                          email:self.email,
+                          linkWay:self.phone
                       }
                   }).then(function(response){
-                    //debugger
                     if (response.data.code == 0) {
-                      Toast('提交信息成功');
+                      Toast('想要成功');
                       history.back();
+                      // that.billSelectedTag = true;
+                      // that.asBillUncheck = true;
                     }else {
-                      Toast('提交信息失败');
-                      history.back();
+                      Toast('再试一次~');
                     }
                   }).catch(function(err){
                     Toast(err);
                   });
+                  // axios({
+                  //     method:"POST",
+                  //     url:api.saveUserInfo,
+                  //     params:{
+                  //         LXR:self.username,
+                  //         XX:self.schoolname,
+                  //         LXFS:self.phone?self.phone:'',
+                  //         YX:self.email,
+                  //         FLAG:parentRouterInfo.FLAG,
+                  //         APP_ID:parentRouterInfo.APP_ID
+                  //     }
+                  // }).then(function(response){
+                  //   //debugger
+                  //   if (response.data.code == 0) {
+                  //     Toast('提交信息成功');
+                  //     history.back();
+                  //   }else {
+                  //     Toast('提交信息失败');
+                  //     history.back();
+                  //   }
+                  // }).catch(function(err){
+                  //   Toast(err);
+                  // });
                 }else if (window.env == 'bh'){
                   axios({
                       method:"POST",
@@ -188,9 +208,10 @@
         created() {
             var that = this;
             if (window.env == 'wx') {
-                that.envFlag = false;
+                that.envFlag = true;
                 //只有微信环境下才回显联系数据
-                that.loginUserInfo();
+                //that.envFlag = false;
+                //that.loginUserInfo();
             }else {
                 that.envFlag = true;
             }
