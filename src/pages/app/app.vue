@@ -271,6 +271,21 @@
                 // }
                 var routeApp = {};
                 routeApp = that.$route.query;
+                //添加钉钉分享的链接，再次被打开时，发送log
+                if (routeApp.linkWid) {
+                    //检查应用是否已经加入清单
+                    axios({
+                       method:"POST",
+                       url:api.saveLinkLog,
+                       params:{
+                          linkWid:routeApp.linkWid
+                       }
+                    }).then(function(response){
+                    
+                    }).catch(function(err){
+                        Toast(err);
+                    });
+                }
                 if (localStorage.getItem("asBillUncheck") == 'true') {
                     that.asBillUncheck = true;
                 }

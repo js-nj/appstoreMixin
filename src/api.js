@@ -40,6 +40,8 @@ export default {
 	checkClick: WEBPACK_CONIFG_HOST + "sys/appstoreservice/jrxy/checkClick.do", //是否已经想要
 	//钉钉打开分享页面的我想要
 	saveShareLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/shareLog/saveShareLog.do",
+	//保存再次打开链接的log
+	saveLinkLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/shareLog/saveLinkLog.do",
 	//获取钉钉配置
 	//getDingTalkConfig: WEBPACK_CONIFG_HOST + "sys/appstoreservice/dingding/getConfig.do", //获取钉钉配置
 
