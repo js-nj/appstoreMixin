@@ -78,7 +78,9 @@
                          </div>
                          <div class="bh-clearfix bh-text-center bh-pv-8">
                            <div class="as-col-md-4">
-                             <h5 class="bh-pv-8 as-font-weight">{{mainDatas.ZHPM}}</h5>
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(mainDatas.ZHPM)" :decimals="0" :duration="2.5" :options="options" ></i-count-up>
+                             </h5>
                              <div class="bh-pb-8 as-color-white-opacity">综合排名</div>
                            </div>
                            <div class="as-col-md-4">
@@ -173,6 +175,8 @@
     import api from '../../api.js';
     import axios  from 'axios';
     import echarts from 'echarts';
+    import ICountUp from 'vue-countup-v2';
+    //import countUp from 'countup.js';
     import wechatShare from '../../../static/mobile/js/wechatShare.js';
     export default {
         data () {
@@ -192,13 +196,26 @@
                 userInfo:{},
                 questionArray:[],
                 noQuestion:false,
-                mainDatas:{},
+                mainDatas:{
+                    ZHPM:50,
+                    UPDATE_TIME:0,
+                    HYD:0,
+                    FGL:0
+                },
                 customerDataTmp:{
                   'SCHOOL_BM_DISPLAY':'1',
                   'DATA_UPDATE_TIME':'2',
                   'HYD':'3',
                   'LLS':'4',
                   'SYS':'5'
+                },
+                options: {
+                  useEasing: true,
+                  useGrouping: true,
+                  separator: ',',
+                  decimal: '.',
+                  prefix: '',
+                  suffix: ''
                 }
             }
         },
@@ -255,20 +272,35 @@
                                 /*
                                 {}
                                 */
-                               //钉钉分享
-                               dd.biz.util.share({
-                                   type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
-                                   url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html?_dt_no_comment=false#/app?APP_ID='+ that.$route.query.APP_ID+'&_dt_no_comment=false',
-                                   title: that.appInfo.NAME1,
-                                   content: that.appInfo.INTRODUCTION,
-                                   image: that.setImgUrlFromId(that.appInfo.IMAGE),
-                                   onSuccess : function() {
-                                       //alert('分享成功');
-                                   },
-                                   onFail : function(err) {
-                                     alert(err);
+                               //保存分享数据
+                               axios({
+                                   method:"POST",
+                                   url:api.saveLink,
+                                   params:{
+                                     appId:that.$route.query.APP_ID
                                    }
-                               });
+                               }).then(function(response){
+                                 if (response.data.code == 0) {
+                                   //钉钉分享
+                                   dd.biz.util.share({
+                                       type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
+                                       url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html#/app?APP_ID='+ that.$route.query.APP_ID+'&linkWid='+response.data.linkWid,
+                                       title: that.appInfo.NAME1,
+                                       content: that.appInfo.INTRODUCTION,
+                                       image: that.setImgUrlFromId(that.appInfo.IMAGE),
+                                       onSuccess : function() {
+                                           //alert('分享成功');
+                                       },
+                                       onFail : function(err) {
+                                         alert(err);
+                                       }
+                                   });
+                                 }else {
+                                   Toast('保存分享数据失败');
+                                 }
+                               }).catch(function(err){
+                                 Toast(err);
+                               }); 
                             },
                             onFail : function(err) {}
                         });
@@ -330,6 +362,7 @@
                   if (response.data.code == 0) {
                     if (response.data.datas.list.rows && response.data.datas.list.rows.length>0) {
                         that.mainDatas = response.data.datas.list.rows[0];
+                        //alert('that.mainDatas:'+that.mainDatas.ZHPM);
                     }else {
                       Toast('暂无应用核心数据');
                     }
@@ -608,7 +641,8 @@
             [MessageBox.name]: MessageBox,
             [Toast.name]: Toast,
             customCase,
-            questionItem
+            questionItem,
+            ICountUp
         }
     }
 </script>
