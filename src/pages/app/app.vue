@@ -74,20 +74,20 @@
                        <div class="bh-ph-8">
                          <div class="bh-clearfix bh-pv-16 bh-ph-8">
                            <div class="bh-pull-left data-main-title">应用数据概况</div>
-                           <label class="bh-pull-right">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                           <label class="bh-pull-right as-color-white-opacity">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
                          </div>
                          <div class="bh-clearfix bh-text-center bh-pv-8">
                            <div class="as-col-md-4">
                              <h5 class="bh-pv-8 as-font-weight">{{mainDatas.ZHPM}}</h5>
-                             <div class="bh-pb-8">综合排名</div>
+                             <div class="bh-pb-8 as-color-white-opacity">综合排名</div>
                            </div>
                            <div class="as-col-md-4">
                              <h5 class="bh-pv-8 as-font-weight">{{mainDatas.HYD}}</h5>
-                             <div class="bh-pb-8">活跃度</div>
+                             <div class="bh-pb-8 as-color-white-opacity">活跃度</div>
                            </div>
                            <div class="as-col-md-4">
                              <h5 class="bh-pv-8 as-font-weight">{{mainDatas.FGL}}</h5>
-                             <div class="bh-pb-8">覆盖率</div>
+                             <div class="bh-pb-8 as-color-white-opacity">覆盖率</div>
                            </div>
                          </div>
                        </div>
@@ -245,13 +245,40 @@
                   if (response.data.code == 0) {
                     if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
                         that.appInfo = response.data.datas.detail.rows[0];
+                        //钉钉分享
+                        dd.biz.navigation.setRight({
+                            show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
+                            control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+                            text: '',//控制显示文本，空字符串表示显示默认文本
+                            onSuccess : function(result) {
+                                //如果control为true，则onSuccess将在发生按钮点击事件被回调
+                                /*
+                                {}
+                                */
+                               //钉钉分享
+                               dd.biz.util.share({
+                                   type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
+                                   url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html?_dt_no_comment=false#/app?APP_ID='+ that.$route.query.APP_ID+'&_dt_no_comment=false',
+                                   title: that.appInfo.NAME1,
+                                   content: that.appInfo.INTRODUCTION,
+                                   image: that.setImgUrlFromId(that.appInfo.IMAGE),
+                                   onSuccess : function() {
+                                       //alert('分享成功');
+                                   },
+                                   onFail : function(err) {
+                                     alert(err);
+                                   }
+                               });
+                            },
+                            onFail : function(err) {}
+                        });
                         //微信分享
-                        var targetUrl = window.location.href.split('#/')[0];
-                        var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
-                        var targetUrlHash = window.location.href.split('#/')[1];
-                        targetUrlHash = targetUrlHash.split('&type=')[0];
-                        var tmpHref = window.location.href;
-                        tmpHref = tmpHref.replace('#/',',');
+                        // var targetUrl = window.location.href.split('#/')[0];
+                        // var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
+                        // var targetUrlHash = window.location.href.split('#/')[1];
+                        // targetUrlHash = targetUrlHash.split('&type=')[0];
+                        // var tmpHref = window.location.href;
+                        // tmpHref = tmpHref.replace('#/',',');
                     }
                   }else {
                     Toast('获取详情数据失败');
@@ -572,19 +599,6 @@
               that.selected = localStorage.appSelectedTab;
             }
             that.appMain();
-            // dd.biz.util.share({
-            //     type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
-            //     url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html#/app?APP_ID=dc92e66d663046cb952c40c57c2abe48',
-            //     title: '我是来自钉钉的分享',
-            //     content: '我分享的地址是今日校园的',
-            //     image: 'www.baidu.com/img/bd_logo1.png',
-            //     onSuccess : function() {
-            //         alert('分享成功');
-            //     },
-            //     onFail : function(err) {
-            //       alert(err);
-            //     }
-            // });
         },
         components:{
             [Button.name]: Button,
