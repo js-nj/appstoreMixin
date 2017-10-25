@@ -45,7 +45,7 @@
             </mt-tab-container>
         </div>
         <!--  微信环境下展示的按钮组 -->
-        <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-wx':envFlag}">
+        <!-- <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-wx':envFlag}">
             <div class="app-button bh-pv-4">
             <div class="app-col-6" ><i class="iconfont icon-dianhua as-color-warning-lv2"></i><div class="app-button-text"><a class="app-tel-line" :href="telephone">联系我</a></div></div>
                 <div class="app-button-line"></div>
@@ -57,8 +57,8 @@
             </div>
             <div type="warning" class="app-button as-bgColor-warning-lv2 bh-color-white bh-pv-16" :class="{'app-button-disable':billSelectedTag}" @click="addBillItem">加入清单</div>
             <div type="warning" class="app-button as-bgColor-warning-lv1 bh-color-white bh-pv-16" @click="goContactionPage">了解更多</div> 
-        </div>
-        <!--  今日校园，钉钉环境下展示的按钮组 -->
+        </div> -->
+        <!--  今日校园环境下展示的按钮组 -->
         <div class="app-buttonContainer bh-clearfix bh-text-center" :class="{'app-buttonContainer-bh':!envFlag}">
             <div class="app-button bh-pv-4">
                 <div class="app-col-6" >
@@ -243,8 +243,8 @@
                 telephone:'',
                 appContainerHeight:'',
                 asBillUncheck:false,
-                envFlag:true,
-                marginBottomValue:'20px',
+                envFlag:false,
+                marginBottomValue:'60px',
                 iwantitTag:true,
                 userInfo:{}
             }
@@ -261,13 +261,14 @@
         methods:{
             appMain() {
                 var that = this;
-                if (window.env == 'wx') {
-                    that.envFlag = false;
-                    that.marginBottomValue = '20px';
-                }else {
-                    that.envFlag = true;
-                    that.marginBottomValue = '60px';
-                }
+                //微信今日校园同一样
+                // if (window.env == 'wx') {
+                //     that.envFlag = false;
+                //     that.marginBottomValue = '20px';
+                // }else {
+                //     that.envFlag = true;
+                //     that.marginBottomValue = '60px';
+                // }
                 var routeApp = {};
                 routeApp = that.$route.query;
                 if (localStorage.getItem("asBillUncheck") == 'true') {
