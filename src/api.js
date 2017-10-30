@@ -88,6 +88,8 @@ export default {
 	data: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/data.do",
 	//数据-案例卡片
 	customerData: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/customerData.do",
+	//安心守护运行数据
+	runData: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/runData.do",
 	//钉钉分享log
 	saveLink: WEBPACK_CONIFG_HOST + "sys/appstoreservice/shareLog/saveLink.do",
 	//钉钉分享后，打开链接的log
