@@ -19,7 +19,7 @@
         <div class="app-tab-container" :style="{height:appTabContainerHeight}">
             <mt-navbar v-model="selected">
               <mt-tab-item id="introduction">介绍</mt-tab-item>
-              <mt-tab-item id="case">案例</mt-tab-item>
+              <mt-tab-item id="case">数据</mt-tab-item>
             </mt-navbar>
 
             <!-- tab-container -->
@@ -40,7 +40,194 @@
                 </div>   
               </mt-tab-container-item>
               <mt-tab-container-item id="case">
-                <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case>
+                <!-- <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case> -->
+                <div style="background-color:#F6F6F6;padding-bottom:64px;" class="">
+                 <div class="data-case bh-ph-16 bh-mh-4 bh-pv-16" style="display:none;">
+                   <div class="bh-pb-8 as-color-999">标杆案例数据</div>
+                   <div class="data-border-radius bh-ph-8" @click="goCustomerCase">
+                     <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                       <div class="bh-pull-left data-case-school">{{customerDataTmp.SCHOOL_BM_DISPLAY}}</div>
+                       <label class="bh-pull-right data-case-updateTime">
+                        更新于 <label>{{customerDataTmp.DATA_UPDATE_TIME}}</label>
+                        <span class="data-case-arrow"></span>
+                       </label>
+                     </div>
+                     <div class="bh-clearfix bh-text-center bh-pv-8" style="border-top:solid 1px #ddd;">
+                       <div class="as-col-md-4">
+                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.HYD}}</h5>
+                         <div class="bh-pb-8 as-color-666">活跃度</div>
+                       </div>
+                       <div class="as-col-md-4">
+                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.LLS}}</h5>
+                         <div class="bh-pb-8 as-color-666">30日浏览数(PV)</div>
+                       </div>
+                       <div class="as-col-md-4">
+                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.SYS}}</h5>
+                         <div class="bh-pb-8 as-color-666">30日使用数(UV)</div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
+                     <div class="bh-pb-8 as-color-999">应用核心数据</div>
+                     <div class="main-container">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">应用数据概况</div>
+                           <label class="bh-pull-right as-color-white-opacity">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class="bh-clearfix bh-text-center bh-pv-8">
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(mainDatas.ZHPM)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                             </h5>
+                             <div class="bh-pb-8 as-color-white-opacity">综合排名</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(mainDatas.HYD)" :decimals="1" :duration="3" :options="options" ></i-count-up>%
+                              </h5>
+                             <div class="bh-pb-8 as-color-white-opacity">活跃度</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(mainDatas.FGL)" :decimals="1" :duration="3" :options="options" ></i-count-up>%
+                              </h5>
+                             <div class="bh-pb-8 as-color-white-opacity">覆盖率</div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 <div v-if="!isAnxinshouhu">
+                   <div class="data-sex bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户性别分布</div>
+                          <label class="bh-pull-right">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="sexEchart" class="data-echart">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="sex-uls bh-pl-32">
+                            <li><span style="background: #4E7CCC;"></span><label>男</label><label>{{mainDatas.SEX_MAN}}%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>女</label><label>{{mainDatas.SEX_GIRL}}%</label></li>
+                            <li><span style="background: #36B3C3;"></span><label>其他</label><label>{{mainDatas.SEX_OTHER}}%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box" style="">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户角色分布</div>
+                          <label class="bh-pull-right" >更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="roleEchart" class="data-echart" style="">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="sex-uls bh-pt-32 bh-pl-32">
+                            <li><span style="background: #4E7CCC;"></span><label>教师</label><label>{{mainDatas.ROLE_TEACHER}}%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>学生</label><label>{{mainDatas.ROLE_STUDENT}}%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                 </div>
+                 <div v-else>
+                   <!-- 应用运行数据 -->
+                   <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
+                     <div class="bh-pb-8 as-color-999">应用运行数据</div>
+                     <div class="data-box sub-container">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">总体数据</div>
+                           <label class="bh-pull-right as-color-black-opacity">更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class="bh-clearfix bh-text-center bh-pv-8">
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHXX)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                             </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">守护学校(所)</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHYY)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                              </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">守护应用(个)</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHZJ)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                              </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">守护主机(台)</div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <!-- 运维数据 -->
+                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">运维数据</div>
+                          <label class="bh-pull-right as-color-black-opacity" >更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="ywEchart" class="data-echart" style="">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <div style="font-size:14px;text-align:right;padding-right:12px;color:#666;">总发现次数 {{runDatas.OPERATE_ZFXCS}}起事件</div>
+                          <ul class="sex-uls bh-pt-32">
+                            <li style="font-size:15px;"><span style="background: #4E7CCC;"></span><label style="width:108px;">半小时应急恢复</label><label style="width:28px;">{{runDatas.OPERATE_HFL}}%</label></li>
+                            <li style="font-size:15px;padding-left: 20px;">{{runDatas.OPERATE_HFCS}}起事件</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                   <!-- 安全数据 -->
+                   <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
+                     <!-- <div class="bh-pb-8 as-color-999">安全数据</div> -->
+                     <div class="sub-container data-box">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">安全数据</div>
+                           <label class="bh-pull-right as-color-black-opacity">更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class="bh-clearfix bh-text-center bh-pv-8">
+                           <div class="as-col-md-6">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                {{runDatas.SECURITY_JTYMCG}}
+                             </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">监测到页面篡改(起)</div>
+                           </div>
+                           <div class="as-col-md-6">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                {{runDatas.SECURITY_ZZEYGJ}}万
+                              </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">阻断恶意攻击(次)</div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
               </mt-tab-container-item>
             </mt-tab-container>
         </div>
@@ -72,6 +259,697 @@
         </div>
     </div>
 </template>
+
+<script>
+    import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
+    import customCase from '../../components/customCase.vue';
+    import api from '../../api.js';
+    import axios  from 'axios';
+    import echarts from 'echarts';
+    import ICountUp from 'vue-countup-v2';
+    import wechatShare from '../../../static/mobile/js/wechatShare.js';
+    export default {
+        data () {
+            return {
+                billSelectedTag:true,
+                selected:'introduction',
+                appInfo:{},
+                introduction:{},
+                customInfo:{},
+                appTabContainerHeight:'',
+                telephone:'',
+                appContainerHeight:'',
+                asBillUncheck:false,
+                envFlag:true,
+                marginBottomValue:'60px',
+                iwantitTag:true,
+                userInfo:{},
+                mainDatas:{
+                    ZHPM:50,
+                    UPDATE_TIME:0,
+                    HYD:0,
+                    FGL:0
+                },
+                customerDataTmp:{
+                  'SCHOOL_BM_DISPLAY':'1',
+                  'DATA_UPDATE_TIME':'2',
+                  'HYD':'3',
+                  'LLS':'4',
+                  'SYS':'5'
+                },
+                options: {
+                  useEasing: true,
+                  useGrouping: true,
+                  separator: ',',
+                  decimal: '.',
+                  prefix: '',
+                  suffix: ''
+                },
+                runDatas:{
+                  TOTAL_SHXX:0,
+                  TOTAL_SHYY:0,
+                  TOTAL_SHZJ:0
+                },
+                isAnxinshouhu:0//是否是安心守护应用
+            }
+        },
+        // computed:{
+        //     marginBottomValue:function(){
+        //         if (window.env == 'wx') {
+        //             return '20px';
+        //         }else {
+        //             return '60px';
+        //         }
+        //     }
+        // },
+        methods:{
+            appMain() {
+                var that = this;
+                //微信今日校园同一样
+                // if (window.env == 'wx') {
+                //     that.envFlag = false;
+                //     that.marginBottomValue = '20px';
+                // }else {
+                //     that.envFlag = true;
+                //     that.marginBottomValue = '60px';
+                // }
+                var routeApp = {};
+                routeApp = that.$route.query;
+                //添加钉钉分享的链接，再次被打开时，发送log
+                if (routeApp.linkWid) {
+                    //检查应用是否已经加入清单
+                    axios({
+                       method:"POST",
+                       url:api.saveLinkLog,
+                       params:{
+                          linkWid:routeApp.linkWid
+                       }
+                    }).then(function(response){
+                    
+                    }).catch(function(err){
+                        Toast(err);
+                    });
+                }
+                if (localStorage.getItem("asBillUncheck") == 'true') {
+                    that.asBillUncheck = true;
+                }
+                //设置billdetail框部分的高度
+                this.appContainerHeight = (document.body.clientHeight) + 'px';
+                BH_MIXIN_SDK.setTitleText('应用详情');
+                //应用详情
+                var option = {
+                    WID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
+                };
+                var appOption = {
+                    APP_ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
+                };
+                if (routeApp.TYPEFROM && routeApp.TYPEFROM=='applist') {
+                    option = {
+                        WID:routeApp.WID
+                    };
+                    appOption = {
+                        APP_ID:routeApp.WID
+                    };
+                }
+                // 判断是否是安心守护
+                if (appOption.APP_ID == '98e54fd6454c4529b8f6629f03b1e0a4') {
+                  that.isAnxinshouhu = 1;
+                }else {
+                  that.isAnxinshouhu = 0;
+                }
+                axios({
+                    method:"POST",
+                    url:api.appsDetail,
+                    params:option
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
+                        that.appInfo = response.data.datas.detail.rows[0];
+                        //微信分享
+                        var targetUrl = window.location.href.split('#/')[0];
+                        var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
+                        var targetUrlHash = window.location.href.split('#/')[1];
+                        targetUrlHash = targetUrlHash.split('&type=')[0];
+                        
+                        var tmpHref = window.location.href;
+                        //console.log('99999999:'+window.location.href);
+                        //tmpHref = tmpHref.replace('123',targetUrlHash);
+                        tmpHref = tmpHref.replace('#/',',');
+                        //console.log('55555555:'+tmpHref);
+                        wechatShare.wechatShare({
+                             title: that.appInfo.NAME1, // 分享标题
+                             desc: that.appInfo.INTRODUCTION, // 分享描述
+                             link: tmpHref, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                             imgUrl: that.setImgUrlFromId(that.appInfo.IMAGE), // 分享图标
+                             type: '', // 分享类型,music、video或link，不填默认为link
+                             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                             success: function() {
+                                 // 用户确认分享后执行的回调函数
+                                 // 统计分享的类型与ID
+                                 axios({
+                                     method:"POST",
+                                     url:api.staticsOfShareApp,
+                                     params:{
+                                         TYPE:2,
+                                         ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
+                                     }
+                                 }).then(function(response){
+
+                                 });
+                             },
+                             cancel: function() {
+                                 // 用户取消分享后执行的回调函数
+                             }
+                        });
+                    }
+                  }else {
+                    Toast('获取详情数据失败');
+                  }
+                }).catch(function(err){
+                  //Toast(err);
+                });
+                //应用tab介绍
+                axios({
+                    method:"POST",
+                    url:api.appsIntrodure,
+                    params:appOption
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.introdure.rows && response.data.datas.introdure.rows.length>0 ) {
+                        that.introduction = response.data.datas.introdure.rows[0];
+                        if (that.introduction.VIDEO_URL) {
+                            //that.introduction.VIDEO_URL = 'http://player.youku.com/embed/'+ that.introduction.VIDEO_URL;
+                            that.introduction.VIDEO_URL = that.introduction.VIDEO_URL;
+                        }
+                        var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
+                        var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
+                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(regString,totalUrl);
+
+                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
+                        //设置图片放大功能
+                        wechatShare.setImagePhotoSwipe('.app-intro-text img');
+                        //设置视频元素的高度
+                        setTimeout(function(){
+                          var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+                          var videoStyle = document.getElementsByClassName("video-js")[0];
+                          //debugger
+                          //console.log(videoStyle);
+                          videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
+                        },100);
+                    }else {
+                        that.introduction = false; 
+                    }
+                  }else {
+                    Toast('获取介绍数据失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+                //数据-应用核心数据
+                axios({
+                    method:"POST",
+                    url:api.data,
+                    params:{
+                      appId:appOption.APP_ID
+                    }
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.list.rows && response.data.datas.list.rows.length>0) {
+                        that.mainDatas = response.data.datas.list.rows[0];
+                        //alert('that.mainDatas:'+that.mainDatas.ZHPM);
+                        if (!that.isAnxinshouhu) {
+                          //性别echart图
+                          let sexEchart = echarts.init(document.getElementById('sexEchart'));
+                          var echartOptions = {
+                            series: [
+                                {
+                                    name:'',
+                                    type:'pie',
+                                    radius: ['60%', '95%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        normal: {
+                                            show: false,
+                                            position: 'center'
+                                        },
+                                        emphasis: {
+                                            show: false,
+                                            textStyle: {
+                                                fontSize: '30',
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    },
+                                    labelLine: {
+                                        normal: {
+                                            show: false
+                                        }
+                                    },
+                                    data:[
+                                        {value:Number(that.mainDatas.SEX_MAN), name:'男'},
+                                        {value:Number(that.mainDatas.SEX_GIRL), name:'女'},
+                                        {value:Number(that.mainDatas.SEX_OTHER), name:'其他'},
+                                    ]
+                                }
+                            ],
+                            color:['#4E7CCC','#4ECDA5','#36B3C3']
+                          };
+                          sexEchart.setOption(echartOptions);
+                          //角色echart图
+                          let roleEchart = echarts.init(document.getElementById('roleEchart'));
+                          var echartOptions = {
+                            series: [
+                                {
+                                    name:'',
+                                    type:'pie',
+                                    radius: ['60%', '95%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        normal: {
+                                            show: false,
+                                            position: 'center'
+                                        },
+                                        emphasis: {
+                                            show: false,
+                                            textStyle: {
+                                                fontSize: '30',
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    },
+                                    labelLine: {
+                                        normal: {
+                                            show: false
+                                        }
+                                    },
+                                    data:[
+                                        {value:Number(that.mainDatas.ROLE_TEACHER), name:'教师'},
+                                        {value:Number(that.mainDatas.ROLE_STUDENT), name:'学生'},
+                                    ]
+                                }
+                            ],
+                            color:['#4E7CCC','#4ECDA5']
+                          };
+                          roleEchart.setOption(echartOptions);
+                        }
+                    }else {
+                      Toast('暂无应用核心数据');
+                    }
+                  }else {
+                    Toast('获取应用核心数据失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+                if (that.isAnxinshouhu) {
+                  //安心守护运行数据
+                  axios({
+                      method:"POST",
+                      url:api.runData,
+                      params:{
+                        appId:appOption.APP_ID
+                      }
+                  }).then(function(response){
+                    if (response.data.code == 0) {
+                      if (response.data.datas.list.rows && response.data.datas.list.rows.length>0) {
+                          that.runDatas = response.data.datas.list.rows[0];
+                          //运维echart图
+                          let ywEchart = echarts.init(document.getElementById('ywEchart'));
+                          var echartOptions = {
+                            series: [
+                                {
+                                    name:'',
+                                    type:'pie',
+                                    radius: ['60%', '95%'],
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        normal: {
+                                            show: false,
+                                            position: 'center'
+                                        },
+                                        emphasis: {
+                                            show: false,
+                                            textStyle: {
+                                                fontSize: '30',
+                                                fontWeight: 'bold'
+                                            }
+                                        }
+                                    },
+                                    labelLine: {
+                                        normal: {
+                                            show: false
+                                        }
+                                    },
+                                    data:[
+                                        {value:Number(that.runDatas.OPERATE_ZFXCS) - Number(that.runDatas.OPERATE_HFCS), name:''},
+                                        {value:Number(that.runDatas.OPERATE_HFCS), name:''},
+                                    ]
+                                }
+                            ],
+                            color:['#4E7CCC','#4ECDA5']
+                          };
+                          ywEchart.setOption(echartOptions);
+                      }else {
+                        Toast('暂无运行数据');
+                      }
+                    }else {
+                      Toast('获取暂无运行数据失败');
+                    }
+                  }).catch(function(err){
+                    Toast(err);
+                  });
+                }
+                // //数据-案例卡片
+                // axios({
+                //     method:"POST",
+                //     url:api.customerData,
+                //     params:{
+                //       appId:appOption.APP_ID
+                //     }
+                // }).then(function(response){
+                //   if (response.data.code == 0) {
+                //     var responseData = response.data.datas.list.rows;
+                //     if (responseData && responseData.length>0) {
+                //       if (!responseData[0].HYD) {
+                //         responseData[0].HYD = 0;
+                //       }
+                //       if (!responseData[0].LLS) {
+                //         responseData[0].LLS = 0;
+                //       }
+                //       if (!responseData[0].SYS) {
+                //         responseData[0].SYS = 0;
+                //       }
+                //       if (!responseData[0].DATA_UPDATE_TIME) {
+                //         responseData[0].DATA_UPDATE_TIME = '无';
+                //       }
+                //       if (!responseData[0].SCHOOL_BM_DISPLAY) {
+                //         responseData[0].SCHOOL_BM_DISPLAY = '无';
+                //       }
+                //       that.customerDataTmp = responseData[0];
+                //     }else {
+                //       Toast('暂无卡片案例数据数据');
+                //     }
+                //   }else {
+                //     Toast('获取卡片案例数据失败');
+                //   }
+                // }).catch(function(err){
+                //   Toast(err);
+                // });
+                //应用tab案例
+                // axios({
+                //     method:"POST",
+                //     url:api.appsCustomer,
+                //     params:appOption
+                // }).then(function(response){
+                //   if (response.data.code == 0) {
+                //     if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
+                //         // that.customInfo = {};
+                //         that.customInfo = response.data.datas.customer.rows[0];
+                //         if(that.customInfo.INFORMATION){
+                //             // var regString = /getFileByToken\/(\w+)\.do/g;
+                //             // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
+                //             var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
+                //             var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
+                //             that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
+                //             that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
+
+                //             //设置图片放大功能
+                //             wechatShare.setImagePhotoSwipe('.app-case-text img');
+                //         }
+                //     }
+                //   }else {
+                //     Toast('获取案例数据失败');
+                //   }
+                // }).catch(function(err){
+                //   Toast(err);
+                // });
+                /*不同的环境需要不同的检查*/
+                //alert(window.env)
+                if (window.env =='wx') {
+                    that.iwantitTag = false;
+                    //检查应用是否已经加入清单
+                    // axios({
+                    //    method:"POST",
+                    //    url:api.checkBills,
+                    //    params:appOption
+                    // }).then(function(response){
+                    //  if (response.data.code == 0) {
+                    //    if (response.data.datas.checkBills.totalSize>0) {
+                    //        that.billSelectedTag = true;
+                    //    }else {
+                    //        that.billSelectedTag = false;
+                    //    }
+                    //  }else {
+                    //    //Toast('检查应用是否加入清单失败');
+                    //  }
+                    // }).catch(function(err){
+                    //     Toast(err);
+                    // }); 
+                }else if(window.env == 'bh') {
+                     if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
+                        BH_MIXIN_SDK.bh.cpdaily.getUserInfo(function(info){
+                            /*如果是学生，要检查是否已经想要*/
+                            that.userInfo = info;
+                            //alert(JSON.stringify(info));
+                            if (info.userRole == 'STUDENT') {
+                                axios({
+                                    method:"POST",
+                                    url:api.checkClick,
+                                    params:{
+                                        appId:that.$route.query.APP_ID,//应用id
+                                        userBh:info.studentNo,//学号
+                                        schoolName:info.tenantShortName,//学校名称
+                                        userType:info.userRole,//用户类型
+                                    }
+                                }).then(function(response){
+                                  if (response.data.code == 0) {
+                                    //Toast('检查我想要成功');
+                                    if (response.data.datas.T_APP_APP_LOG.rows[0].flag) {
+                                        that.iwantitTag = true;
+                                    }else {
+                                        that.iwantitTag = false;
+                                    }
+                                  }else {
+                                    Toast('检查我想要失败');
+                                  }
+                                }).catch(function(err){
+                                  Toast(err);
+                                });
+                            }else if (info.userRole == 'TEACHER') {
+                                that.iwantitTag = false;
+                            }
+                        });  
+                    }
+                } else if (window.env == 'dt') {
+                    that.iwantitTag = false;
+                } else {
+                    that.iwantitTag = false;
+                }
+                
+                //设置app tab框部分的高度
+                this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
+
+                //查询系统电话
+                axios({
+                    method:"POST",
+                    url:api.sysSetting
+                }).then(function(response){
+                  if (response.data.code == 0) {
+                    if (response.data.datas.setting.rows) {
+                        that.telephone = 'tel:'+response.data.datas.setting.rows[0].LXFS;
+                    }else {
+                        that.telephone = 'javascript:void(0)';
+                        Toast('请设置系统电话');
+                    }
+                  }else {
+                    Toast('获取系统电话失败');
+                  }
+                }).catch(function(err){
+                  Toast(err);
+                });
+            },
+            goSchoolPage(item) {
+                //var routeApp = this.$route.query;
+                if (Number(item.SCHOOL_COUNT)>0) {
+                    this.$router.push({
+                      name: 'school',
+                      query: {
+                        item: JSON.stringify(item)
+                      }
+                    });
+                }
+            },
+            goContactionPage() {
+                var queryObject = this.$route.query;
+                var item = {
+                    FLAG:'1',
+                    APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
+                };
+                this.$router.push({
+                  name: 'contaction',
+                  query:item
+                });
+            },
+            goBillPage() {
+                sessionStorage.setItem("selectedTab","myBill");
+                this.$router.push({
+                  name: 'index'
+                });
+            },
+            addBillItem() {
+                //加入清单
+                //如果是已加入
+                var that = this;
+                var queryObject = that.$route.query;
+                if (that.billSelectedTag) {
+                    Toast('已在清单中');
+                }else {
+                    axios({
+                        method:"POST",
+                        url:api.addBill,
+                        params:{
+                            APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
+                        }
+                    }).then(function(response){
+                      if (response.data.code == 0) {
+                        Toast('加入清单成功');
+                        that.billSelectedTag = true;
+                        that.asBillUncheck = true;
+                      }else {
+                        Toast('加入清单失败');
+                      }
+                    }).catch(function(err){
+                      Toast(err);
+                    });
+                }   
+            },
+            goCustomerCase() {
+              var that = this;
+              axios({
+                  method:"POST",
+                  url:api.appsCustomer,
+                  params:{'APP_ID':that.$route.query.APP_ID}
+              }).then(function(response){
+                if (response.data.code == 0) {
+                  if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
+                      that.$router.push({
+                        name: 'custom',
+                        query:response.data.datas.customer.rows[0]
+                      });
+                  }
+                }else {
+                  Toast('获取案例数据失败');
+                }
+              }).catch(function(err){
+                Toast(err);
+              });
+            },
+            iWantIt(){
+                var that = this;
+                if (window.env == 'bh') {
+                    //alert('that.iwantitTag:'+that.iwantitTag +'------------------');
+                    if (!that.iwantitTag) {
+                        //alert('that.userInfo.userRole:'+that.userInfo.userRole +'------------------');
+                        if (that.userInfo.userRole == 'STUDENT') {
+                            axios({
+                                method:"POST",
+                                url:api.iWantIt,
+                                params:{
+                                    appId:that.$route.query.APP_ID,//应用id
+                                    userName:that.userInfo.name,//用户名
+                                    userBh:that.userInfo.studentNo,//学号
+                                    zw:'',//职务
+                                    schoolBh:that.userInfo.tenant,//学校编码
+                                    email:that.userInfo.email,
+                                    schoolName:that.userInfo.tenantShortName,//学校名称
+                                    userTel:that.userInfo.telePhone,//电话号码
+                                    userType:that.userInfo.userRole,//用户类型
+                                }
+                            }).then(function(response){
+                              if (response.data.code == 0) {
+                                that.iwantitTag = true;
+                                Toast('想要成功');
+                              }else {
+                                Toast('再试一次~');
+                              }
+                            }).catch(function(err){
+                              Toast(err);
+                            });
+                        }else if (that.userInfo.userRole == 'TEACHER'){
+                            var queryObject = that.$route.query;
+                            var item = {
+                                FLAG:'1',
+                                APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
+                                info:that.userInfo
+                            };
+                            that.$router.push({
+                              name: 'contaction',
+                              query:item
+                            });
+                        }
+                    }else {
+                        Toast("已想要");
+                    }     
+               }else if(window.env == 'wx') {
+                  var queryObject = that.$route.query;
+                  var item = {
+                      FLAG:'1',
+                      APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
+                  };
+                  that.$router.push({
+                    name: 'contaction',
+                    query:item
+                  });
+               }else if(window.env == 'dt') {
+                    //Toast('请检查运行环境，是否是微信或者今日校园');
+                    var queryObject = that.$route.query;
+                    var item = {
+                        FLAG:'1',
+                        APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
+                        info:{}
+                    };
+                    that.$router.push({
+                      name: 'contaction',
+                      query:item
+                    });
+               }
+            },
+            setImgUrlFromId(id) {
+                return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';
+            }
+        },
+        watch:{
+            selected:function(value,oldvalue){
+                switch(value){
+                  case 'introduction':
+                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
+                        break;
+                  case 'case':
+                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
+                        break;
+                }
+            },
+            asBillUncheck:function(value,oldvalue) {
+                localStorage.setItem("asBillUncheck",value);
+                console.log(localStorage.getItem("asBillUncheck"))
+            }
+        },
+        created() {
+            var that = this;
+            wechatShare.authAndLogin(that.appMain); 
+        },
+        components:{
+            [Button.name]: Button,
+            [Navbar.name]: Navbar,
+            [TabItem.name]: TabItem,
+            [TabContainer.name]: TabContainer,
+            [MessageBox.name]: MessageBox,
+            [Toast.name]: Toast,
+            customCase,
+            ICountUp
+        }
+    }
+</script>
 <style>
 .app-content {
     font-size: 12px;
@@ -224,447 +1102,91 @@
   width: 100% !important;
   /* height:212px !important; */
 }
+.data-case-arrow {
+  display: inline-block;
+  width:8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border-top: solid 1px #666;
+  border-right: solid 1px #666;
+}
+.sex-uls {
+  padding: 8px 0;
+}
+.sex-uls li {
+  padding: 4px 4px;
+  font-size:16px;
+}
+.sex-uls li span {
+  display: inline-block;
+  width:8px;
+  height:8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  background: #666;
+}
+.role-uls {
+  padding: 8px 0;
+}
+.role-uls li {
+  padding: 4px 4px;
+  font-size:16px;
+}
+.role-uls li span {
+  display: inline-block;
+  width:8px;
+  height:8px;
+  border-radius: 4px;
+  margin-right: 8px;
+  background: #666;
+}
+.sex-uls li label {
+  display: inline-block;
+  width: 50px;
+}
+.data-main .main-container {
+    border:solid 1px #ddd;
+    border-radius:4px;
+    background-color:#0D152F;
+    color:#fff;
+}
+.data-main .sub-container {
+    border:solid 1px #ddd;
+    border-radius:4px;
+}
+ .data-main .main-container > div{
+  background: url(../../../static/assets/main-background.png) top center no-repeat;
+    background-size: 100% 100%;
+ }
+ .data-border-radius {
+  border:solid 1px #ddd;border-radius:4px;
+ }
+ .data-case-school {
+  font-size:18px;font-weight: 600;
+ }
+ .data-case-updateTime {
+  color:#666;line-height: 24px;
+ }
+  .data-case-updateTime label{
+  display:inline-block;padding:0 4px;
+  }
+  .data-main-title {
+    font-size:14px;line-height: 14px;font-weight: 600;border-left:solid 2px #27EFA6;padding-left:8px;
+  }
+  .data-main-title label {
+    color:rgba(255,255,255,0.23);line-height: 14px;
+  }
+  .data-main-title label.sub-title {
+    color:rgba(0,0,0,0.23);line-height: 14px;
+  }
+  .data-main-title label span {
+    display:inline-block;padding:0 4px;
+  }
+  .data-echart {
+    width:106px;height:106px;margin:0 auto;
+  }
+  .data-box {
+    border:solid 1px #ddd;border-radius:4px;
+    background: #fff;
+  }
 </style>
-<script>
-    import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
-    import customCase from '../../components/customCase.vue';
-    import api from '../../api.js';
-    import axios  from 'axios';
-    import wechatShare from '../../../static/mobile/js/wechatShare.js';
-    export default {
-        data () {
-            return {
-                billSelectedTag:true,
-                selected:'introduction',
-                appInfo:{},
-                introduction:{},
-                customInfo:{},
-                appTabContainerHeight:'',
-                telephone:'',
-                appContainerHeight:'',
-                asBillUncheck:false,
-                envFlag:true,
-                marginBottomValue:'60px',
-                iwantitTag:true,
-                userInfo:{}
-            }
-        },
-        // computed:{
-        //     marginBottomValue:function(){
-        //         if (window.env == 'wx') {
-        //             return '20px';
-        //         }else {
-        //             return '60px';
-        //         }
-        //     }
-        // },
-        methods:{
-            appMain() {
-                var that = this;
-                //微信今日校园同一样
-                // if (window.env == 'wx') {
-                //     that.envFlag = false;
-                //     that.marginBottomValue = '20px';
-                // }else {
-                //     that.envFlag = true;
-                //     that.marginBottomValue = '60px';
-                // }
-                var routeApp = {};
-                routeApp = that.$route.query;
-                //添加钉钉分享的链接，再次被打开时，发送log
-                if (routeApp.linkWid) {
-                    //检查应用是否已经加入清单
-                    axios({
-                       method:"POST",
-                       url:api.saveLinkLog,
-                       params:{
-                          linkWid:routeApp.linkWid
-                       }
-                    }).then(function(response){
-                    
-                    }).catch(function(err){
-                        Toast(err);
-                    });
-                }
-                if (localStorage.getItem("asBillUncheck") == 'true') {
-                    that.asBillUncheck = true;
-                }
-                //设置billdetail框部分的高度
-                this.appContainerHeight = (document.body.clientHeight) + 'px';
-                BH_MIXIN_SDK.setTitleText('应用详情');
-                //应用详情
-                var option = {
-                    WID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                };
-                var appOption = {
-                    APP_ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                };
-                if (routeApp.TYPEFROM && routeApp.TYPEFROM=='applist') {
-                    option = {
-                        WID:routeApp.WID
-                    };
-                    appOption = {
-                        APP_ID:routeApp.WID
-                    };
-                }
-                axios({
-                    method:"POST",
-                    url:api.appsDetail,
-                    params:option
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
-                        that.appInfo = response.data.datas.detail.rows[0];
-                        //微信分享
-                        var targetUrl = window.location.href.split('#/')[0];
-                        var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
-                        var targetUrlHash = window.location.href.split('#/')[1];
-                        targetUrlHash = targetUrlHash.split('&type=')[0];
-                        
-                        var tmpHref = window.location.href;
-                        //console.log('99999999:'+window.location.href);
-                        //tmpHref = tmpHref.replace('123',targetUrlHash);
-                        tmpHref = tmpHref.replace('#/',',');
-                        //console.log('55555555:'+tmpHref);
-                        wechatShare.wechatShare({
-                             title: that.appInfo.NAME1, // 分享标题
-                             desc: that.appInfo.INTRODUCTION, // 分享描述
-                             link: tmpHref, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                             imgUrl: that.setImgUrlFromId(that.appInfo.IMAGE), // 分享图标
-                             type: '', // 分享类型,music、video或link，不填默认为link
-                             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                             success: function() {
-                                 // 用户确认分享后执行的回调函数
-                                 // 统计分享的类型与ID
-                                 axios({
-                                     method:"POST",
-                                     url:api.staticsOfShareApp,
-                                     params:{
-                                         TYPE:2,
-                                         ID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
-                                     }
-                                 }).then(function(response){
-
-                                 });
-                             },
-                             cancel: function() {
-                                 // 用户取消分享后执行的回调函数
-                             }
-                        });
-                    }
-                  }else {
-                    Toast('获取详情数据失败');
-                  }
-                }).catch(function(err){
-                  //Toast(err);
-                });
-                //应用tab介绍
-                axios({
-                    method:"POST",
-                    url:api.appsIntrodure,
-                    params:appOption
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.introdure.rows && response.data.datas.introdure.rows.length>0 ) {
-                        that.introduction = response.data.datas.introdure.rows[0];
-                        if (that.introduction.VIDEO_URL) {
-                            //that.introduction.VIDEO_URL = 'http://player.youku.com/embed/'+ that.introduction.VIDEO_URL;
-                            that.introduction.VIDEO_URL = that.introduction.VIDEO_URL;
-                        }
-                        var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
-                        var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
-                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(regString,totalUrl);
-
-                        that.introduction.APP_INTRODUCE = that.introduction.APP_INTRODUCE.replace(/\\/g,"");
-                        //设置图片放大功能
-                        wechatShare.setImagePhotoSwipe('.app-intro-text img');
-                        //设置视频元素的高度
-                        setTimeout(function(){
-                          var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
-                          var videoStyle = document.getElementsByClassName("video-js")[0];
-                          //debugger
-                          //console.log(videoStyle);
-                          videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
-                        },100);
-                    }else {
-                        that.introduction = false; 
-                    }
-                  }else {
-                    Toast('获取介绍数据失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-                //应用tab案例
-                axios({
-                    method:"POST",
-                    url:api.appsCustomer,
-                    params:appOption
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
-                        // that.customInfo = {};
-                        that.customInfo = response.data.datas.customer.rows[0];
-                        if(that.customInfo.INFORMATION){
-                            // var regString = /getFileByToken\/(\w+)\.do/g;
-                            // that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,'getSingleImageByToken.do?fileToken=$1&type=3');
-                            var regString = /\/emap\/sys\/emapcomponent\/file\/getFileByToken\/(\w+)\.do/g;
-                            var totalUrl = WEBPACK_CONIFG_HOST + "sys/emapcomponent/file/"+"getSingleImageByToken.do?fileToken=$1&type=3";
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(regString,totalUrl);
-                            that.customInfo.INFORMATION = that.customInfo.INFORMATION.replace(/\\/g,'');
-
-                            //设置图片放大功能
-                            wechatShare.setImagePhotoSwipe('.app-case-text img');
-                        }
-                    }
-                  }else {
-                    Toast('获取案例数据失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-                /*不同的环境需要不同的检查*/
-                //alert(window.env)
-                if (window.env =='wx') {
-                    that.iwantitTag = false;
-                    //检查应用是否已经加入清单
-                    // axios({
-                    //    method:"POST",
-                    //    url:api.checkBills,
-                    //    params:appOption
-                    // }).then(function(response){
-                    //  if (response.data.code == 0) {
-                    //    if (response.data.datas.checkBills.totalSize>0) {
-                    //        that.billSelectedTag = true;
-                    //    }else {
-                    //        that.billSelectedTag = false;
-                    //    }
-                    //  }else {
-                    //    //Toast('检查应用是否加入清单失败');
-                    //  }
-                    // }).catch(function(err){
-                    //     Toast(err);
-                    // }); 
-                }else if(window.env == 'bh') {
-                     if (BH_MIXIN_SDK.bh && BH_MIXIN_SDK.bh.cpdaily) {
-                        BH_MIXIN_SDK.bh.cpdaily.getUserInfo(function(info){
-                            /*如果是学生，要检查是否已经想要*/
-                            that.userInfo = info;
-                            //alert(JSON.stringify(info));
-                            if (info.userRole == 'STUDENT') {
-                                axios({
-                                    method:"POST",
-                                    url:api.checkClick,
-                                    params:{
-                                        appId:that.$route.query.APP_ID,//应用id
-                                        userBh:info.studentNo,//学号
-                                        schoolName:info.tenantShortName,//学校名称
-                                        userType:info.userRole,//用户类型
-                                    }
-                                }).then(function(response){
-                                  if (response.data.code == 0) {
-                                    //Toast('检查我想要成功');
-                                    if (response.data.datas.T_APP_APP_LOG.rows[0].flag) {
-                                        that.iwantitTag = true;
-                                    }else {
-                                        that.iwantitTag = false;
-                                    }
-                                  }else {
-                                    Toast('检查我想要失败');
-                                  }
-                                }).catch(function(err){
-                                  Toast(err);
-                                });
-                            }else if (info.userRole == 'TEACHER') {
-                                that.iwantitTag = false;
-                            }
-                        });  
-                    }
-                } else if (window.env == 'dt') {
-                    that.iwantitTag = false;
-                } else {
-                    that.iwantitTag = false;
-                }
-                
-                //设置app tab框部分的高度
-                this.appTabContainerHeight = (document.body.clientHeight - 46 - 79 - 109) + 'px';//46是底部导航栏的高度 79是顶部tab头的高度,109是标签描述
-
-                //查询系统电话
-                axios({
-                    method:"POST",
-                    url:api.sysSetting
-                }).then(function(response){
-                  if (response.data.code == 0) {
-                    if (response.data.datas.setting.rows) {
-                        that.telephone = 'tel:'+response.data.datas.setting.rows[0].LXFS;
-                    }else {
-                        that.telephone = 'javascript:void(0)';
-                        Toast('请设置系统电话');
-                    }
-                  }else {
-                    Toast('获取系统电话失败');
-                  }
-                }).catch(function(err){
-                  Toast(err);
-                });
-            },
-            goSchoolPage(item) {
-                //var routeApp = this.$route.query;
-                if (Number(item.SCHOOL_COUNT)>0) {
-                    this.$router.push({
-                      name: 'school',
-                      query: {
-                        item: JSON.stringify(item)
-                      }
-                    });
-                }
-            },
-            goContactionPage() {
-                var queryObject = this.$route.query;
-                var item = {
-                    FLAG:'1',
-                    APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
-                };
-                this.$router.push({
-                  name: 'contaction',
-                  query:item
-                });
-            },
-            goBillPage() {
-                sessionStorage.setItem("selectedTab","myBill");
-                this.$router.push({
-                  name: 'index'
-                });
-            },
-            addBillItem() {
-                //加入清单
-                //如果是已加入
-                var that = this;
-                var queryObject = that.$route.query;
-                if (that.billSelectedTag) {
-                    Toast('已在清单中');
-                }else {
-                    axios({
-                        method:"POST",
-                        url:api.addBill,
-                        params:{
-                            APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
-                        }
-                    }).then(function(response){
-                      if (response.data.code == 0) {
-                        Toast('加入清单成功');
-                        that.billSelectedTag = true;
-                        that.asBillUncheck = true;
-                      }else {
-                        Toast('加入清单失败');
-                      }
-                    }).catch(function(err){
-                      Toast(err);
-                    });
-                }   
-            },
-            iWantIt(){
-                var that = this;
-                if (window.env == 'bh') {
-                    //alert('that.iwantitTag:'+that.iwantitTag +'------------------');
-                    if (!that.iwantitTag) {
-                        //alert('that.userInfo.userRole:'+that.userInfo.userRole +'------------------');
-                        if (that.userInfo.userRole == 'STUDENT') {
-                            axios({
-                                method:"POST",
-                                url:api.iWantIt,
-                                params:{
-                                    appId:that.$route.query.APP_ID,//应用id
-                                    userName:that.userInfo.name,//用户名
-                                    userBh:that.userInfo.studentNo,//学号
-                                    zw:'',//职务
-                                    schoolBh:that.userInfo.tenant,//学校编码
-                                    email:that.userInfo.email,
-                                    schoolName:that.userInfo.tenantShortName,//学校名称
-                                    userTel:that.userInfo.telePhone,//电话号码
-                                    userType:that.userInfo.userRole,//用户类型
-                                }
-                            }).then(function(response){
-                              if (response.data.code == 0) {
-                                that.iwantitTag = true;
-                                Toast('想要成功');
-                              }else {
-                                Toast('再试一次~');
-                              }
-                            }).catch(function(err){
-                              Toast(err);
-                            });
-                        }else if (that.userInfo.userRole == 'TEACHER'){
-                            var queryObject = that.$route.query;
-                            var item = {
-                                FLAG:'1',
-                                APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
-                                info:that.userInfo
-                            };
-                            that.$router.push({
-                              name: 'contaction',
-                              query:item
-                            });
-                        }
-                    }else {
-                        Toast("已想要");
-                    }     
-               }else if(window.env == 'wx') {
-                  var queryObject = that.$route.query;
-                  var item = {
-                      FLAG:'1',
-                      APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID
-                  };
-                  that.$router.push({
-                    name: 'contaction',
-                    query:item
-                  });
-               }else if(window.env == 'dt') {
-                    //Toast('请检查运行环境，是否是微信或者今日校园');
-                    var queryObject = that.$route.query;
-                    var item = {
-                        FLAG:'1',
-                        APP_ID:queryObject.APP_ID ? queryObject.APP_ID : queryObject.WID,
-                        info:{}
-                    };
-                    that.$router.push({
-                      name: 'contaction',
-                      query:item
-                    });
-               }
-            },
-            setImgUrlFromId(id) {
-                return WEBPACK_CONIFG_HOST +'sys/appstoreservice/attrs/preview.do?token=' + id+'&type=3';
-            }
-        },
-        watch:{
-            selected:function(value,oldvalue){
-                switch(value){
-                  case 'introduction':
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'block';
-                        break;
-                  case 'case':
-                        document.getElementsByClassName('app-intro-video-iframe')[0].style.display = 'none';
-                        break;
-                }
-            },
-            asBillUncheck:function(value,oldvalue) {
-                localStorage.setItem("asBillUncheck",value);
-                console.log(localStorage.getItem("asBillUncheck"))
-            }
-        },
-        created() {
-            var that = this;
-            wechatShare.authAndLogin(that.appMain); 
-        },
-        components:{
-            [Button.name]: Button,
-            [Navbar.name]: Navbar,
-            [TabItem.name]: TabItem,
-            [TabContainer.name]: TabContainer,
-            [MessageBox.name]: MessageBox,
-            [Toast.name]: Toast,
-            customCase
-        }
-    }
-</script>

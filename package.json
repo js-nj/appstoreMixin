@@ -3,7 +3,7 @@
   "description": "A Vue.js project",
   "version": "1.0.0",
   "author": "xujiabin <xujiabin0114@163.com>",
-  "packageName": "appstore",
+  "packageName": "appstore-dailyCompus",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
@@ -16,6 +16,9 @@
     "bh-mixin-sdk": "0.1.22",
     "bh-mint-ui2": "^0.0.10",
     "vue": "^2.1.0",
+    "echarts": "3.7.2",
+    "countup.js": "1.9.2",
+    "vue-countup-v2": "^0.1.2",
     "vue-router": "2.7.0",
     "lodash": "4.17.4"
   },

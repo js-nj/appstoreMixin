@@ -44,5 +44,11 @@ export default {
 	saveLinkLog: WEBPACK_CONIFG_HOST + "sys/appstoreservice/shareLog/saveLinkLog.do",
 	//获取钉钉配置
 	//getDingTalkConfig: WEBPACK_CONIFG_HOST + "sys/appstoreservice/dingding/getConfig.do", //获取钉钉配置
+	//应用核心数据
+	data: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/data.do",
+	//数据-案例卡片
+	customerData: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/customerData.do",
+	//安心守护运行数据
+	runData: WEBPACK_CONIFG_HOST + "sys/appstoreservice/core/runData.do"
 
 }

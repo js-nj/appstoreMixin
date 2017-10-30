@@ -113,42 +113,21 @@
         },
         methods: {
             goPagesByType(item) {
-                console.log(item);
-                delete item.NAME1;
-                delete item.APPTYPE
-                delete item.APPTYPE_DISPLAY;
-                delete item.IMAGE;
-                delete item.BADGE;
-                delete item.SCHOOL_BM_DISPLAY;
-                delete item.SCHOOL_COUNT;
-                delete item.VIDEO_URL;
-                delete item.APP_COUNT;
-                delete item.CJSJ;
-                delete item.JSSJ;
-                delete item.STATE;
-                delete item.CJR;
-                delete item.XGR;
-                delete item.XGSJ;
-                delete item.XSXX;
-                delete item.STATE_DISPLAY;
-                delete item.KSSJ;
-                delete item.APP_ID_DISPLAY;
-                delete item.SCHOOL_BM;
-                console.log(item);
+                var itemTmp = {
+                    APP_ID:item.APP_ID
+                };
                 if (item.TYPE == 'app') {
-                    delete item.TYPE;
                     this.$router.push({
                       name: 'app',
-                      query: item
+                      query: itemTmp
                     });
                 }else if (item.TYPE == 'custom') {
                     if (item.PARENTTYPE && item.PARENTTYPE =='school') {
                         console.log('from school.vue')
                     }else {
-                        delete item.TYPE;
                         this.$router.push({
                           name: 'custom',
-                          query:item
+                          query:itemTmp
                         });  
                     }    
                 }
