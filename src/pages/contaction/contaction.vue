@@ -1,5 +1,5 @@
 <template>
-    <div class="contact-content">
+    <div class="contact-content" :style="{height:contactHeight}">
         <div class="contact-forms">
             <mt-field label="联系人" placeholder="联系人" v-model="username" ></mt-field>
             <mt-field label="学校" placeholder="学校" v-model="schoolname" ></mt-field>
@@ -104,7 +104,7 @@
         created() {
             var that = this;
             this.contactHeight = document.body.clientHeight + 'px';
-            BH_MIXIN_SDK.setTitleText('发送资料');    
+            //BH_MIXIN_SDK.setTitleText('发送资料');    
         },
         components:{
             [Button.name]: Button,

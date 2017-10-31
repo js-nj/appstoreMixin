@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :style="{height:infoContainerHeight}">
     <div class="bh-clearfix bh-ph-16 bh-pv-16" style="border-bottom:solid 1px #eee;">
         <div class="bh-pull-left" style="">
             <div class="bh-ph-4">
@@ -45,10 +45,12 @@
     export default {
         data () {
             return {
-               
+               infoContainerHeight:''
             }
         },
-        created() {},
+        created() {
+            this.infoContainerHeight = (document.body.clientHeight) + 'px';
+        },
         methods:{
             goSendInfoPage(appid) {
                 var self = this;

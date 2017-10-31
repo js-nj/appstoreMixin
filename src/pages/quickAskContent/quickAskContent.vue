@@ -633,18 +633,41 @@
                     },200); 
                 }
             },
-            takeCamera() {
-                let takeCamera = BH_MIXIN_SDK.takeCamera;
-                takeCamera((ret) => {
-                    this.imgs = this.imgs.concat(ret);
-                })
-                this.uploadImgType = '拍照';
-            },
+            // takeCamera() {
+            //     let takeCamera = BH_MIXIN_SDK.takeCamera;
+            //     takeCamera((ret) => {
+            //         this.imgs = this.imgs.concat(ret);
+            //     })
+            //     this.uploadImgType = '拍照';
+            // },
             takePhoto() {
-                let takePhoto = BH_MIXIN_SDK.takePhoto;
-                takePhoto((ret) => {
-                    this.imgs = this.imgs.concat(ret);
-                }, this.imgLimit - this.imgs.length);
+                var that = this;
+                DingTalkPC.biz.util.uploadImage({
+                    multiple: false, //是否多选，默认false
+                    max: 3, //最多可选个数
+                    onSuccess : function(result) {
+                        /*
+                        [
+                          'https://static.dingtalk.com/media/lADOA9bQH8zIzMg_200_200.jpg'
+                        ]
+                        */
+                       console.log('上传的图片');
+                       console.log(result);
+                       if (result.length>0) {
+                            for (var i = 0; i < result.length; i++) {
+                                that.imgs.push({base64:result[i],url:result[i]});
+                            }
+                       }
+                       console.log(that.imgs)
+                       //that.imgs = that.imgs.concat(result);
+                       //that.saveImgToEmap(that.options);
+                    },
+                    onFail : function() {}
+                });
+                // let takePhoto = BH_MIXIN_SDK.takePhoto;
+                // takePhoto((ret) => {
+                //     this.imgs = this.imgs.concat(ret);
+                // }, this.imgLimit - this.imgs.length);
                 //this.uploadImgType = '相册';
             },
             deleteImg(index,item) {
@@ -653,7 +676,26 @@
                 this.deleteImgArr.push(item);
             },
             previewImg(index) {
-                BH_MIXIN_SDK.preViewImages(this.imgs, index);
+                //alert('ask');
+                var originUrl = [];
+                for (var i = 0; i < this.imgs.length; i++) {
+                    originUrl.push(window.location.origin + this.imgs[i].url);
+                }
+                console.log('ask-1');
+                console.log(originUrl)
+                console.log(index)
+                DingTalkPC.biz.util.previewImage({
+                    urls: originUrl,//图片地址列表
+                    current: originUrl[index],//当前显示的图片链接
+                    onSuccess : function(result) {
+                        /**/
+                        console.log(result)
+                    },
+                    onFail : function(err) {
+                        console.log(err)
+                    }
+                });
+                //BH_MIXIN_SDK.preViewImages(this.imgs, index);
             },
             uploadImage() {
                 return BH_MIXIN_SDK.uploadImgsToEmap({

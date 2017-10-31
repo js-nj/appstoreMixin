@@ -101,7 +101,7 @@
         },
         created() {
           var that = this;
-          BH_MIXIN_SDK.setTitleText('正在服务学校');
+          //BH_MIXIN_SDK.setTitleText('正在服务学校');
           //设置billdetail框部分的高度
           that.schoolContainerHeight = (document.body.clientHeight) + 'px';
           that.appName =JSON.parse(that.$route.query.item).NAME1;

@@ -335,7 +335,7 @@
                 //this.appContainerHeight = (document.body.clientHeight) + 'px';
                 //下面写法在ios上存在兼容性
                 this.appContainerHeight = (document.body.clientHeight) - 47 + 'px';
-                BH_MIXIN_SDK.setTitleText('应用详情');
+                //BH_MIXIN_SDK.setTitleText('应用详情');
                 //应用详情
                 var option = {
                     WID:routeApp.APP_ID?routeApp.APP_ID : routeApp.WID
@@ -367,47 +367,47 @@
                     if (response.data.datas.detail.rows && response.data.datas.detail.rows.length>0) {
                         that.appInfo = response.data.datas.detail.rows[0];
                         //钉钉分享
-                        dd.biz.navigation.setRight({
-                            show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
-                            control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
-                            text: '',//控制显示文本，空字符串表示显示默认文本
-                            onSuccess : function(result) {
-                                //如果control为true，则onSuccess将在发生按钮点击事件被回调
-                                /*
-                                {}
-                                */
-                               //保存分享数据
-                               axios({
-                                   method:"POST",
-                                   url:api.saveLink,
-                                   params:{
-                                     appId:that.$route.query.APP_ID
-                                   }
-                               }).then(function(response){
-                                 if (response.data.code == 0) {
-                                   //钉钉分享
-                                   dd.biz.util.share({
-                                       type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
-                                       url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html#/app?APP_ID='+ that.$route.query.APP_ID+'&linkWid='+response.data.linkWid,
-                                       title: that.appInfo.NAME1,
-                                       content: that.appInfo.INTRODUCTION,
-                                       image: that.setImgUrlFromId(that.appInfo.IMAGE),
-                                       onSuccess : function() {
-                                           //alert('分享成功');
-                                       },
-                                       onFail : function(err) {
-                                         alert(err);
-                                       }
-                                   });
-                                 }else {
-                                   Toast('保存分享数据失败');
-                                 }
-                               }).catch(function(err){
-                                 Toast(err);
-                               }); 
-                            },
-                            onFail : function(err) {}
-                        });
+                        // dd.biz.navigation.setRight({
+                        //     show: true,//控制按钮显示， true 显示， false 隐藏， 默认true
+                        //     control: true,//是否控制点击事件，true 控制，false 不控制， 默认false
+                        //     text: '',//控制显示文本，空字符串表示显示默认文本
+                        //     onSuccess : function(result) {
+                        //         //如果control为true，则onSuccess将在发生按钮点击事件被回调
+                        //         /*
+                        //         {}
+                        //         */
+                        //        //保存分享数据
+                        //        axios({
+                        //            method:"POST",
+                        //            url:api.saveLink,
+                        //            params:{
+                        //              appId:that.$route.query.APP_ID
+                        //            }
+                        //        }).then(function(response){
+                        //          if (response.data.code == 0) {
+                        //            //钉钉分享
+                        //            dd.biz.util.share({
+                        //                type: 0,//分享类型，0:全部组件 默认； 1:只能分享到钉钉；2:不能分享，只有刷新按钮
+                        //                url: 'http://appstore.campusphere.cn:28080/emap/sys/appstoreservice/index.html#/app?APP_ID='+ that.$route.query.APP_ID+'&linkWid='+response.data.linkWid,
+                        //                title: that.appInfo.NAME1,
+                        //                content: that.appInfo.INTRODUCTION,
+                        //                image: that.setImgUrlFromId(that.appInfo.IMAGE),
+                        //                onSuccess : function() {
+                        //                    //alert('分享成功');
+                        //                },
+                        //                onFail : function(err) {
+                        //                  alert(err);
+                        //                }
+                        //            });
+                        //          }else {
+                        //            Toast('保存分享数据失败');
+                        //          }
+                        //        }).catch(function(err){
+                        //          Toast(err);
+                        //        }); 
+                        //     },
+                        //     onFail : function(err) {}
+                        // });
                         //微信分享
                         // var targetUrl = window.location.href.split('#/')[0];
                         // var targetPage = encodeURIComponent(targetUrl.split('?')[0]);
@@ -442,7 +442,10 @@
                         wechatShare.setImagePhotoSwipe('.app-intro-text img');
                         //设置视频元素的高度
                         setTimeout(function(){
-                          var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+                          //var width = window.innerWidth || document.body.clientWidth || document.documentElement.clientWidth;
+                          //var width = document.getElementsByClassName("main")[0].style.width;
+                          var width = 400;
+                          console.log('******width******'+document.getElementsByClassName("main")[0].width);
                           var videoStyle = document.getElementsByClassName("video-js")[0];
                           videoStyle.style.height = Math.floor(Number(width) * 9 / 16) + 'px';
                         },50);
@@ -821,6 +824,8 @@
 }
 .app-content-body {
     overflow:auto;
+    /*border-left:solid 1px #ddd;
+    border-right:solid 1px #ddd;*/
 }
 .app-name {
 }

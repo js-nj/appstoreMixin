@@ -25,6 +25,7 @@
     import style from './style.css';
     import axios  from 'axios';
     import api from './api.js';
+    import {Toast} from 'bh-mint-ui2';
     export default {
         data () {
             return {
@@ -55,34 +56,34 @@
           if (!sessionStorage.login) {
             console.log('dingding --------login')
             //if (dd) {
-              dd.runtime.permission.requestAuthCode({
-                  corpId: 'ding5b727efd1035c355', //企业id
+              DingTalkPC.runtime.permission.requestAuthCode({
+                  corpId: "ding5b727efd1035c355", //企业ID
                   onSuccess: function(info) {
-                      console.log('authcode:' + info.code);
-                      window.authcode = info.code;
-                      axios({
-                          method:"POST",
-                          url:api.getUserInfo,
-                          params:{
-                              weiXincode:window.authcode,
-                              openId:""
-                          }
-                      }).then(function(response){
-                        if (response.data.code == 0) {
-                          //一次对话，表示已经登录
-                          sessionStorage.login = true;
-                          console.log('sessionStorage:'+sessionStorage);
-                          self.queryCurrentUserInfo();
-                        }else {
-                          sessionStorage.login = false;
-                          Toast('发送用户code失败');
+                    console.log('userGet success: ' + JSON.stringify(info));
+                    window.authcode = info.code;
+                    axios({
+                        method:"POST",
+                        url:api.getUserInfo,
+                        params:{
+                            weiXincode:window.authcode,
+                            openId:""
                         }
-                      }).catch(function(err){
-                        Toast(err);
-                      });
+                    }).then(function(response){
+                      if (response.data.code == 0) {
+                        //一次对话，表示已经登录
+                        sessionStorage.login = true;
+                        console.log('sessionStorage:'+sessionStorage);
+                        self.queryCurrentUserInfo();
+                      }else {
+                        sessionStorage.login = false;
+                        Toast('发送用户code失败');
+                      }
+                    }).catch(function(err){
+                      Toast(err);
+                    });
                   },
-                  onFail: function(err) {
-                      console.log('requestAuthCode fail: ' + JSON.stringify(err));
+                  onFail : function(err) {
+                    console.log('userGet fail: ' + JSON.stringify(err));
                   }
               });
             //}
@@ -116,6 +117,9 @@
               //Toast('queryCurrentUserInfo');
             });
           }
+        },
+        components:{
+            [Toast.name]: Toast
         }
     }
 </script>

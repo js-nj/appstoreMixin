@@ -15,12 +15,12 @@ echo > "%name%\lib\readme"
 echo > "%name%\EMAP_APP"
 md "%name%\config"
 md "%name%\web"
-md "%name%\web\dist"
+md "%name%\web\pcdist"
 md "%name%\web\static"
-XCOPY ".\dist" "%name%\web\dist" /e
+XCOPY ".\pcdist" "%name%\web\pcdist" /e
 XCOPY ".\static" "%name%\web\static" /e
 copy ".\EMAP_APP" "%name%"
-copy ".\index.html" "%name%\web"
+copy ".\pcIndex.html" "%name%\web"
 echo "---- add file complete ----"
 if exist "app_info.xml" (
     echo "---- app_info has ----"

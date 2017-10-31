@@ -153,7 +153,14 @@
                   localStorage.selectedTab = 'bestRecomend';
                   this.classBestRecomend = 'tab-icon-bestRecomend-selected';
                   this.classFeedBack = 'tab-icon-feedBack';
-                  BH_MIXIN_SDK.setTitleText('精品推荐');
+                  // DingTalkPC.biz.navigation.setTitle({
+                  //     title: "精品推荐",//标题
+                  //     onSuccess : function(result) {
+                  //         /**/
+                  //     },
+                  //     onFail : function() {}
+                  // })
+                  //BH_MIXIN_SDK.setTitleText('精品推荐');
                   document.body.removeEventListener('touchmove', scrollCallback);
                   this.requestBestRecomendAjax();
                   //this.queryCurrentUserInfo();
@@ -163,7 +170,14 @@
                   localStorage.selectedTab = 'feedBack';
                   this.classBestRecomend = 'tab-icon-bestRecomend';
                   this.classFeedBack = 'tab-icon-feedBack-selected';
-                  BH_MIXIN_SDK.setTitleText('问题反馈');
+                  // DingTalkPC.biz.navigation.setTitle({
+                  //     title: "问题反馈",//标题
+                  //     onSuccess : function(result) {
+                  //         /**/
+                  //     },
+                  //     onFail : function() {}
+                  // })
+                  //BH_MIXIN_SDK.setTitleText('问题反馈');
                   document.body.removeEventListener('touchmove', scrollCallback);
                   this.queryFeedBackDatas();
                   break;
@@ -173,8 +187,15 @@
         created() {
           var that = this;
           console.log('测试钉钉title');
-          console.log(BH_MIXIN_SDK);
-          BH_MIXIN_SDK.setTitleText('APP STORE');
+          //console.log(BH_MIXIN_SDK);
+          //BH_MIXIN_SDK.setTitleText('APP STORE');
+          // DingTalkPC.biz.navigation.setTitle({
+          //     title: "APP STORE",//标题
+          //     onSuccess : function(result) {
+          //         /**/
+          //     },
+          //     onFail : function() {}
+          // });
           that.pageHeight = (document.body.clientHeight) - 50 +'px';
           var indexUrl = window.location.href;
           var routeParam = that.$route.query;

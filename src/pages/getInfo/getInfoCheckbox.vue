@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="{height:contactHeight}">
         <ul>
             <li v-for="item in items" class="as-list bh-ph-16 bh-pv-24 bh-clearfix" style="border-bottom:solid 1px #eee;">
                 <div class="bill-list-radio bh-pl-8">
@@ -63,11 +63,13 @@
                 id:'5',
                 name:'竞争对手分析',
                 time:'暂无'
-               }]
+               }],
+               contactHeight:''
             }
         },
         created() {
             var that = this;
+            that.contactHeight = document.body.clientHeight + 'px';
             axios({
                 method:"POST",
                 url:api.queryAppIntroduceFjxx,
@@ -155,7 +157,7 @@
                         params:options
                     }).then(function(response){
                       if (response.data.code == 0) {
-                        dd.device.notification.alert({
+                        DingTalkPC.device.notification.alert({
                             message: "资料已发送至邮箱",
                             title: "",//可传空
                             buttonName: "ok",

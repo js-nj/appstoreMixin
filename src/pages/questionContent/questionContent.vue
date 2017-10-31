@@ -1,6 +1,6 @@
 <template>
-    <div class="qc-content">
-        <div class="qc-content-body" :style="{height:contentHeight}">
+    <div class="qc-content" :style="{height:contentHeight}">
+        <div class="qc-content-body">
            <div class="bh-ph-16 bh-pv-8" style="border-bottom:solid 1px #eee;background-color: #fff;">
                <div class="bh-clearfix">
                    <h5 class="bh-pull-left" style="font-size: 15px;font-weight: 600;display:inline-block;">{{questionInfo.TITLE}}</h5>
@@ -12,8 +12,8 @@
                    {{questionInfo.CONTENT}}
                </p>
                <div class="post-imgs bh-clearfix">
-                   <div class="post-img" v-for="img in imgs">
-                       <img @click="previewImg($index)" :src="img.base64">
+                   <div class="post-img" v-for="(img,index) in imgs">
+                       <img @click="previewImg(index)" :src="img.base64">
                    </div>
                </div>
                <div class="bh-clearfix bh-pt-4">
@@ -42,8 +42,8 @@
                                {{answer.ANSWER}}
                            </p>
                            <div class="post-imgs bh-clearfix">
-                               <div class="post-img" v-for="img in answer.answerImgs">
-                                   <img @click="previewImg2(answer.answerImgs,$index)" :src="img.base64">
+                               <div class="post-img" v-for="(img,index) in answer.answerImgs">
+                                   <img @click="previewImg2(answer.answerImgs,index)" :src="img.base64">
                                </div>
                            </div>
                        </div>
@@ -198,7 +198,7 @@
             },
             deleteQuestion(){
                 var that = this;
-                dd.device.notification.confirm({
+                DingTalkPC.device.notification.confirm({
                     message: "确定删除吗？",
                     title: "删除",
                     buttonLabels: ['确定', '取消'],
@@ -239,7 +239,7 @@
             },
             deleteAnswer(item){
                 var that = this;
-                dd.device.notification.confirm({
+                DingTalkPC.device.notification.confirm({
                     message: "确定删除吗？",
                     title: "删除",
                     buttonLabels: ['确定', '取消'],
@@ -284,10 +284,48 @@
                 });
             },
             previewImg(index) {
-                BH_MIXIN_SDK.preViewImages(this.imgs, index);
+                //alert(1);
+                var originUrl = [];
+                for (var i = 0; i < this.imgs.length; i++) {
+                    originUrl.push(this.imgs[i].url);
+                }
+                console.log('content-1');
+                console.log(originUrl);
+                console.log(index);
+                DingTalkPC.biz.util.previewImage({
+                    urls: originUrl,//图片地址列表
+                    current: originUrl[index],//当前显示的图片链接
+                    onSuccess : function(result) {
+                        /**/
+                        console.log(result)
+                    },
+                    onFail : function(err) {
+                      console.log(err)
+                    }
+                });
+                //BH_MIXIN_SDK.preViewImages(this.imgs, index);
             },
             previewImg2(arr,index) {
-                BH_MIXIN_SDK.preViewImages(arr, index);
+                //alert(2);
+                var originUrl = [];
+                for (var i = 0; i < arr.length; i++) {
+                    originUrl.push(arr[i].url);
+                }
+                console.log('content-2');
+                console.log(originUrl);
+                console.log(index);
+                DingTalkPC.biz.util.previewImage({
+                    urls: originUrl,//图片地址列表
+                    current: originUrl[index],//当前显示的图片链接
+                    onSuccess : function(result) {
+                        /**/
+                        console.log(result)
+                    },
+                    onFail : function(err) {
+                      console.log(err)
+                    }
+                });
+                //BH_MIXIN_SDK.preViewImages(arr, index);
             },
             getImg(token,arr,num){
                 var that =this;
@@ -430,7 +468,7 @@
             console.log('localStorage.personId:'+localStorage.personId);
             that.personId = localStorage.personId;
 
-            that.contentHeight = (document.body.clientHeight) - 50 + 'px';
+            that.contentHeight = (document.body.clientHeight) + 'px';
             
             if (that.questionInfo.DESC_PIC) {
                that.getImg(that.questionInfo.DESC_PIC,that.imgs); 

@@ -36,7 +36,7 @@
             },
             customMain() {
                 var that = this;
-                BH_MIXIN_SDK.setTitleText('案例详情');
+                //BH_MIXIN_SDK.setTitleText('案例详情');
                 
                 //设置custom中间内容部分的高度
                 that.customContentHeight = (document.body.clientHeight) + 'px';

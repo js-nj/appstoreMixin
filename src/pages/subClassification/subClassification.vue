@@ -160,7 +160,7 @@ input[type="search" i]:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-se
         },
         created() {
             var that = this;
-            BH_MIXIN_SDK.setTitleText('应用列表');
+            //BH_MIXIN_SDK.setTitleText('应用列表');
             // setTimeout(function(){
             //     console.log('preventBodyScroll -subc')
             //     wechatShare.preventBodyScroll();
