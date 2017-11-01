@@ -52,43 +52,41 @@
           var self = this;
           //钉钉上将用户code传递给后台
           //alert(!sessionStorage.login)
-          if (!sessionStorage.login) {
-            console.log('dingding --------login')
-            //if (dd) {
-              dd.runtime.permission.requestAuthCode({
-                  corpId: 'ding5b727efd1035c355', //企业id
-                  onSuccess: function(info) {
-                      console.log('authcode:' + info.code);
-                      window.authcode = info.code;
-                      axios({
-                          method:"POST",
-                          url:api.getUserInfo,
-                          params:{
-                              weiXincode:window.authcode,
-                              openId:""
-                          }
-                      }).then(function(response){
-                        if (response.data.code == 0) {
-                          //一次对话，表示已经登录
-                          sessionStorage.login = true;
-                          console.log('sessionStorage:'+sessionStorage);
-                          self.queryCurrentUserInfo();
-                        }else {
-                          sessionStorage.login = false;
-                          Toast('发送用户code失败');
-                        }
-                      }).catch(function(err){
-                        Toast(err);
-                      });
-                  },
-                  onFail: function(err) {
-                      console.log('requestAuthCode fail: ' + JSON.stringify(err));
-                  }
-              });
-            //}
-            localStorage.selectedTab = '';
-            localStorage.appSelectedTab = '';
-          }
+          // if (!sessionStorage.login) {
+          //   console.log('dingding --------login')
+          //   dd.runtime.permission.requestAuthCode({
+          //       corpId: 'ding5b727efd1035c355', //企业id
+          //       onSuccess: function(info) {
+          //           console.log('authcode:' + info.code);
+          //           window.authcode = info.code;
+          //           axios({
+          //               method:"POST",
+          //               url:api.getUserInfo,
+          //               params:{
+          //                   weiXincode:window.authcode,
+          //                   openId:""
+          //               }
+          //           }).then(function(response){
+          //             if (response.data.code == 0) {
+          //               //一次对话，表示已经登录
+          //               sessionStorage.login = true;
+          //               console.log('sessionStorage:'+sessionStorage);
+          //               self.queryCurrentUserInfo();
+          //             }else {
+          //               sessionStorage.login = false;
+          //               Toast('发送用户code失败');
+          //             }
+          //           }).catch(function(err){
+          //             Toast(err);
+          //           });
+          //       },
+          //       onFail: function(err) {
+          //           console.log('requestAuthCode fail: ' + JSON.stringify(err));
+          //       }
+          //   });
+          //   localStorage.selectedTab = '';
+          //   localStorage.appSelectedTab = '';
+          // }
         },
         methods:{
           queryCurrentUserInfo(){
