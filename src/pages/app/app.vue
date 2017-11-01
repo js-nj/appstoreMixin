@@ -801,6 +801,15 @@
             if (localStorage.appSelectedTab) {
               that.selected = localStorage.appSelectedTab;
             }
+            // DingTalkPC.device.notification.alert({
+            //     message: "app-detail",
+            //     title: "提示",//可传空
+            //     buttonName: "收到",
+            //     onSuccess : function() {
+            //         /*回调*/
+            //     },
+            //     onFail : function(err) {}
+            // });
             that.appMain();
         },
         components:{

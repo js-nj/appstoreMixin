@@ -50,73 +50,81 @@
             }
         },
         beforeCreate(){
-          var self = this;
-          //钉钉上将用户code传递给后台
-          //alert(!sessionStorage.login)
-          if (!sessionStorage.login) {
-            console.log('dingding --------login')
-            //if (dd) {
-              DingTalkPC.runtime.permission.requestAuthCode({
-                  corpId: "ding5b727efd1035c355", //企业ID
-                  onSuccess: function(info) {
-                    console.log('userGet success: ' + JSON.stringify(info));
-                    window.authcode = info.code;
-                    axios({
-                        method:"POST",
-                        url:api.getUserInfo,
-                        params:{
-                            weiXincode:window.authcode,
-                            openId:""
-                        }
-                    }).then(function(response){
-                      if (response.data.code == 0) {
-                        //一次对话，表示已经登录
-                        sessionStorage.login = true;
-                        console.log('sessionStorage:'+sessionStorage);
-                        self.queryCurrentUserInfo();
-                      }else {
-                        sessionStorage.login = false;
-                        Toast('发送用户code失败');
-                      }
-                    }).catch(function(err){
-                      Toast(err);
-                    });
-                  },
-                  onFail : function(err) {
-                    console.log('userGet fail: ' + JSON.stringify(err));
-                  }
-              });
-            //}
-            localStorage.selectedTab = '';
-            localStorage.appSelectedTab = '';
-          }
+          // var self = this;
+          // //钉钉上将用户code传递给后台
+          // DingTalkPC.device.notification.alert({
+          //     message: !sessionStorage.login,
+          //     title: "提示",//可传空
+          //     buttonName: "收到",
+          //     onSuccess : function() {
+          //         /*回调*/
+          //     },
+          //     onFail : function(err) {}
+          // });
+          // if (!sessionStorage.login) {
+          //   console.log('dingding --------login')
+          //   //if (dd) {
+          //     DingTalkPC.runtime.permission.requestAuthCode({
+          //         corpId: "ding5b727efd1035c355", //企业ID
+          //         onSuccess: function(info) {
+          //           console.log('userGet success: ' + JSON.stringify(info));
+          //           window.authcode = info.code;
+          //           axios({
+          //               method:"POST",
+          //               url:api.getUserInfo,
+          //               params:{
+          //                   weiXincode:window.authcode,
+          //                   openId:""
+          //               }
+          //           }).then(function(response){
+          //             if (response.data.code == 0) {
+          //               //一次对话，表示已经登录
+          //               sessionStorage.login = true;
+          //               console.log('sessionStorage:'+sessionStorage);
+          //               self.queryCurrentUserInfo();
+          //             }else {
+          //               sessionStorage.login = false;
+          //               Toast('发送用户code失败');
+          //             }
+          //           }).catch(function(err){
+          //             Toast(err);
+          //           });
+          //         },
+          //         onFail : function(err) {
+          //           console.log('userGet fail: ' + JSON.stringify(err));
+          //         }
+          //     });
+          //   //}
+          //   localStorage.selectedTab = '';
+          //   localStorage.appSelectedTab = '';
+          // }
         },
         methods:{
-          queryCurrentUserInfo(){
-            //获取用户身份信息
-            axios({
-                method:"POST",
-                url:api.queryCurrentUserInfo,
-                params:{
-                    pageNum:1,
-                    pageSize:15
-                }
-            }).then(function(response){
-              //alert(JSON.stringify(response));
-              if (response.data.code == 0) {
-                var responseData = response.data.datas.list.rows;
-                localStorage.personId = responseData[0].WID;
-                localStorage.personGh = responseData[0].GH;
-                console.log('window.personId:'+localStorage.personId)
-                console.log('window.personGh:'+localStorage.personGh)
-              }else {
-                Toast('获取用户身份信息失败');
-              }
-            }).catch(function(err){
-              Toast(err);
-              //Toast('queryCurrentUserInfo');
-            });
-          }
+          // queryCurrentUserInfo(){
+          //   //获取用户身份信息
+          //   axios({
+          //       method:"POST",
+          //       url:api.queryCurrentUserInfo,
+          //       params:{
+          //           pageNum:1,
+          //           pageSize:15
+          //       }
+          //   }).then(function(response){
+          //     //alert(JSON.stringify(response));
+          //     if (response.data.code == 0) {
+          //       var responseData = response.data.datas.list.rows;
+          //       localStorage.personId = responseData[0].WID;
+          //       localStorage.personGh = responseData[0].GH;
+          //       console.log('window.personId:'+localStorage.personId)
+          //       console.log('window.personGh:'+localStorage.personGh)
+          //     }else {
+          //       Toast('获取用户身份信息失败');
+          //     }
+          //   }).catch(function(err){
+          //     Toast(err);
+          //     //Toast('queryCurrentUserInfo');
+          //   });
+          // }
         },
         components:{
             [Toast.name]: Toast
