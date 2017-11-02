@@ -1,5 +1,5 @@
 <template>
-    <div class="bh-clearfix bh-ph-16 bh-pv-16 qa-container">
+    <div class="bh-clearfix bh-ph-8 bh-pv-16 qa-container">
         <div class="bh-pull-left">
             <div>
                 <img :src="'./static/assets/ask.png'" style="margin-top:-4px;width:16px;height:16px;"/>

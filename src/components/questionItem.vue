@@ -28,7 +28,7 @@
     font-size: 15px;
     font-weight: 600;
     display:inline-block;
-    width: 65%;
+    width: 60%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
