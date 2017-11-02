@@ -109,50 +109,52 @@ axios({
                     //Toast('queryCurrentUserInfo');
                 });
             };
-            if (!sessionStorage.login) {
-                console.log('dingding --------login')
-                DingTalkPC.runtime.permission.requestAuthCode({
-                    corpId: "ding5b727efd1035c355", //企业ID
-                    onSuccess: function(info) {
-                        console.log('userGet success: ' + JSON.stringify(info));
-                        window.authcode = info.code;
-                        axios({
-                            method: "POST",
-                            url: api.getUserInfo,
-                            params: {
-                                weiXincode: window.authcode,
-                                openId: ""
-                            }
-                        }).then(function(response) {
-                            if (response.data.code == 0) {
-                                //一次对话，表示已经登录
-                                sessionStorage.login = true;
-                                console.log('sessionStorage:' + sessionStorage);
-                                queryCurrentUserInfo();
-                                //页面加载函数
-                                //钉钉PC版,无需去引用、验证bh-mixin-sdk
-                                Init();
-                            } else {
-                                sessionStorage.login = false;
-                                Toast('发送用户code失败');
-                            }
-                        }).catch(function(err) {
-                            Toast(err);
-                        });
-                    },
-                    onFail: function(err) {
-                        console.log('userGet fail: ' + JSON.stringify(err));
-                    }
-                });
-                localStorage.selectedTab = '';
-                localStorage.appSelectedTab = '';
-            } else {
-                //查询用户信息
-                queryCurrentUserInfo();
-                //页面加载函数
-                //钉钉PC版,无需去引用、验证bh-mixin-sdk
-                Init();
-            }
+            //console.log(sessionStorage);
+            //console.log('!sessionStorage.login:' + sessionStorage.login);
+            //if (!sessionStorage.login) {
+            console.log('dingding --------login')
+            DingTalkPC.runtime.permission.requestAuthCode({
+                corpId: "ding5b727efd1035c355", //企业ID
+                onSuccess: function(info) {
+                    console.log('userGet success: ' + JSON.stringify(info));
+                    window.authcode = info.code;
+                    axios({
+                        method: "POST",
+                        url: api.getUserInfo,
+                        params: {
+                            weiXincode: window.authcode,
+                            openId: ""
+                        }
+                    }).then(function(response) {
+                        if (response.data.code == 0) {
+                            //一次对话，表示已经登录
+                            sessionStorage.login = true;
+                            console.log('sessionStorage:' + sessionStorage);
+                            queryCurrentUserInfo();
+                            //页面加载函数
+                            //钉钉PC版,无需去引用、验证bh-mixin-sdk
+                            Init();
+                        } else {
+                            sessionStorage.login = false;
+                            Toast('发送用户code失败');
+                        }
+                    }).catch(function(err) {
+                        Toast(err);
+                    });
+                },
+                onFail: function(err) {
+                    console.log('userGet fail: ' + JSON.stringify(err));
+                }
+            });
+            localStorage.selectedTab = '';
+            localStorage.appSelectedTab = '';
+            // } else {
+            //     //查询用户信息
+            //     queryCurrentUserInfo();
+            //     //页面加载函数
+            //     //钉钉PC版,无需去引用、验证bh-mixin-sdk
+            //     Init();
+            // }
 
             /*{
                 authorizedAPIList: ['device.notification.alert'], //已授权API列表

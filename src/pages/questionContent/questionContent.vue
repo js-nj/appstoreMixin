@@ -8,7 +8,7 @@
                        {{questionInfo.CREATE_TIME}}
                    </span>
                </div>
-               <p class="" style="font-size: 14px;">
+               <p class="" style="font-size: 14px;word-break: break-all;">
                    {{questionInfo.CONTENT}}
                </p>
                <div class="post-imgs bh-clearfix">
@@ -38,7 +38,7 @@
                                    {{answer.CREATE_TIME}}
                                </span>
                            </div>
-                           <p class="bh-pt-8 bh-pb-16" style="font-size: 14px;">
+                           <p class="bh-pt-8 bh-pb-16" style="font-size: 14px;word-break: break-all;">
                                {{answer.ANSWER}}
                            </p>
                            <div class="post-imgs bh-clearfix">
