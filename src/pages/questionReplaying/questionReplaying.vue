@@ -1,5 +1,5 @@
 <template>
-    <div class="bh-pv-16 qr-container">
+    <div class="bh-pv-16 qr-container" :style="{height:contentHeight}">
         <question-item :items="questionArray"></question-item>
     </div>
 </template>
@@ -14,11 +14,13 @@
     export default {
         data () {
             return {
-               questionArray:[]
+               questionArray:[],
+               contentHeight:''
             }
         },
         created() {
             var self = this;
+            self.contentHeight = (document.body.clientHeight) + 'px';
             axios({
                 method:"POST",
                 url:api.queryQuestionByUserId,

@@ -91,6 +91,7 @@
 .qc-item-tag .mint-badge.is-size-normal {
     font-size: 10px !important;
     border-radius:4px !important;
+    margin-top: 2px;
 }
 .contact-button {
     width: 33.33%;

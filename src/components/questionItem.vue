@@ -7,7 +7,7 @@
                     {{item.CREATE_TIME}}
                 </span>
             </div>
-            <p class="bh-pv-8" style="font-size: 12px;">{{item.CONTENT}}</p>
+            <p class="bh-pv-8" style="font-size: 12px;word-break:break-all;">{{item.CONTENT}}</p>
             <div class="bh-clearfix bh-pt-4">
                 <div class="bh-l-inline bh-pull-left qi-item-tag" style="font-size:12px;">
                     <mt-badge>{{item.PRODUCT_CODE_DISPLAY}}</mt-badge>
@@ -23,6 +23,7 @@
 .qi-item-tag .mint-badge.is-size-normal {
     font-size: 10px !important;
     border-radius:4px !important;
+    margin-top: 2px;
 }
 .qi-item-title{
     font-size: 15px;
