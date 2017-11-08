@@ -43,30 +43,7 @@
                 <!-- <custom-case :details="customInfo" :subTag="true" class="app-case-text"></custom-case> -->
                 <div style="background-color:#F6F6F6;padding-bottom:64px;" class="">
                  <div class="data-case bh-ph-16 bh-mh-4 bh-pv-16" style="display:none;">
-                   <div class="bh-pb-8 as-color-999">标杆案例数据</div>
-                   <div class="data-border-radius bh-ph-8" @click="goCustomerCase">
-                     <div class="bh-clearfix bh-pv-16 bh-ph-8">
-                       <div class="bh-pull-left data-case-school">{{customerDataTmp.SCHOOL_BM_DISPLAY}}</div>
-                       <label class="bh-pull-right data-case-updateTime">
-                        更新于 <label>{{customerDataTmp.DATA_UPDATE_TIME}}</label>
-                        <span class="data-case-arrow"></span>
-                       </label>
-                     </div>
-                     <div class="bh-clearfix bh-text-center bh-pv-8" style="border-top:solid 1px #ddd;">
-                       <div class="as-col-md-4">
-                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.HYD}}</h5>
-                         <div class="bh-pb-8 as-color-666">活跃度</div>
-                       </div>
-                       <div class="as-col-md-4">
-                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.LLS}}</h5>
-                         <div class="bh-pb-8 as-color-666">30日浏览数(PV)</div>
-                       </div>
-                       <div class="as-col-md-4">
-                         <h5 class="bh-pv-8 as-font-weight">{{customerDataTmp.SYS}}</h5>
-                         <div class="bh-pb-8 as-color-666">30日使用数(UV)</div>
-                       </div>
-                     </div>
-                   </div>
+                     <bg-case-data :cuscustomerDataTmp="customerDataTmp"></bg-case-data>
                  </div>
                  <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
                      <div class="bh-pb-8 as-color-999">应用核心数据</div>
@@ -99,52 +76,7 @@
                        </div>
                      </div>
                    </div>
-                 <div v-if="!isAnxinshouhu">
-                   <div class="data-sex bh-ph-16 bh-mh-4 bh-pv-8">
-                    <div class="data-box">
-                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
-                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户性别分布</div>
-                          <label class="bh-pull-right">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
-                       </div>
-                      <div class="bh-clearfix bh-pb-24">
-                        <div class="as-col-md-6">
-                          <div id="sexEchart" class="data-echart">
-                            
-                          </div>
-                        </div>
-                        <div class="as-col-md-6">
-                          <ul class="sex-uls bh-pl-32">
-                            <li><span style="background: #4E7CCC;"></span><label>男</label><label>{{mainDatas.SEX_MAN}}%</label></li>
-                            <li><span style="background: #4ECDA5;"></span><label>女</label><label>{{mainDatas.SEX_GIRL}}%</label></li>
-                            <li><span style="background: #36B3C3;"></span><label>其他</label><label>{{mainDatas.SEX_OTHER}}%</label></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div> 
-                   </div>
-                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-8">
-                    <div class="data-box" style="">
-                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
-                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户角色分布</div>
-                          <label class="bh-pull-right" >更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
-                       </div>
-                      <div class="bh-clearfix bh-pb-24">
-                        <div class="as-col-md-6">
-                          <div id="roleEchart" class="data-echart" style="">
-                            
-                          </div>
-                        </div>
-                        <div class="as-col-md-6">
-                          <ul class="sex-uls bh-pt-32 bh-pl-32">
-                            <li><span style="background: #4E7CCC;"></span><label>教师</label><label>{{mainDatas.ROLE_TEACHER}}%</label></li>
-                            <li><span style="background: #4ECDA5;"></span><label>学生</label><label>{{mainDatas.ROLE_STUDENT}}%</label></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div> 
-                   </div>
-                 </div>
-                 <div v-else>
+                 <div v-if="isAnxinshouhu">
                    <!-- 应用运行数据 -->
                    <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
                      <div class="bh-pb-8 as-color-999">应用运行数据</div>
@@ -227,6 +159,152 @@
                      </div>
                    </div>
                  </div>
+                 <div v-else-if="isManageStudentService">
+                   <!-- 应用运行数据 -->
+                   <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
+                     <div class="bh-pb-8 as-color-999">应用运行数据</div>
+                     <div class="data-box sub-container">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">总体数据</div>
+                           <label class="bh-pull-right as-color-black-opacity">更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class="bh-clearfix bh-text-center bh-pv-8">
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHXX)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                             </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">服务学校(所)</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHYY)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                              </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">开发应用数(个)</div>
+                           </div>
+                           <div class="as-col-md-4">
+                             <h5 class="bh-pv-8 as-font-weight">
+                                <i-count-up :start="0" :end="Number(runDatas.TOTAL_SHZJ)" :decimals="0" :duration="3" :options="options" ></i-count-up>
+                              </h5>
+                             <div class="bh-pb-8 as-color-black-opacity">服务学生数(人)</div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <!-- 运维数据 -->
+                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">运维数据</div>
+                          <label class="bh-pull-right as-color-black-opacity" >更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="ywEchart" class="data-echart" style="">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <div style="font-size:14px;text-align:right;padding-right:12px;color:#666;">学年内学生数 {{runDatas.OPERATE_ZFXCS}}</div>
+                          <ul class="sex-uls bh-pt-32">
+                            <li style="font-size:15px;"><span style="background: #4E7CCC;"></span><label style="width:108px;">活跃学生数</label><label style="width:28px;">{{runDatas.OPERATE_HFL}}%</label></li>
+                            <li style="font-size:15px;padding-left: 20px;">{{runDatas.OPERATE_HFCS}}人</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                   <!-- 活跃学校 -->
+                   <div class="data-main bh-ph-16 bh-mh-4 bh-pv-8">
+                     <div class="bh-pb-8 as-color-999">活跃学校 TOP 3</div>
+                     <div class="data-box sub-container">
+                       <div class="bh-ph-8">
+                         <div class="bh-clearfix bh-pv-16 bh-ph-8">
+                           <div class="bh-pull-left data-main-title">总体数据</div>
+                           <label class="bh-pull-right as-color-black-opacity">更新于 <span>{{runDatas.UPDATE_TIME}}</span></label>
+                         </div>
+                         <div class=" bh-text-center bh-pv-8">
+                           <div class="bh-clearfix bh-pv-4 as-rank-school">
+                               <div class="as-col-md-6">
+                                   <img :src="'./static/assets/indexSearch.png'"  />
+                                   <h5>南京邮电大学</h5>
+                               </div>
+                               <div class="as-col-md-6">
+                                   <label>活跃用户数:</label>
+                                   <span>55人次</span>
+                               </div>
+                           </div>
+                           <div class="bh-clearfix bh-pv-4 as-rank-school">
+                               <div class="as-col-md-6">
+                                   <img :src="'./static/assets/indexSearch.png'"  />
+                                   <h5>南京邮电大学</h5>
+                               </div>
+                               <div class="as-col-md-6">
+                                   <label>活跃用户数:</label>
+                                   <span>55人次</span>
+                               </div>
+                           </div>
+                           <div class="bh-clearfix bh-pv-4 as-rank-school">
+                               <div class="as-col-md-6">
+                                   <img :src="'./static/assets/indexSearch.png'"  />
+                                   <h5>南京邮电大学</h5>
+                               </div>
+                               <div class="as-col-md-6">
+                                   <label>活跃用户数:</label>
+                                   <span>55人次</span>
+                               </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 <div v-else>
+                   <div class="data-sex bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户性别分布</div>
+                          <label class="bh-pull-right">更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="sexEchart" class="data-echart">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="sex-uls bh-pl-32">
+                            <li><span style="background: #4E7CCC;"></span><label>男</label><label>{{mainDatas.SEX_MAN}}%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>女</label><label>{{mainDatas.SEX_GIRL}}%</label></li>
+                            <li><span style="background: #36B3C3;"></span><label>其他</label><label>{{mainDatas.SEX_OTHER}}%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                   <div class="data-role bh-ph-16 bh-mh-4 bh-pv-8">
+                    <div class="data-box" style="">
+                      <div class="bh-clearfix bh-pv-16 bh-ph-16">
+                          <div class="bh-pull-left data-main-title" style="border-left:solid 2px #278FEF;">用户角色分布</div>
+                          <label class="bh-pull-right" >更新于 <span>{{mainDatas.UPDATE_TIME}}</span></label>
+                       </div>
+                      <div class="bh-clearfix bh-pb-24">
+                        <div class="as-col-md-6">
+                          <div id="roleEchart" class="data-echart" style="">
+                            
+                          </div>
+                        </div>
+                        <div class="as-col-md-6">
+                          <ul class="sex-uls bh-pt-32 bh-pl-32">
+                            <li><span style="background: #4E7CCC;"></span><label>教师</label><label>{{mainDatas.ROLE_TEACHER}}%</label></li>
+                            <li><span style="background: #4ECDA5;"></span><label>学生</label><label>{{mainDatas.ROLE_STUDENT}}%</label></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div> 
+                   </div>
+                 </div>
                </div>
               </mt-tab-container-item>
             </mt-tab-container>
@@ -263,6 +341,7 @@
 <script>
     import { Button ,Navbar, TabItem, TabContainer,MessageBox,Toast} from 'bh-mint-ui2';
     import customCase from '../../components/customCase.vue';
+    import bgCaseData from './bgCaseData.vue';
     import api from '../../api.js';
     import axios  from 'axios';
     import echarts from 'echarts';
@@ -310,7 +389,8 @@
                   TOTAL_SHYY:0,
                   TOTAL_SHZJ:0
                 },
-                isAnxinshouhu:0//是否是安心守护应用
+                isAnxinshouhu:0,//是否是安心守护应用
+                isManageStudentService:1,//是否是学生管理服务应用
             }
         },
         // computed:{
@@ -823,27 +903,6 @@
                     });
                 }   
             },
-            goCustomerCase() {
-              var that = this;
-              axios({
-                  method:"POST",
-                  url:api.appsCustomer,
-                  params:{'APP_ID':that.$route.query.APP_ID}
-              }).then(function(response){
-                if (response.data.code == 0) {
-                  if (response.data.datas.customer.rows && response.data.datas.customer.rows.length>0) {
-                      that.$router.push({
-                        name: 'custom',
-                        query:response.data.datas.customer.rows[0]
-                      });
-                  }
-                }else {
-                  Toast('获取案例数据失败');
-                }
-              }).catch(function(err){
-                Toast(err);
-              });
-            },
             iWantIt(){
                 var that = this;
                 if (window.env == 'bh') {
@@ -946,7 +1005,8 @@
             [MessageBox.name]: MessageBox,
             [Toast.name]: Toast,
             customCase,
-            ICountUp
+            ICountUp,
+            bgCaseData
         }
     }
 </script>
@@ -1188,5 +1248,17 @@
   .data-box {
     border:solid 1px #ddd;border-radius:4px;
     background: #fff;
+  }
+  .as-rank-school img {
+    width: 16px;
+    height: 16px;
+    vertical-align: text-top;
+  }
+  .as-rank-school h5 {
+      display:inline-block;
+      font-size:14px;
+  }
+  .as-rank-school label {
+      color:#999;
   }
 </style>

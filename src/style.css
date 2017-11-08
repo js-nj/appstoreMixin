@@ -118,3 +118,6 @@ body > a[title="站长统计"] {
 .as-color-black-opacity {
     color: rgba(0,0,0,0.5);
 }
+.app-intro-text .my-picture-large {
+    display: inline-block;
+}

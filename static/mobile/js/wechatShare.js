@@ -102,15 +102,18 @@ var wechatShare = {
     },
     setImagePhotoSwipe: function(ele) {
         setTimeout(function() {
+            //console.log('setImagePhotoSwipe---' + ele);
+
             var targetImgs = document.querySelectorAll(ele);
+            //console.log(targetImgs);
             //console.log('photoswipe 结构替换开始,替换个数为' + targetImgs.length);
             for (var i = 0; i < targetImgs.length; i++) {
                 var targetImg = targetImgs[i];
                 var targetImgSrc = targetImg.src;
                 var newImgUrl = '';
 
-                var rw = targetImg.naturalWidth; // 真实图片宽度
-                var rh = targetImg.naturalHeight; //真实图片高度
+                var rw = targetImg.naturalWidth || targetImg.innerWidth || targetImg.width || 500; // 真实图片宽度
+                var rh = targetImg.naturalHeight || targetImg.innerHeight || targetImg.height || 500; //真实图片高度
 
                 var largeImgSize = rw + 'x' + rh;
                 targetImg.className = 'my-picture-small';
@@ -136,7 +139,7 @@ var wechatShare = {
             }
             //console.log('photoswipe 结构替换完毕');
             initPhotoSwipeFromDOM('.my-gallery');
-        }, 50);
+        }, 1000);
     }
 };
 
